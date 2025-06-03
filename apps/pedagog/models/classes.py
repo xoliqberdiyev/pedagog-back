@@ -35,3 +35,24 @@ class Classes(AbstractBaseModel):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class ClassGroup(AbstractBaseModel):
+    """
+    Model representing a group of classes.
+    """
+
+    name = models.CharField(
+        max_length=20,
+        verbose_name=_("Name"),
+        help_text=_("The name of the class group."),
+        db_index=True,
+    )
+
+    class Meta:
+        verbose_name = _("Class Group")
+        verbose_name_plural = _("Class Groups")
+        ordering = ["name"]
+
+    def __str__(self):
+        return f"{self.name}"

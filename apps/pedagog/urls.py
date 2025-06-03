@@ -6,7 +6,7 @@ from apps.pedagog.views.admin_site import (
 )
 from apps.pedagog.views.ai import AiAPIView
 from apps.pedagog.views.change_role import ChangeRoleView
-from apps.pedagog.views.classes import ClassesListView
+from apps.pedagog.views.classes import ClassesListView, ClassGroupListView
 from apps.pedagog.views.degree import DegreeListView
 from apps.pedagog.views.download import (
     DownloadMediaView,
@@ -96,6 +96,7 @@ urlpatterns = [
     path("media/", MediaApiView.as_view(), name="media"),
     path("school/type/", SchoolTypeListView.as_view(), name="school-type"),
     path("classes/", ClassesListView.as_view(), name="classes"),
+    path("classes/group/", ClassGroupListView.as_view(), name="classes-group"),
     path("science/", ScienceListView.as_view(), name="science"),
     path("science/language/", ScienceLanguageListView.as_view(), name="science-language"),
     path(
