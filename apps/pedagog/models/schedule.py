@@ -34,19 +34,19 @@ class LessonSchedule(AbstractBaseModel):
         Classes,
         on_delete=models.CASCADE,
         verbose_name=_("Sinf"),
-        related_name="plans",
+        related_name="schedule",
     )
     science = models.ForeignKey(
         Science,
         on_delete=models.CASCADE,
         verbose_name=_("Fan"),
-        related_name="plans",
+        related_name="schedule",
     )
     science_language = models.ForeignKey(
         ScienceLanguage,
         on_delete=models.CASCADE,
         verbose_name=_("Fan tili"),
-        related_name="plans",
+        related_name="schedule",
         null=True,
         blank=True,
     )
