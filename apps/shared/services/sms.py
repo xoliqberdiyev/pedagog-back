@@ -1,4 +1,3 @@
-import random
 from datetime import timedelta
 
 from django.utils import timezone
@@ -7,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.shared.exceptions.core import SmsException
 from apps.users.models.user import SmsConfirm
-from apps.users.tasks.sms import SendConfirm
 
 
 class SmsService:
@@ -47,7 +45,7 @@ class SmsService:
             seconds=SmsConfirm.SMS_EXPIRY_SECONDS
         )  # noqa
         sms_confirm.save()
-
+        from apps.users.tasks.sms import SendConfirm
         SendConfirm.delay(phone, code, language)
         return True
 
