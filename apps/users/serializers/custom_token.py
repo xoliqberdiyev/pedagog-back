@@ -11,10 +11,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         refresh = self.get_token(self.user)
         data["refresh"] = str(refresh)
         data["access"] = str(refresh.access_token)
-
-        user_serializer = UserSerializer(self.user, context={"user": self.user})
-        data["user"] = user_serializer.data
-
         # Check if the user is a moderator
         if self.user.role == "moderator":
             try:
