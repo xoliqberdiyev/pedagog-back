@@ -52,8 +52,6 @@ services:
       - PGBOUNCER_LOGFILE=/var/log/pgbouncer/pgbouncer.log
     volumes:
       - pgbouncer_data:/etc/pgbouncer
-    ports:
-      - ${POSTGRES_BOUNCER_PORT:-6432}:6432
     depends_on:
       db:
         condition: service_healthy
