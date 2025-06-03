@@ -21,4 +21,4 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # else:
         #     data["user"].pop("is_contracted", None)
         #
-        # return data
+        return data
