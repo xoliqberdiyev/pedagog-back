@@ -13,6 +13,7 @@ from apps.payment.models.models import (
 class PlansRequirementsInline(StackedInline):
     model = PlansRequirements
     extra = 0
+    tab = True
 
 
 @admin.register(PlansRequirements)
@@ -79,5 +80,6 @@ class PlansAdmin(ModelAdmin):
     )
     search_fields = ("price",)
     ordering = ("quarter",)
+    autocomplete_fields = ("quarter",)
     list_filter = ("quarter",)
     inlines = [PlansRequirementsInline]

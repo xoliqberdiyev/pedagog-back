@@ -57,6 +57,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 text_data=json.dumps(
                     {
                         "type": "send_notification",
+                        "title": notification.title,
                         "message": notification.message,
                         "notification_id": notification.id,
                     }
