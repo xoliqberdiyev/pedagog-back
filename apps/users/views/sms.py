@@ -191,6 +191,9 @@ class ConfirmView(APIView):
                             "data": {
                                 "access": token["access"],
                                 "refresh": token["refresh"],
+                                "user": UserDetailSerializer(
+                                    user, context={"request": request}
+                                ).data,
                             },
                         },
                         status=status.HTTP_201_CREATED,
