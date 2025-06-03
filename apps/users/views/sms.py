@@ -17,6 +17,7 @@ from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from apps.pedagog.models.degree import Degree
 from apps.pedagog.models.moderator import Moderator
 from apps.shared.enums import Messages
 from apps.shared.exceptions.core import SmsException
@@ -150,12 +151,15 @@ class ConfirmView(APIView):
                                 password=user_data[b"password"].decode("utf-8"),
                             )
                             if user_data[b"type"].decode("utf-8") == "moderator":
+                                degree_instance = Degree.objects.filter(
+                                    id=user_data[b"degree"].decode("utf-8")
+                                ).first()
                                 user.role = "moderator"
                                 user.save(update_fields=["role"])
                                 moderator, created = Moderator.objects.update_or_create(
                                     user=user,
                                     defaults={
-                                        "degree": user_data[b"degree"].decode("utf-8")
+                                        "degree": degree_instance
                                     },
                                 )
                                 docs_data = json.loads(
@@ -166,7 +170,7 @@ class ConfirmView(APIView):
                             redis_instance.delete(phone)
                         except IntegrityError as e:
                             if "duplicate key value violates unique constraint" in str(
-                                e
+                                    e
                             ):
                                 return Response(
                                     {
