@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.shared.enums import Messages
-from apps.shared.services.user import UserService
+from apps.shared.services.sms import SmsService
 from apps.users.serializers.auth import ResendSerializer
 
 
@@ -15,17 +15,14 @@ class AbstractSendSms(APIView):
     throttle_classes = [throttling.UserRateThrottle]
     permission_classes = [permissions.AllowAny]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.service = UserService()
-
     def post(self, rq: Type[request.Request]):
         language = rq.headers.get("Accept-Language", "uz")
+        sms_service = SmsService()
         translation.activate(language)
         ser = self.serializer_class(data=rq.data)
         ser.is_valid(raise_exception=True)
         phone = ser.data.get("phone")
-        self.service.send_confirmation(phone, language)
+        sms_service.send_confirm(phone, language)
         return Response(
             {"success": True, "message": Messages.SEND_MESSAGE},
             status=200,

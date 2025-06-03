@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from apps.pedagog.models.classes import Classes
+from apps.pedagog.models.classes import Classes, ClassGroup
 from apps.pedagog.models.quarter import Quarter
 from apps.pedagog.models.science import Science, ScienceLanguage
 from apps.pedagog.models.topic import Topic
@@ -35,6 +35,14 @@ class LessonSchedule(AbstractBaseModel):
         on_delete=models.CASCADE,
         verbose_name=_("Sinf"),
         related_name="schedule",
+    )
+    class_group = models.ForeignKey(
+        ClassGroup,
+        on_delete=models.CASCADE,
+        verbose_name=_("Sinf guruhi"),
+        related_name="schedule",
+        null=True,
+        blank=True,
     )
     science = models.ForeignKey(
         Science,

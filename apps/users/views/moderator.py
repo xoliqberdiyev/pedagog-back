@@ -12,13 +12,13 @@ from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
 
 from apps.pedagog.models.documents import Document
-from apps.shared.services.user import UserService
+from apps.shared.services.sms import SmsService
 from apps.users.serializers.auth import ModeratorRegisterSerializer
 
 redis_instance = redis.StrictRedis.from_url(os.getenv("REDIS_CACHE_URL"))
 
 
-class ModeratorRegisterView(APIView, UserService):
+class ModeratorRegisterView(APIView):
     permission_classes = [AllowAny]
     throttle_classes = [UserRateThrottle]
     serializer_class = ModeratorRegisterSerializer
@@ -58,7 +58,8 @@ class ModeratorRegisterView(APIView, UserService):
 
             # Tilni olish
             language = request.headers.get("Accept-Language", "uz")
-            self.send_confirmation(phone, language)
+            sms_service = SmsService()
+            sms_service.send_confirm(phone, language)
 
             return Response(
                 {

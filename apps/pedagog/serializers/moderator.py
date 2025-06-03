@@ -5,10 +5,10 @@ from apps.payment.services.services import get_user_profit, get_user_statistics
 from apps.pedagog.models.download import Download
 from apps.pedagog.models.media import Media
 from apps.pedagog.models.moderator import Moderator
-from apps.users.serializers.locations import RegionSerializer, DistrictSerializer
-from apps.shared.services.user import UserService
+from apps.shared.services.sms import SmsService
 from apps.users.models.locations import Region, District
 from apps.users.models.user import User
+from apps.users.serializers.locations import RegionSerializer, DistrictSerializer
 
 
 class UserModeratorSerializer(serializers.ModelSerializer):
@@ -122,8 +122,8 @@ class ModeratorCreateSerializer(serializers.ModelSerializer):
         user_serializer.is_valid(raise_exception=True)
         user = user_serializer.save()
 
-        sms_service = UserService()
-        sms_service.send_confirmation(user.phone, language)
+        sms_service = SmsService()
+        sms_service.send_confirm(user.phone, language)
 
         moderator = Moderator.objects.create(user=user, **validated_data)
         return moderator

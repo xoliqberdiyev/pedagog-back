@@ -22,7 +22,6 @@ from apps.pedagog.models.moderator import Moderator
 from apps.shared.enums import Messages
 from apps.shared.exceptions.core import SmsException
 from apps.shared.services.sms import SmsService
-from apps.shared.services.user import UserService
 from apps.users.models.locations import Region, District
 from apps.users.models.reset_token import ResetToken
 from apps.users.models.user import User
@@ -41,7 +40,7 @@ from apps.users.views.auth import AbstractSendSms
 redis_instance = redis.StrictRedis.from_url(os.getenv("REDIS_CACHE_URL"))
 
 
-class RegisterView(APIView, UserService):
+class RegisterView(APIView):
     permission_classes = [AllowAny]
     throttle_classes = [UserRateThrottle]
     serializer_class = RegisterSerializer
@@ -62,7 +61,8 @@ class RegisterView(APIView, UserService):
             redis_instance.delete(phone)
             redis_instance.hset(phone, mapping=data)
             language = request.headers.get("Accept-Language", "uz")
-            self.send_confirmation(phone, language)
+            sms_service = SmsService()
+            sms_service.send_confirm(phone, language)
 
             return Response(
                 {
@@ -219,7 +219,7 @@ class ConfirmView(APIView):
         )
 
 
-class ResetConfirmationCodeView(views.APIView, UserService):
+class ResetConfirmationCodeView(views.APIView):
     """Reset confirm otp code"""
 
     serializer_class = ResetConfirmationSerializer
@@ -263,7 +263,7 @@ class ResetConfirmationCodeView(views.APIView, UserService):
             return response.Response({"detail": e}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ResetSetPasswordView(views.APIView, UserService):
+class ResetSetPasswordView(views.APIView):
     serializer_class = SetPasswordSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -286,7 +286,9 @@ class ResetSetPasswordView(views.APIView, UserService):
             )
         phone = token.first().user.phone
         token.delete()
-        self.change_password(phone, password)
+        user = User.objects.filter(phone=phone).first()
+        user.set_password(password)
+        user.save()
         return response.Response(
             {"detail": _("Parol yangilandi")}, status=status.HTTP_200_OK
         )
