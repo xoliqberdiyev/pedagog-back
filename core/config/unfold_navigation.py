@@ -242,14 +242,6 @@ PAGES = [
                     request.user, "view_quarter"
                 ),
             },
-            {
-                "title": _("Haftalar"),
-                "icon": "date_range",
-                "link": reverse_lazy("admin:pedagog_weeks_changelist"),
-                "permission": lambda request: user_has_group_or_permission(
-                    request.user, "view_weeks"
-                ),
-            },
         ],
     },
     {

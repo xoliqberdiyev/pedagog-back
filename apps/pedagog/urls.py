@@ -38,10 +38,8 @@ from apps.pedagog.views.school import SchoolTypeListView
 from apps.pedagog.views.science import ScienceListView, ScienceLanguageListView
 from apps.pedagog.views.tmr_appeal import TMRAppealAPIView, TmrFilesAPIView
 from apps.pedagog.views.topic import TopicApiView
-from apps.pedagog.views.weeks import WeeksByQuarterView
 
 urlpatterns = [
-
     path(
         "download/media/<int:media_id>/",
         DownloadMediaView.as_view(),
@@ -85,11 +83,6 @@ urlpatterns = [
         "moderator/electron/resource/<int:moderator_id>/",
         ModeratorElectronResourcesApiView.as_view(),
         name="moderator-electron-resource-list",
-    ),
-    path(
-        "weeks/",
-        WeeksByQuarterView.as_view(),
-        name="moderator-media-detail",
     ),
     path(
         "ai/",
