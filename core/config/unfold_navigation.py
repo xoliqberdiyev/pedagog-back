@@ -205,6 +205,14 @@ PAGES = [
                     request.user, "view_classes"
                 ),
             },
+            {
+                "title": _("Sinf guruhlari"),
+                "icon": "hub",
+                "link": reverse_lazy("admin:pedagog_classgroup_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_classgroup"
+                ),
+            },
         ],
     },
     {
