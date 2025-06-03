@@ -5,7 +5,6 @@ from rest_framework import permissions, request, throttling
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.shared.enums import Messages
 from apps.shared.services.sms import SmsService
 from apps.users.serializers.auth import ResendSerializer
 
@@ -24,6 +23,6 @@ class AbstractSendSms(APIView):
         phone = ser.data.get("phone")
         sms_service.send_confirm(phone, language)
         return Response(
-            {"success": True, "message": Messages.SEND_MESSAGE},
+            {"success": True, "message": f"Sms {phone} raqamiga yuborildi"},
             status=200,
         )
