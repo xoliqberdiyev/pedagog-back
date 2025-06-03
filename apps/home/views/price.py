@@ -3,14 +3,14 @@ from rest_framework.views import APIView
 
 from apps.home.serializers.price import PriceSerializer
 from apps.payment.models.models import Plans
-from apps.shared.pagination.custom import PedagogPagination
+from apps.shared.pagination.custom import CustomPagination
 
 
 class PriceView(APIView):
     permission_classes = (AllowAny,)
     serializer_class = PriceSerializer
     queryset = Plans.objects.all()
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     def get(self, request):
         """

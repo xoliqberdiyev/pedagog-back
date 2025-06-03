@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 
 from apps.home.models.info import PedagogInfo
 from apps.home.serializers.info import PedagogInfoSerializer
-from apps.shared.pagination.custom import PedagogPagination
+from apps.shared.pagination.custom import CustomPagination
 
 
 class PedagogInfoListView(APIView):
@@ -14,7 +14,7 @@ class PedagogInfoListView(APIView):
     permission_classes = [AllowAny]
     queryset = PedagogInfo.objects.all()
     serializer_class = PedagogInfoSerializer
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     def get(self, request):
         """

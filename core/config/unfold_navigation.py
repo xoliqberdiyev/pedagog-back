@@ -389,6 +389,14 @@ PAGES = [
                     request.user, "view_notification"
                 ),
             },
+            {
+                "title": _("Darajalar"),
+                "icon": "tenancy",
+                "link": reverse_lazy("admin:pedagog_degree_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_degree"
+                ),
+            },
         ],
     },
 ]

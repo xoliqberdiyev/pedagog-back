@@ -4,13 +4,13 @@ from rest_framework.views import APIView
 
 from apps.home.models.seo import Seo, SeoType
 from apps.home.serializers.seo import SeoSerializer
-from apps.shared.pagination.custom import PedagogPagination
+from apps.shared.pagination.custom import CustomPagination
 
 
 class SeoView(APIView):
     serializer_class = SeoSerializer
     permission_classes = [AllowAny]
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
     queryset = Seo.objects.all()
 
     @extend_schema(

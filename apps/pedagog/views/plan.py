@@ -16,7 +16,7 @@ from apps.pedagog.serializers.plan import (
     PlanDetailSerializer,
     PlanAdminListSerializer,
 )
-from apps.shared.pagination.custom import PedagogPagination, CustomPagination
+from apps.shared.pagination.custom import CustomPagination, CustomPagination
 
 
 class PlanApiView(APIView):
@@ -101,7 +101,7 @@ class PlanAdminListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Media.objects.all()
     serializer_class = PlanAdminListSerializer
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = MediaFilter
 

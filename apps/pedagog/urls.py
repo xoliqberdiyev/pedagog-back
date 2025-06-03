@@ -7,6 +7,7 @@ from apps.pedagog.views.admin_site import (
 from apps.pedagog.views.ai import AiAPIView
 from apps.pedagog.views.change_role import ChangeRoleView
 from apps.pedagog.views.classes import ClassesListView
+from apps.pedagog.views.degree import DegreeListView
 from apps.pedagog.views.download import (
     DownloadMediaView,
     DownloadFileView,
@@ -61,6 +62,7 @@ urlpatterns = [
         name="moderator-resource",
     ),
     path("quarters/", QuarterListView.as_view(), name="quarter-list"),
+    path("degree/", DegreeListView.as_view(), name="degree-list"),
     path(
         "change-role/",
         ChangeRoleView.as_view(),

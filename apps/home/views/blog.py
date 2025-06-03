@@ -12,7 +12,7 @@ from apps.home.serializers.blog import (
     BlogDetailSerializer,
 )
 from apps.shared.exceptions.http404 import get_object_or_404
-from apps.shared.pagination.custom import PedagogPagination
+from apps.shared.pagination.custom import CustomPagination
 
 
 class BlogCategoryListView(APIView):
@@ -23,7 +23,7 @@ class BlogCategoryListView(APIView):
     permission_classes = [AllowAny]
     queryset = BlogCategory.objects.all()
     serializer_class = BlogCategorySerializer
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     def get(self, request):
         """
@@ -44,7 +44,7 @@ class BlogListView(APIView):
     permission_classes = [AllowAny]
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     @extend_schema(
         parameters=[

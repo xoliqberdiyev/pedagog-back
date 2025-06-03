@@ -2,8 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from apps.payment.services.services import get_user_profit
-from apps.pedagog.choices.degree import Degree
 from apps.pedagog.models.classes import Classes
+from apps.pedagog.models.degree import Degree
 from apps.pedagog.models.school import SchoolType
 from apps.pedagog.models.science import Science, ScienceLanguage
 from apps.shared.models.base import AbstractBaseModel
@@ -27,10 +27,12 @@ class Moderator(AbstractBaseModel):
         blank=True,
         null=True,
     )
-    degree = models.CharField(
-        max_length=15,
-        choices=Degree.choices,
-        default=Degree.AUTHOR,
+    degree = models.ForeignKey(
+        Degree,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="moderators",
         verbose_name=_("Daraja"),
     )
     card_number = models.CharField(

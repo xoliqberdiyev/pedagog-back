@@ -6,7 +6,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.pedagog.choices.degree import Degree
 from apps.pedagog.models.moderator import Moderator
 from apps.pedagog.serializers.admin_site import ModeratorAdminSiteSerializer
 from apps.shared.pagination.custom import CustomPagination
@@ -31,8 +30,7 @@ class ModeratorAdminSiteView(APIView):
                 name="degree",
                 description="Degree filter",
                 required=False,
-                enum=[choice.value for choice in Degree],
-                type=str,
+                type=int,
             ),
             OpenApiParameter(
                 name="status",

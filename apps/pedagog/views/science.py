@@ -6,14 +6,14 @@ from apps.pedagog.serializers.science import (
     ScienceSerializer,
     ScienceLanguageSerializer,
 )
-from apps.shared.pagination.custom import PedagogPagination
+from apps.shared.pagination.custom import CustomPagination
 
 
 class ScienceListView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ScienceSerializer
     queryset = Science.objects.filter(is_active=True)
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     def get(self, request):
         classes = request.query_params.get("classes", None)
@@ -30,7 +30,7 @@ class ScienceLanguageListView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ScienceLanguageSerializer
     queryset = ScienceLanguage.objects.filter(is_active=True)
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     def get(self, request):
         science = request.query_params.get("science", None)

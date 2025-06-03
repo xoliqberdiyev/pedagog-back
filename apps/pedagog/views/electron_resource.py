@@ -19,7 +19,7 @@ from apps.pedagog.serializers.electron_resource import (
     ElectronResourceSerializer,
     ElectronResourceAdminSerializer,
 )
-from apps.shared.pagination.custom import CustomPagination, PedagogPagination
+from apps.shared.pagination.custom import CustomPagination, CustomPagination
 
 
 class ElectronResourceCategoryView(APIView):
@@ -269,7 +269,7 @@ class ElectronResourceDetailView(APIView):
 class ElectronResourceAdminView(APIView):
     serializer_class = ElectronResourceAdminSerializer
     permission_classes = [AllowAny]
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     def get_permissions(self):
         if self.request.method in ["POST", "PATCH", "DELETE"]:

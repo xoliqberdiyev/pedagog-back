@@ -17,7 +17,7 @@ from apps.pedagog.serializers.moderator import (
     SendMoneySerializer,
     ModeratorTemetikPlanSerializer,
 )
-from apps.shared.pagination.custom import PedagogPagination
+from apps.shared.pagination.custom import CustomPagination
 from apps.users.models.user import User
 
 
@@ -42,7 +42,7 @@ class ModeratorCreateViewSet(APIView):
 class ModeratorListView(APIView):
     permission_classes = [IsAdminUser]
     serializer_class = ModeratorListSerializer
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     def get(self, request):
         try:
@@ -132,7 +132,7 @@ class SendMoneyToModerators(APIView):
 
 class ModeratorTemetikPlanApiView(APIView):
     permission_classes = [IsAdminUser]
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     def get(self, request, moderator_id, *args, **kwargs):
         try:
@@ -160,7 +160,7 @@ class ModeratorTemetikPlanApiView(APIView):
 
 class ModeratorElectronResourcesApiView(APIView):
     permission_classes = [IsAdminUser]
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     def get(self, request, moderator_id):
         moderator = User.objects.filter(id=moderator_id).first()

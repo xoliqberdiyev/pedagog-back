@@ -1,24 +1,23 @@
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from apps.home.models.privacy import PrivacyPolicy
-from apps.home.serializers.privacy import PrivacyPolicySerializer
+from apps.pedagog.models.degree import Degree
+from apps.pedagog.serializers.degree import DegreeSerializer
 from apps.shared.pagination.custom import CustomPagination
 
 
-class PrivacyPolicyView(APIView):
+class DegreeListView(APIView):
     """
-    API view to retrieve the privacy policy.
+    API view to list all degrees.
     """
-
-    permission_classes = [AllowAny]
-    serializer_class = PrivacyPolicySerializer
-    queryset = PrivacyPolicy.objects.all()
+    serializer_class = DegreeSerializer
+    permission_classes = (AllowAny,)
+    queryset = Degree.objects.all()
     pagination_class = CustomPagination
 
     def get(self, request):
         """
-        Handle GET requests to retrieve a list of blog categories.
+        Handle GET requests to retrieve a list of price.
         """
         queryset = self.queryset
         paginator = self.pagination_class()

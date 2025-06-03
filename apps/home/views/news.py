@@ -12,7 +12,7 @@ from apps.home.serializers.news import (
     NewsDetailSerializer,
 )
 from apps.shared.exceptions.http404 import get_object_or_404
-from apps.shared.pagination.custom import PedagogPagination
+from apps.shared.pagination.custom import CustomPagination
 
 
 class NewsCategoryListView(APIView):
@@ -23,7 +23,7 @@ class NewsCategoryListView(APIView):
     permission_classes = [AllowAny]
     queryset = NewsCategory.objects.all()
     serializer_class = NewsCategorySerializer
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     def get(self, request):
         """
@@ -44,7 +44,7 @@ class NewsListView(APIView):
     permission_classes = [AllowAny]
     queryset = News.objects.all()
     serializer_class = NewsSerializer
-    pagination_class = PedagogPagination
+    pagination_class = CustomPagination
 
     @extend_schema(
         parameters=[
