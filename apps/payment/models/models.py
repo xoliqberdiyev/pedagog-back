@@ -44,6 +44,12 @@ class Orders(AbstractBaseModel):
         null=True,
         blank=True,
     )
+    quarter = models.ForeignKey(
+        Quarter,
+        on_delete=models.CASCADE,
+        verbose_name=_("Chorak"),
+        related_name="orders",
+    )
     price = models.BigIntegerField(default=0, verbose_name=_("Narxi"))
     status = models.BooleanField(default=False, verbose_name=_("Holati"))
 
@@ -60,6 +66,10 @@ class Orders(AbstractBaseModel):
                 f"{self.user.district.district} {self.user.role}"
             )
         return f"{self.id} - Incomplete User Information"
+
+    def save(self, *args, **kwargs):
+        self.price = Plans.objects.filter(quarter=self.quarter).first().price
+        super().save(*args, **kwargs)
 
 
 class Payments(AbstractBaseModel):
@@ -82,10 +92,10 @@ class Payments(AbstractBaseModel):
 
     def __str__(self) -> str:
         if (
-            self.order.user
-            and self.order.user.region
-            and self.order.user.district
-            and self.order.science
+                self.order.user
+                and self.order.user.region
+                and self.order.user.district
+                and self.order.science
         ):
             return (
                 f"{self.id} {self.order.user.last_name} {self.order.user.first_name} "

@@ -36,12 +36,16 @@ class OrderViewSet(
 
     def perform_create(self, serializer):
         user = self.request.user
-        types = serializer.validated_data.get("types")
+        science = serializer.validated_data.get("science")
+        science_language = serializer.validated_data.get("science_language")
+        classes = serializer.validated_data.get("classes")
         current_date = timezone.now().date()
 
         if Orders.objects.filter(
             user=user,
-            types__in=types,
+            science=science,
+            science_language=science_language,
+            classes=classes,
             start_date__lte=current_date,
             end_date__gte=current_date,
             status=True,

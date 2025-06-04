@@ -5,9 +5,7 @@ from uuid import uuid4
 
 import requests
 from django.conf import settings
-from django.utils import timezone
 from django.utils.translation import gettext as _
-from rest_framework.exceptions import APIException
 
 from apps.pedagog.models.electron_resource import ElectronResource
 from apps.shared.utils.logger import logger
@@ -125,29 +123,6 @@ def get_user_statistics(user):
         return 0, 0
 
 
-class PlanService:
-    def get_plan(self):
-        from apps.payment.models.models import Plans
-
-        current_date = timezone.now().date()
-
-        plan = Plans.objects.filter(
-            quarter__start_date__lte=current_date,
-            quarter__end_date__gte=current_date,
-        ).last()
-
-        if not plan:
-            plan = Plans.objects.filter(quarter__start_date__gt=current_date).first()
-
-        if plan:
-            return plan
-        raise APIException(
-            _(
-                "Serverda plan topilmadi bu texnik xatolik iltimos adminga murojat qiling"
-            )
-        )
-
-
 class UzumService:
     _number: Union[int, str]
     _mfo: Union[int, str]
@@ -175,11 +150,11 @@ class UzumService:
         return self._get_balance()
 
     def generate_link(
-        self,
-        client_id: str,
-        order_id: str,
-        amount: int,
-        detail: str,
+            self,
+            client_id: str,
+            order_id: str,
+            amount: int,
+            detail: str,
     ) -> Tuple:
         url = "https://checkout-key.inplat-tech.com/api/v1/payment/register"
 
