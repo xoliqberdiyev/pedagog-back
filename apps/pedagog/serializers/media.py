@@ -3,6 +3,7 @@ from rest_framework import serializers
 from apps.pedagog.models.media import Media
 
 
+
 class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
@@ -16,7 +17,6 @@ class MediaSerializer(serializers.ModelSerializer):
 
 
 class MediaDetailSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
     is_author = serializers.SerializerMethodField()
 
     class Meta:
@@ -30,21 +30,26 @@ class MediaDetailSerializer(serializers.ModelSerializer):
             "count",
             "statistics",
             "created_at",
-            "user",
             "view_count",
             "is_author",
+            "user",
         )
-
-    def get_user(self, obj):
-        from apps.users.serializers.user import UserSerializer
-
-        return UserSerializer(obj.user).data
 
     def get_is_author(self, obj):
         request = self.context.get("request", None)
         if request is None:
             return False
         return obj.user == request.user
+
+    def to_representation(self, obj):
+        from apps.users.serializers.user import UserMiniSerializer
+        data = super().to_representation(obj)
+        request = self.context.get("request")
+        data["user"] = UserMiniSerializer(obj.user).data
+        if request and request.user.is_authenticated:
+            data["is_author"] = obj.user == request.user
+
+        return data
 
 
 class MediaMiniSerializer(serializers.ModelSerializer):

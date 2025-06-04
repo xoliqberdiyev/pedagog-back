@@ -1,9 +1,9 @@
 from django.conf import settings
 from rest_framework import serializers
 
-from apps.users.choices.role import Role
 from apps.pedagog.models.moderator import Moderator
 from apps.pedagog.serializers.document import DocumentSerializer
+from apps.users.choices.role import Role
 from apps.users.models.user import User
 
 
@@ -199,3 +199,10 @@ class UserDetailSerializer(serializers.ModelSerializer):
             data.pop("is_contracted", None)
 
         return data
+
+
+class UserMiniSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = ["id", "avatar", "first_name", "last_name"]
+        model = User

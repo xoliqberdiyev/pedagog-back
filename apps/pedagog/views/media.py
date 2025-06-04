@@ -44,7 +44,7 @@ class MediaApiView(APIView):
                 )
 
         return Response(
-            {"error": "media_id is required"},
+            {"error": "media_id or topic_id is required"},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -64,24 +64,6 @@ class MediaApiView(APIView):
             serializer.save(topic_id_id=topic_id, user=request.user, object_id=topic_id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request):
-        media_id = request.query_params.get("id")
-        if not media_id:
-            return Response(
-                {"error": "media_id is required"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        try:
-            media = Media.objects.get(id=media_id, user=request.user)
-        except Media.DoesNotExist:
-            return Response(
-                {"error": "Media not found"}, status=status.HTTP_404_NOT_FOUND
-            )
-
-        media.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def patch(self, request):
         media_id = request.query_params.get("id")

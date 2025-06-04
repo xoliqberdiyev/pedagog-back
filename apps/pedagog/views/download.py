@@ -42,7 +42,9 @@ class DownloadMediaView(APIView):
         if plan:
             order = Orders.objects.filter(
                 user=user,
-                types=plan.science_types,
+                classes=plan.classes,
+                science=plan.science,
+                science_language=plan.science_language,
                 start_date__lte=current_date,
                 end_date__gte=current_date,
                 status=True,

@@ -11,8 +11,6 @@ class Media(AbstractBaseModel):
         on_delete=models.CASCADE,
         related_name="medias",
         verbose_name=_("Mavzu"),
-        null=True,
-        blank=True,
     )
     image = models.ImageField(
         upload_to="media/images/",
@@ -50,8 +48,6 @@ class Media(AbstractBaseModel):
         on_delete=models.CASCADE,
         related_name="media",
         verbose_name=_("Foydalanuvchi"),
-        null=True,
-        blank=True,
     )
     object_type = models.CharField(
         max_length=255,
