@@ -10,8 +10,8 @@ from apps.shared.models.base import AbstractBaseModel
 
 
 class Shift(models.TextChoices):
-    FIRST = '1', _("1-smena")
-    SECOND = '2', _("2-smena")
+    FIRST = "1", _("1-smena")
+    SECOND = "2", _("2-smena")
 
 
 class WeekDay(models.IntegerChoices):
@@ -69,11 +69,11 @@ class LessonSchedule(AbstractBaseModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['classes', 'date', 'start_time'],
-                name='unique_schedule_per_class_date_time'
+                fields=["classes", "date", "start_time"],
+                name="unique_schedule_per_class_date_time",
             )
         ]
-        ordering = ['date', 'start_time']
+        ordering = ["date", "start_time"]
 
     def __str__(self):
         return f"{self.classes} - {self.science} - {self.date} - {self.start_time} - {self.end_time}"

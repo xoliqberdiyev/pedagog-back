@@ -10,6 +10,7 @@ class DegreeListView(APIView):
     """
     API view to list all degrees.
     """
+
     serializer_class = DegreeSerializer
     permission_classes = (AllowAny,)
     queryset = Degree.objects.all()

@@ -34,9 +34,9 @@ def reorder_topics_on_save(sender, instance, created, **kwargs):
 def file_status_m2m(sender, instance, action, **kwargs):
     if action == "post_add":  # Trigger after documents are added
         if (
-                instance.document.exists()
-                and instance.status_file == ContractStatus.NO_FILE
-                or instance.status_file == ContractStatus.REJECTED
+            instance.document.exists()
+            and instance.status_file == ContractStatus.NO_FILE
+            or instance.status_file == ContractStatus.REJECTED
         ):
             instance.status_file = ContractStatus.WAITING
             instance.save()
@@ -50,10 +50,10 @@ def file_status_m2m(sender, instance, action, **kwargs):
 @receiver(post_save, sender=User)
 def file_status_pre_save(sender, instance, **kwargs):
     if (
-            instance.response_file
-            and instance.status_file == ContractStatus.WAITING
-            and instance.status is False
-            and instance.role == Role.MODERATOR
+        instance.response_file
+        and instance.status_file == ContractStatus.WAITING
+        and instance.status is False
+        and instance.role == Role.MODERATOR
     ):
         User.objects.filter(pk=instance.pk).update(
             status_file=ContractStatus.ACCEPTED, status=True

@@ -6,7 +6,10 @@ from apps.pedagog.models.topic import Topic
 from apps.pedagog.serializers.classes import ClassesSerializer
 from apps.pedagog.serializers.quarter import QuarterMiniSerializer
 from apps.pedagog.serializers.school import SchoolTypeSerializer
-from apps.pedagog.serializers.science import ScienceSerializer, ScienceLanguageSerializer
+from apps.pedagog.serializers.science import (
+    ScienceSerializer,
+    ScienceLanguageSerializer,
+)
 
 
 class PlanSerializer(serializers.ModelSerializer):
@@ -188,9 +191,9 @@ class PlanAdminListSerializer(serializers.ModelSerializer):
 
         if size < 1024:
             return f"{size} B"
-        elif size < 1024 ** 2:
+        elif size < 1024**2:
             return f"{size / 1024:.2f} KB"
-        elif size < 1024 ** 3:
+        elif size < 1024**3:
             return f"{size / 1024 ** 2:.2f} MB"
         else:
             return f"{size / 1024 ** 3:.2f} GB"

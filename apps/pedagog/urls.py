@@ -42,12 +42,12 @@ from apps.pedagog.views.topic import TopicApiView
 
 urlpatterns = [
     path(
-        "download/media/<int:media_id>/",
+        "download/get/<int:media_id>/",
         DownloadMediaView.as_view(),
         name="download_resource",
     ),
     path(
-        "download/file/<uuid:download_token>/",
+        "download/set/<uuid:download_token>/",
         DownloadFileView.as_view(),
         name="download_file",
     ),
@@ -98,7 +98,9 @@ urlpatterns = [
     path("classes/", ClassesListView.as_view(), name="classes"),
     path("classes/group/", ClassGroupListView.as_view(), name="classes-group"),
     path("science/", ScienceListView.as_view(), name="science"),
-    path("science/language/", ScienceLanguageListView.as_view(), name="science-language"),
+    path(
+        "science/language/", ScienceLanguageListView.as_view(), name="science-language"
+    ),
     path(
         "history/download/",
         MobileDownloadHistoryView.as_view(),
@@ -157,7 +159,6 @@ urlpatterns = [
         "admin-site/moderator/<int:pk>/",
         ModeratorAdminSiteDetailView.as_view(),
     ),
-
     path("plan/admin/", PlanAdminListAPIView.as_view(), name="plan-admin"),
     path(
         "electron-resource/admin/",

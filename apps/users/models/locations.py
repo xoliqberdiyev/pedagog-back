@@ -20,7 +20,7 @@ class Region(AbstractBaseModel):
     class Meta:
         verbose_name = _("Viloyat")
         verbose_name_plural = _("Viloyatlar")
-        ordering = ['name']
+        ordering = ["name"]
 
 
 class District(AbstractBaseModel):
@@ -45,4 +45,4 @@ class District(AbstractBaseModel):
     class Meta:
         verbose_name = _("Tuman")
         verbose_name_plural = _("Tumanlar")
-        ordering = ['name']
+        ordering = ["name"]

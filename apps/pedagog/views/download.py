@@ -52,10 +52,10 @@ class DownloadMediaView(APIView):
 
         # If media has a topic, only the owner or a user with an order can download
         if (
-                plan
-                and media.user != user
-                and user.role == Role.MODERATOR
-                or user.role == Role.ADMIN
+            plan
+            and media.user != user
+            and user.role == Role.MODERATOR
+            or user.role == Role.ADMIN
         ):
             raise Http404(_("Ushbu resurslar sizga tegishli emas"))
 
@@ -199,7 +199,7 @@ def moderator_media_list(request):
         OpenApiParameter(
             name="time_range",
             description="Filter by time range (e.g., last_hour, last_2_hours, "
-                        "last_3_hours, last_24_hours, last_4_weeks)",
+            "last_3_hours, last_24_hours, last_4_weeks)",
             required=False,
             type=str,
         ),

@@ -50,6 +50,7 @@ class OrdersAdmin(ModelAdmin):
         "user__phone",
     )
     list_filter = ("status",)
+    autocomplete_fields = ("user", "classes", "science", "science_language")
 
 
 @admin.register(Payments)

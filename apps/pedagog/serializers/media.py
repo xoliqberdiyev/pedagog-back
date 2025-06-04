@@ -3,7 +3,6 @@ from rest_framework import serializers
 from apps.pedagog.models.media import Media
 
 
-
 class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
@@ -43,6 +42,7 @@ class MediaDetailSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj):
         from apps.users.serializers.user import UserMiniSerializer
+
         data = super().to_representation(obj)
         request = self.context.get("request")
         data["user"] = UserMiniSerializer(obj.user).data

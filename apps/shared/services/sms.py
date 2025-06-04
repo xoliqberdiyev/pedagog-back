@@ -46,6 +46,7 @@ class SmsService:
         )  # noqa
         sms_confirm.save()
         from apps.users.tasks.sms import SendConfirm
+
         SendConfirm.delay(phone, code, language)
         return True
 

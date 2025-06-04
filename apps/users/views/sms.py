@@ -158,9 +158,7 @@ class ConfirmView(APIView):
                                 user.save(update_fields=["role"])
                                 moderator, created = Moderator.objects.update_or_create(
                                     user=user,
-                                    defaults={
-                                        "degree": degree_instance
-                                    },
+                                    defaults={"degree": degree_instance},
                                 )
                                 docs_data = json.loads(
                                     user_data[b"docs"].decode("utf-8")
@@ -170,7 +168,7 @@ class ConfirmView(APIView):
                             redis_instance.delete(phone)
                         except IntegrityError as e:
                             if "duplicate key value violates unique constraint" in str(
-                                    e
+                                e
                             ):
                                 return Response(
                                     {
