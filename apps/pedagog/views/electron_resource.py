@@ -1,5 +1,6 @@
 from django.db.models import Q
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -46,13 +47,7 @@ class ElectronResourceCategoryDetailView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, pk):
-        try:
-            category = ElectronResourceCategory.objects.get(pk=pk)
-        except ElectronResourceCategory.DoesNotExist:
-            return Response(
-                {"error": "Category not found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+        category = get_object_or_404(ElectronResourceCategory, pk=pk)
         serializer = self.serializer_class(category)
         return Response(serializer.data)
 
@@ -112,29 +107,12 @@ class ElectronResourceSubCategoryDetailView(APIView):
         return super().get_permissions()
 
     def get(self, request, pk):
-        try:
-            sub_category = ElectronResourceSubCategory.objects.get(pk=pk)
-        except ElectronResourceSubCategory.DoesNotExist:
-            return Response(
-                {"error": "Sub category not found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+        sub_category = get_object_or_404(ElectronResourceSubCategory, pk=pk)
         serializer = self.serializer_class(sub_category)
         return Response(serializer.data)
 
     def patch(self, request, pk):
-        try:
-            sub_category = ElectronResourceSubCategory.objects.get(pk=pk)
-        except ElectronResourceSubCategory.DoesNotExist:
-            return Response(
-                {"error": "Sub category not found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        if sub_category.user != request.user:
-            return Response(
-                {"message": "You are not allowed to patch this sub category"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
+        sub_category = get_object_or_404(ElectronResourceSubCategory, pk=pk, user=request.user)
         serializer = self.serializer_class(sub_category, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -191,34 +169,12 @@ class ElectronResourceDetailView(APIView):
         return super().get_permissions()
 
     def get(self, request, pk):
-        try:
-            resource = ElectronResource.objects.get(pk=pk)
-        except ElectronResource.DoesNotExist:
-            return Response(
-                {"error": "Resource not found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        if resource.user != request.user:
-            return Response(
-                {"message": "You are not allowed to view this resource"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
+        resource = get_object_or_404(ElectronResource, pk=pk)
         serializer = self.serializer_class(resource)
         return Response(serializer.data)
 
     def patch(self, request, pk):
-        try:
-            resource = ElectronResource.objects.get(pk=pk)
-        except ElectronResource.DoesNotExist:
-            return Response(
-                {"error": "Resource not found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        if resource.user != request.user:
-            return Response(
-                {"message": "You are not allowed to update this resource"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
+        resource = get_object_or_404(ElectronResource, pk=pk, user=request.user)
         serializer = self.serializer_class(resource, data=request.data)
         if serializer.is_valid():
             serializer.save()
