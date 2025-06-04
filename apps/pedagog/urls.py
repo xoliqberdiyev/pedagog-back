@@ -24,7 +24,7 @@ from apps.pedagog.views.electron_resource import (
     ElectronResourceDetailView,
     ElectronResourceAdminView,
 )
-from apps.pedagog.views.media import MediaApiView
+from apps.pedagog.views.media import MediaApiView, MediaDetailApiView
 from apps.pedagog.views.moderator import (
     ModeratorCreateViewSet,
     ModeratorListView,
@@ -95,6 +95,7 @@ urlpatterns = [
     path("topic/", TopicApiView.as_view(), name="topic"),
     path("topic/<int:pk>/", TopicDetailApiView.as_view(), name="topic-detail"),
     path("media/", MediaApiView.as_view(), name="media"),
+    path("media/<int:pk>/", MediaDetailApiView.as_view(), name="media"),
     path("school/type/", SchoolTypeListView.as_view(), name="school-type"),
     path("classes/", ClassesListView.as_view(), name="classes"),
     path("classes/group/", ClassGroupListView.as_view(), name="classes-group"),
