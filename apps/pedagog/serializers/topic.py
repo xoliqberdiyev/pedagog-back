@@ -84,9 +84,6 @@ class TopicDetailSerializer(serializers.ModelSerializer):
 
         representation = super().to_representation(instance)
         representation["plan_id"] = PlanDetailSerializer(instance.plan_id).data
-        representation["media"] = MediaDetailSerializer(
-            instance.medias.all(), many=True, context=self.context
-        ).data
         return representation
 
 

@@ -40,36 +40,36 @@ class PlanApiView(APIView):
     def get(self, request, *args, **kwargs):
         user = request.user
         plan_id = request.query_params.get("id", None)
+        school_type = request.query_params.get("school_type", None)
         classes = request.query_params.get("classes", None)
-        quarter = request.query_params.get("quarter", None)
         science = request.query_params.get("science", None)
-        class_group = request.query_params.get("class_group", None)
-        science_types = request.query_params.get("science_types", None)
+        science_language = request.query_params.get("science_language", None)
+        quarters = request.query_params.get("quarters", None)
 
         if Moderator.objects.filter(user=user).exists():
             moderator = Moderator.objects.get(user=user)
             plans = Plan.objects.filter(
+                school_type__in=moderator.school_type.all(),
                 classes__in=moderator.classes.all(),
-                quarter__in=moderator.quarters.all(),
                 science__in=moderator.science.all(),
-                class_group__in=moderator.class_groups.all(),
-                science_types__in=moderator.science_type.all(),
+                science_language__in=moderator.science_language.all(),
+                quarters__in=moderator.quarters.all(),
             )
         else:
             plans = Plan.objects.filter(is_active=True)
 
         if plan_id:
             plans = plans.filter(id=plan_id)
+        if school_type:
+            plans = plans.filter(school_type=school_type)
         if classes:
             plans = plans.filter(classes=classes)
-        if quarter:
-            plans = plans.filter(quarter=quarter)
         if science:
             plans = plans.filter(science=science)
-        if class_group:
-            plans = plans.filter(class_group=class_group)
-        if science_types:
-            plans = plans.filter(science_types=science_types)
+        if science_language:
+            plans = plans.filter(science_language=science_language)
+        if quarters:
+            plans = plans.filter(quarters=quarters)
 
         paginator = self.pagination_class()
         paginated_plans = paginator.paginate_queryset(plans, request)
@@ -86,15 +86,6 @@ class PlanApiView(APIView):
         plan_serializer.is_valid(raise_exception=True)
         plan_serializer.save()
         return Response(plan_serializer.data, status=status.HTTP_200_OK)
-
-    def delete(self, request, *args, **kwargs):
-        plan_id = request.query_params.get("id", None)
-        try:
-            plan = Plan.objects.get(id=plan_id, user=request.user)
-        except Plan.DoesNotExist:
-            raise NotFound("Plan not found or you do not have permission to delete it")
-        plan.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PlanAdminListAPIView(ListAPIView):
