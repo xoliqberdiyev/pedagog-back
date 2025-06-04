@@ -14,21 +14,13 @@ class PlanSerializer(serializers.ModelSerializer):
         model = Plan
         fields = [
             "id",
-            "language",
+            "school_type",
             "classes",
-            "quarter",
             "science",
-            "class_group",
-            "science_types",
+            "science_language",
+            "quarter",
         ]
         extra_kwargs = {"id": {"read_only": True}}
-        unique_together = (
-            "classes",
-            "quarter",
-            "science",
-            "class_group",
-            "science_types",
-        )
 
     def create(self, validated_data):
         user = self.context["request"].user
@@ -41,10 +33,10 @@ class PlanSerializer(serializers.ModelSerializer):
 class PlanDetailSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     quarter = QuarterMiniSerializer()
+    school_type = SchoolTypeSerializer()
     classes = ClassesSerializer()
     science = ScienceSerializer()
-    science_langauge = ScienceLanguageSerializer()
-    school_type = SchoolTypeSerializer()
+    science_language = ScienceLanguageSerializer()
     is_author = serializers.SerializerMethodField()
     is_topic = serializers.SerializerMethodField()
 
