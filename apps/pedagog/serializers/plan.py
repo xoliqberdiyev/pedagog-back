@@ -31,7 +31,6 @@ class PlanSerializer(serializers.ModelSerializer):
 
 
 class PlanDetailSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
     quarter = QuarterMiniSerializer()
     school_type = SchoolTypeSerializer()
     classes = ClassesSerializer()
@@ -47,7 +46,6 @@ class PlanDetailSerializer(serializers.ModelSerializer):
             "is_active",
             "is_author",
             "hour",
-            "user",
             "quarter",
             "school_type",
             "classes",
@@ -62,11 +60,6 @@ class PlanDetailSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.user == request.user
         return False
-
-    def get_user(self, obj):
-        from apps.users.serializers.user import UserSerializer
-
-        return UserSerializer(obj.user).data
 
     def get_is_topic(self, obj):
         return Topic.objects.filter(plan_id=obj.id).exists()

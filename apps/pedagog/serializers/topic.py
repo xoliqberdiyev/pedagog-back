@@ -46,7 +46,6 @@ class ModeratorTopicSerializer(serializers.ModelSerializer):
 
 
 class TopicDetailSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
     media_count = serializers.SerializerMethodField()
     download_count = serializers.SerializerMethodField()
 
@@ -54,7 +53,6 @@ class TopicDetailSerializer(serializers.ModelSerializer):
         model = Topic
         fields = [
             "id",
-            "plan_id",
             "name",
             "description",
             "hours",
@@ -78,13 +76,6 @@ class TopicDetailSerializer(serializers.ModelSerializer):
 
     def get_download_count(self, obj):
         return obj.all_download_count
-
-    def to_representation(self, instance):
-        from apps.pedagog.serializers.plan import PlanDetailSerializer
-
-        representation = super().to_representation(instance)
-        representation["plan_id"] = PlanDetailSerializer(instance.plan_id).data
-        return representation
 
 
 class MobileTopicDetailSerializer(serializers.ModelSerializer):
