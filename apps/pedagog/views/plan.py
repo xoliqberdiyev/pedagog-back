@@ -16,7 +16,7 @@ from apps.pedagog.serializers.plan import (
     PlanDetailSerializer,
     PlanAdminListSerializer,
 )
-from apps.shared.pagination.custom import CustomPagination, CustomPagination
+from apps.shared.pagination.custom import CustomPagination
 
 
 class PlanApiView(APIView):

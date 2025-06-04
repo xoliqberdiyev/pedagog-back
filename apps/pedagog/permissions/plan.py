@@ -18,10 +18,10 @@ class PlanPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
         try:
-            science = int(request.data.get("science"))
-            science_type = int(request.data.get("science_types"))
+            school_type = int(request.data.get("school_type"))
             classes = int(request.data.get("classes"))
-            class_groups = int(request.data.get("class_group"))
+            science = int(request.data.get("science"))
+            science_language = int(request.data.get("science_language"))
             quarters = int(request.data.get("quarter"))
         except (TypeError, ValueError):
             raise ValidationError("Invalid data provided.")
@@ -30,10 +30,10 @@ class PlanPermission(permissions.BasePermission):
             moderator = Moderator.objects.get(user=user)
             if (
                 not moderator.plan_creatable
-                or not moderator.science.filter(id=science).exists()
-                or not moderator.science_type.filter(id=science_type).exists()
+                or not moderator.school_type.filter(id=school_type).exists()
                 or not moderator.classes.filter(id=classes).exists()
-                or not moderator.class_groups.filter(id=class_groups).exists()
+                or not moderator.science.filter(id=science).exists()
+                or not moderator.science_language.filter(id=science_language).exists()
                 or not moderator.quarters.filter(id=quarters).exists()
             ):
                 raise ValidationError("User is not allowed to create a plan.")
