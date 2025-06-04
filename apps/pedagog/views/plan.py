@@ -44,7 +44,7 @@ class PlanApiView(APIView):
         classes = request.query_params.get("classes", None)
         science = request.query_params.get("science", None)
         science_language = request.query_params.get("science_language", None)
-        quarters = request.query_params.get("quarters", None)
+        quarter = request.query_params.get("quarter", None)
 
         if Moderator.objects.filter(user=user).exists():
             moderator = Moderator.objects.get(user=user)
@@ -53,7 +53,7 @@ class PlanApiView(APIView):
                 classes__in=moderator.classes.all(),
                 science__in=moderator.science.all(),
                 science_language__in=moderator.science_language.all(),
-                quarters__in=moderator.quarters.all(),
+                quarter__in=moderator.quarters.all(),
             )
         else:
             plans = Plan.objects.filter(is_active=True)
@@ -68,8 +68,8 @@ class PlanApiView(APIView):
             plans = plans.filter(science=science)
         if science_language:
             plans = plans.filter(science_language=science_language)
-        if quarters:
-            plans = plans.filter(quarters=quarters)
+        if quarter:
+            plans = plans.filter(quarter=quarter)
 
         paginator = self.pagination_class()
         paginated_plans = paginator.paginate_queryset(plans, request)
