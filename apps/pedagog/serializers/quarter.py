@@ -6,4 +6,4 @@ from apps.pedagog.models.quarter import Quarter
 class QuarterMiniSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quarter
-        fields = ("id", "choices", "start_date", "end_date")
+        fields = ("id", "name", "choices", "start_date", "end_date")

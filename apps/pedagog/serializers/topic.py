@@ -60,22 +60,52 @@ class TopicDetailSerializer(serializers.ModelSerializer):
             "created_at",
             "weeks",
             "banner",
-            "user",
             "view_count",
             "media_count",
             "download_count",
         ]
-
-    def get_user(self, obj):
-        from apps.users.serializers.user import UserSerializer
-
-        return UserSerializer(obj.user).data
 
     def get_media_count(self, obj):
         return obj.media_count
 
     def get_download_count(self, obj):
         return obj.all_download_count
+
+
+class TopicAllDetailSerializer(serializers.ModelSerializer):
+    media_count = serializers.SerializerMethodField()
+    download_count = serializers.SerializerMethodField()
+    plan_id = PlanMiniSerializer()
+
+    class Meta:
+        model = Topic
+        fields = [
+            "id",
+            "plan_id",
+            "name",
+            "description",
+            "hours",
+            "sequence_number",
+            "created_at",
+            "weeks",
+            "banner",
+            "view_count",
+            "media_count",
+            "download_count",
+        ]
+
+    def get_media_count(self, obj):
+        return obj.media_count
+
+    def get_download_count(self, obj):
+        return obj.all_download_count
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation["plan_id"] = PlanMiniSerializer(
+    #         instance.plan_id, context=self.context
+    #     ).data
+    #     return representation
 
 
 class MobileTopicDetailSerializer(serializers.ModelSerializer):

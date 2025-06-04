@@ -38,7 +38,7 @@ from apps.pedagog.views.quarter import QuarterListView, ModeratorQuarterApiView
 from apps.pedagog.views.school import SchoolTypeListView
 from apps.pedagog.views.science import ScienceListView, ScienceLanguageListView
 from apps.pedagog.views.tmr_appeal import TMRAppealAPIView, TmrFilesAPIView
-from apps.pedagog.views.topic import TopicApiView
+from apps.pedagog.views.topic import TopicApiView, TopicDetailApiView
 
 urlpatterns = [
     path(
@@ -93,6 +93,7 @@ urlpatterns = [
     ),
     path("plan/", PlanApiView.as_view(), name="plan"),
     path("topic/", TopicApiView.as_view(), name="topic"),
+    path("topic/<int:pk>/", TopicDetailApiView.as_view(), name="topic-detail"),
     path("media/", MediaApiView.as_view(), name="media"),
     path("school/type/", SchoolTypeListView.as_view(), name="school-type"),
     path("classes/", ClassesListView.as_view(), name="classes"),

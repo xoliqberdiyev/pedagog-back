@@ -81,7 +81,7 @@ class PlanMiniSerializer(serializers.ModelSerializer):
     quarter = QuarterMiniSerializer()
     classes = ClassesSerializer()
     science = ScienceSerializer()
-    science_langauge = ScienceLanguageSerializer()
+    science_language = ScienceLanguageSerializer()
     school_type = SchoolTypeSerializer()
 
     class Meta:
@@ -89,10 +89,10 @@ class PlanMiniSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "quarter",
-            "school_type",
             "classes",
             "science",
             "science_language",
+            "school_type",
         ]
 
 

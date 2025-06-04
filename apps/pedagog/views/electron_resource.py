@@ -132,7 +132,7 @@ class ElectronResourceSubCategoryDetailView(APIView):
             )
         if sub_category.user != request.user:
             return Response(
-                {"message": "You are not allowed to delete this sub category"},
+                {"message": "You are not allowed to patch this sub category"},
                 status=status.HTTP_403_FORBIDDEN,
             )
         serializer = self.serializer_class(sub_category, data=request.data)
