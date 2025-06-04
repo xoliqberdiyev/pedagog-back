@@ -1,10 +1,10 @@
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.pedagog.models.media import Media
-from apps.pedagog.models.topic import Topic
 from apps.pedagog.serializers.media import MediaDetailSerializer, MediaSerializer
 from apps.users.views.locations import CustomPagination
 
@@ -18,30 +18,18 @@ class MediaApiView(APIView):
         topic_id = request.query_params.get("topic_id")
 
         if media_id:
-            try:
-                media = Media.objects.get(id=media_id)
-                serializer = MediaDetailSerializer(media, context={"request": request})
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            except Media.DoesNotExist:
-                return Response(
-                    {"error": "Media not found"},
-                    status=status.HTTP_404_NOT_FOUND,
-                )
+            media = get_object_or_404(Media, pk=media_id)
+            serializer = MediaDetailSerializer(media, context={"request": request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         if topic_id:
-            try:
-                media = Media.objects.filter(topic_id=topic_id)
-                paginator = self.pagination_class()
-                paginated_media = paginator.paginate_queryset(media, request)
-                serializer = MediaDetailSerializer(
-                    paginated_media, many=True, context={"request": request}
-                )
-                return paginator.get_paginated_response(serializer.data)
-            except Topic.DoesNotExist:
-                return Response(
-                    {"error": "Topic not found"},
-                    status=status.HTTP_404_NOT_FOUND,
-                )
+            media = Media.objects.filter(topic_id=topic_id)
+            paginator = self.pagination_class()
+            paginated_media = paginator.paginate_queryset(media, request)
+            serializer = MediaDetailSerializer(
+                paginated_media, many=True, context={"request": request}
+            )
+            return paginator.get_paginated_response(serializer.data)
 
         return Response(
             {"error": "media_id or topic_id is required"},
@@ -73,12 +61,7 @@ class MediaApiView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        try:
-            media = Media.objects.get(id=media_id)
-        except Media.DoesNotExist:
-            return Response(
-                {"error": "Media not found"}, status=status.HTTP_404_NOT_FOUND
-            )
+        media = get_object_or_404(Media, pk=media_id)
 
         serializer = MediaSerializer(
             media,
