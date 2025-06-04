@@ -4,8 +4,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-
-from apps.users.choices.role import Role
 from apps.pedagog.filters.electron_resource import ElectronResourceFilter
 from apps.pedagog.models.electron_resource import (
     ElectronResourceCategory,
@@ -19,7 +17,8 @@ from apps.pedagog.serializers.electron_resource import (
     ElectronResourceSerializer,
     ElectronResourceAdminSerializer,
 )
-from apps.shared.pagination.custom import CustomPagination, CustomPagination
+from apps.shared.pagination.custom import CustomPagination
+from apps.users.choices.role import Role
 
 
 class ElectronResourceCategoryView(APIView):
@@ -147,23 +146,6 @@ class ElectronResourceSubCategoryDetailView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
-        try:
-            sub_category = ElectronResourceSubCategory.objects.get(pk=pk)
-        except ElectronResourceSubCategory.DoesNotExist:
-            return Response(
-                {"message": "Sub category not found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        if sub_category.user != request.user:
-            return Response(
-                {"message": "You are not allowed to delete this sub category"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-        sub_category.is_active = False
-        sub_category.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class ElectronResourceView(APIView):
     serializer_class = ElectronResourceSerializer
@@ -248,23 +230,6 @@ class ElectronResourceDetailView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
-        try:
-            resource = ElectronResource.objects.get(pk=pk)
-        except ElectronResource.DoesNotExist:
-            return Response(
-                {"error": "Resource not found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        if resource.user != request.user:
-            return Response(
-                {"message": "You are not allowed to delete this resource"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-        resource.is_active = False
-        resource.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class ElectronResourceAdminView(APIView):
     serializer_class = ElectronResourceAdminSerializer
@@ -296,13 +261,13 @@ class ElectronResourceAdminView(APIView):
         category_count = queryset.values("category__category").distinct().count()
         sub_category_count = queryset.values("category").distinct().count()
         total_count = (
-            user_count
-            + file_count
-            + file_type_count
-            + file_size_count
-            + file_create_count
-            + category_count
-            + sub_category_count
+                user_count
+                + file_count
+                + file_type_count
+                + file_size_count
+                + file_create_count
+                + category_count
+                + sub_category_count
         )
 
         # ⏬ Pagination
