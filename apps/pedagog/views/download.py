@@ -8,7 +8,6 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import generics
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,12 +16,10 @@ from apps.payment.models.models import Orders
 from apps.pedagog.models.download import Download
 from apps.pedagog.models.download_token import DownloadToken
 from apps.pedagog.models.media import Media
-from apps.pedagog.models.moderator import Moderator
 from apps.pedagog.serializers.download_history import (
     DownloadHistorySerializer,
     UploadMediaSerializer,
 )
-from apps.shared.pagination.custom import CustomPagination
 from apps.users.choices.role import Role
 
 
@@ -52,10 +49,10 @@ class DownloadMediaView(APIView):
 
         # If media has a topic, only the owner or a user with an order can download
         if (
-            plan
-            and media.user != user
-            and user.role == Role.MODERATOR
-            or user.role == Role.ADMIN
+                plan
+                and media.user != user
+                and user.role == Role.MODERATOR
+                or user.role == Role.ADMIN
         ):
             raise Http404(_("Ushbu resurslar sizga tegishli emas"))
 
@@ -137,49 +134,6 @@ class DownloadFileView(APIView):
 
 
 ############################################################################################################
-# Moderator yuklagan resurs media fayllarini ro'yxatini olish
-############################################################################################################
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def moderator_media_list(request):
-    if not Moderator.objects.filter(user=request.user).exists():
-        return Response({"detail": _("Siz moderator emassiz")}, status=403)
-
-    moderator = Moderator.objects.get(user=request.user)
-
-    media_files = (
-        Media.objects.filter(user=moderator.user).distinct().order_by("-created_at")
-    )
-
-    paginator = CustomPagination()
-    paginated_media = paginator.paginate_queryset(media_files, request)
-
-    media_list = [
-        {
-            "id": media.id,
-            "name": media.name,
-            "file_type": media.type,
-            "desc": media.desc,
-            "size": media.size,
-            "count": media.count,
-            "statistics": media.statistics,
-            "created_at": media.created_at,
-            "updated_at": media.updated_at,
-        }
-        for media in paginated_media
-    ]
-
-    total_media_count = media_files.count()
-
-    response_data = {
-        "total_media_count": total_media_count,
-        "media_files": media_list,
-    }
-
-    return paginator.get_paginated_response(response_data)
-
-
-############################################################################################################
 # Yuklab olingan resurs media fayllarini ro'yxatini olish mobile uchun
 ############################################################################################################
 @extend_schema(
@@ -199,7 +153,7 @@ def moderator_media_list(request):
         OpenApiParameter(
             name="time_range",
             description="Filter by time range (e.g., last_hour, last_2_hours, "
-            "last_3_hours, last_24_hours, last_4_weeks)",
+                        "last_3_hours, last_24_hours, last_4_weeks)",
             required=False,
             type=str,
         ),

@@ -11,7 +11,6 @@ from apps.pedagog.views.degree import DegreeListView
 from apps.pedagog.views.download import (
     DownloadMediaView,
     DownloadFileView,
-    moderator_media_list,
     MobileDownloadHistoryView,
     MobileUploadHistoryView,
 )
@@ -76,11 +75,6 @@ urlpatterns = [
         name="moderator-detail",
     ),
     path("send/money/", SendMoneyToModerators.as_view(), name="send-money"),
-    path(
-        "moderator/media/",
-        moderator_media_list,
-        name="moderator-media-list",
-    ),
     path(
         "moderator/electron/resource/<int:moderator_id>/",
         ModeratorElectronResourcesApiView.as_view(),
