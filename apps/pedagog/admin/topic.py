@@ -1,9 +1,7 @@
 from django.contrib import admin
-from django.utils.translation import gettext_lazy as _
 from import_export.admin import ImportExportModelAdmin
 from unfold.admin import ModelAdmin
 
-from apps.pedagog.filters.plan import PlanFilter
 from apps.pedagog.models.topic import Topic
 from apps.pedagog.resources.topic import TopicResource
 
@@ -35,4 +33,3 @@ class TopicAdmin(ModelAdmin, ImportExportModelAdmin):
         "plan_id",
         "user",
     )
-    list_filter = (PlanFilter,)

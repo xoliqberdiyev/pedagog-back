@@ -1,7 +1,6 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 
-from apps.pedagog.filters.plan import UserFilter
 from apps.pedagog.models.media import Media
 
 
@@ -17,7 +16,7 @@ class MediaAdmin(ModelAdmin):
     )
     search_fields = ("name",)
     list_display_links = ("name",)
-    list_filter = ("type", "object_type", UserFilter)
+    list_filter = ("type", "object_type")
     list_filter_submit = True
     readonly_fields = ("created_at", "updated_at")
     filter_horizontal = ("download_users",)

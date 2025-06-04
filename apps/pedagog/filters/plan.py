@@ -1,52 +1,7 @@
 import django_filters
 from django.db.models import Q
-from django.utils.translation import gettext_lazy as _
-from unfold.contrib.filters.admin import DropdownFilter
 
 from apps.pedagog.models.media import Media
-from apps.pedagog.models.plan import Plan
-from apps.users.models.user import User
-
-
-class PlanFilter(DropdownFilter):
-    title = _("Tematik reja")
-    parameter_name = "plan"
-
-    def lookups(self, request, model_admin):
-        plans = Plan.objects.all()
-        return [
-            (
-                plan.id,
-                f"{plan.science.name} - {plan.science_types.name} - {plan.classes.name} - {plan.class_group.name}",
-            )
-            for plan in plans
-        ]
-
-    def queryset(self, request, queryset):
-        if self.value():
-            return queryset.filter(plan_id__id=self.value())
-        return queryset
-
-
-# User filter
-class UserFilter(DropdownFilter):
-    title = _("Foydalanuvchi")
-    parameter_name = "user"
-
-    def lookups(self, request, model_admin):
-        users = User.objects.all()
-        return [
-            (
-                user.id,
-                f"ID:{user.id}-{user.phone} - {user.first_name} {user.last_name} {user.father_name}",
-            )
-            for user in users
-        ]
-
-    def queryset(self, request, queryset):
-        if self.value():
-            return queryset.filter(user_id__id=self.value())
-        return queryset
 
 
 class MediaFilter(django_filters.FilterSet):
@@ -119,9 +74,9 @@ class MediaFilter(django_filters.FilterSet):
             return "0 B"
         if size < 1024:
             return f"{size} B"
-        elif size < 1024**2:
+        elif size < 1024 ** 2:
             return f"{size / 1024:.2f} KB"
-        elif size < 1024**3:
+        elif size < 1024 ** 3:
             return f"{size / 1024 ** 2:.2f} MB"
         else:
             return f"{size / 1024 ** 3:.2f} GB"
