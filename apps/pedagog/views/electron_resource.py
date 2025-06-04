@@ -119,11 +119,6 @@ class ElectronResourceSubCategoryDetailView(APIView):
                 {"error": "Sub category not found"},
                 status=status.HTTP_404_NOT_FOUND,
             )
-        if sub_category.user != request.user:
-            return Response(
-                {"message": "You are not allowed to delete this sub category"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
         serializer = self.serializer_class(sub_category)
         return Response(serializer.data)
 
