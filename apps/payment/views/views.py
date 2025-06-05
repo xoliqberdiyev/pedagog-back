@@ -128,6 +128,7 @@ class WebhookApiView(ViewSet):
 class TransactionViewSet(ViewSet):
     serializer_class = TransactionSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
 
     def list(self, request):
         transactions = TransactionModel.objects.all()
