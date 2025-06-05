@@ -18,13 +18,17 @@ def custom_exception_handler(exc, context):
             AuthenticationFailed: "Incorrect authentication credentials.",
             NotAuthenticated: "Authentication credentials were not provided.",
             MethodNotAllowed: "Method not allowed.",
-            ValidationError: "Invalid input.",
             PermissionDenied: "You do not have permissions to perform this action.",
             NotFound: "Not found.",
             Throttled: "Request was throttled.",
             NotAcceptable: "Not acceptable.",
         }
-        if type(exc) in messages:
+        if isinstance(exc, ValidationError):
+            response.data = {
+                "success": False,
+                "message": exc.detail,
+            }
+        elif type(exc) in messages:
             response.data = {
                 "success": False,
                 "message": messages.get(type(exc)),

@@ -27,8 +27,6 @@ class PlanApiView(APIView):
             IsAuthenticated,
             PlanPermission(["moderator"]),
         ]
-        self.check_permissions(request)
-
         plan_serializer = PlanSerializer(
             data=request.data, context={"request": request}
         )
