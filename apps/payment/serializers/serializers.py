@@ -1,15 +1,12 @@
 from rest_framework import serializers
 
 from apps.payment.models.models import Orders, TransactionModel
+from apps.pedagog.serializers.classes import ClassesSerializer
 from apps.pedagog.serializers.moderator import ModeratorListSerializer
+from apps.pedagog.serializers.science import ScienceSerializer, ScienceLanguageSerializer
 
 
 class OrderSerializer(serializers.ModelSerializer):
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        return data
-
     class Meta:
         fields = (
             "id",
@@ -28,6 +25,12 @@ class OrderSerializer(serializers.ModelSerializer):
             "price": {"read_only": True},
             "status": {"read_only": True},
         }
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["science"] = ScienceSerializer(instance.science).data
+        data["science_language"] = ScienceLanguageSerializer(instance.science_language).data
+        data["classes"] = ClassesSerializer(instance.classes).data
+        return data
 
 
 class PaymentCreateSerializer(serializers.Serializer):
