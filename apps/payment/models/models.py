@@ -85,17 +85,6 @@ class Payments(AbstractBaseModel):
         ordering = ("-created_at",)
 
     def __str__(self) -> str:
-        if (
-                self.order.user
-                and self.order.user.region
-                and self.order.user.district
-                and self.order.science
-        ):
-            return (
-                f"{self.id} {self.order.user.last_name} {self.order.user.first_name} "
-                f"{self.order.user.father_name} - {self.order.science.name} {self.order.user.region.region} "
-                f"{self.order.user.district.district} {self.order.user.role}"
-            )
         return f"{self.id} - Incomplete User Information"
 
 

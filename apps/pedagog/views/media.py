@@ -46,6 +46,7 @@ class MediaDetailApiView(APIView):
 
     def get(self, request, pk):
         media = get_object_or_404(Media, pk=pk)
+        media.calculation_view_count()
         serializer = MediaDetailSerializer(media, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
