@@ -144,5 +144,9 @@ class TransactionViewSet(ViewSet):
     @action(detail=False, methods=["get"], url_path=r"me")
     def my_transactions(self, request):
         transactions = TransactionModel.objects.filter(moderator__user=request.user)
-        serializer = TransactionSerializer(transactions, many=True)
-        return Response(serializer.data)
+        paginator = CustomPagination()
+        paginated_transactions = paginator.paginate_queryset(transactions, request)
+        serializer = TransactionSerializer(
+            paginated_transactions, many=True
+        )
+        return paginator.get_paginated_response(serializer.data)
