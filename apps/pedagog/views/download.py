@@ -20,6 +20,7 @@ from apps.pedagog.serializers.download_history import (
     DownloadHistorySerializer,
     UploadMediaSerializer,
 )
+from apps.shared.pagination.custom import CustomPagination
 from apps.users.choices.role import Role
 
 
@@ -162,6 +163,7 @@ class DownloadFileView(APIView):
 class MobileDownloadHistoryView(generics.ListAPIView):
     serializer_class = DownloadHistorySerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         user = self.request.user
@@ -219,6 +221,7 @@ class MobileDownloadHistoryView(generics.ListAPIView):
 class MobileUploadHistoryView(generics.ListAPIView):
     serializer_class = UploadMediaSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         user = self.request.user
