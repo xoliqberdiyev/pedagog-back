@@ -18,7 +18,7 @@ class PlanPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
         try:
-            school_type = int(request.data.get("school_type"))
+            # school_type = int(request.data.get("school_type"))
             classes = int(request.data.get("classes"))
             science = int(request.data.get("science"))
             science_language = int(request.data.get("science_language"))
@@ -30,7 +30,7 @@ class PlanPermission(permissions.BasePermission):
             moderator = Moderator.objects.get(user=user)
             if (
                 not moderator.plan_creatable
-                or not moderator.school_type.filter(id=school_type).exists()
+                # or not moderator.school_type.filter(id=school_type).exists()
                 or not moderator.classes.filter(id=classes).exists()
                 or not moderator.science.filter(id=science).exists()
                 or not moderator.science_language.filter(id=science_language).exists()
