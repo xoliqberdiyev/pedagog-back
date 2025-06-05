@@ -1,7 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
-from rest_framework.exceptions import NotFound
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,7 +22,7 @@ class PlanApiView(APIView):
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         self.permission_classes = [
             IsAuthenticated,
             PlanPermission(["moderator"]),
@@ -37,9 +36,8 @@ class PlanApiView(APIView):
         plan_serializer.save()
         return Response(plan_serializer.data, status=status.HTTP_201_CREATED)
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         user = request.user
-        plan_id = request.query_params.get("id", None)
         school_type = request.query_params.get("school_type", None)
         classes = request.query_params.get("classes", None)
         science = request.query_params.get("science", None)
@@ -58,8 +56,6 @@ class PlanApiView(APIView):
         else:
             plans = Plan.objects.filter(is_active=True)
 
-        if plan_id:
-            plans = plans.filter(id=plan_id)
         if school_type:
             plans = plans.filter(school_type=school_type)
         if classes:
@@ -76,12 +72,17 @@ class PlanApiView(APIView):
         plan_serializer = PlanDetailSerializer(paginated_plans, many=True)
         return paginator.get_paginated_response(plan_serializer.data)
 
-    def patch(self, request, *args, **kwargs):
-        plan_id = request.query_params.get("id", None)
-        try:
-            plan = Plan.objects.get(id=plan_id, user=request.user)
-        except Plan.DoesNotExist:
-            raise NotFound("Plan not found")
+
+class PlanDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        plan = get_object_or_404(Plan, pk=pk)
+        plan_serializer = PlanDetailSerializer(plan)
+        return Response(plan_serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, pk):
+        plan = get_object_or_404(Plan, pk=pk, user=request.user)
         plan_serializer = PlanSerializer(plan, data=request.data, partial=True)
         plan_serializer.is_valid(raise_exception=True)
         plan_serializer.save()

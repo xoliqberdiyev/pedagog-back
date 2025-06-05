@@ -32,7 +32,7 @@ from apps.pedagog.views.moderator import (
     ModeratorElectronResourcesApiView,
     ModeratorTemetikPlanApiView,
 )
-from apps.pedagog.views.plan import PlanApiView, PlanAdminListAPIView
+from apps.pedagog.views.plan import PlanApiView, PlanAdminListAPIView, PlanDetailView
 from apps.pedagog.views.quarter import QuarterListView, ModeratorQuarterApiView
 from apps.pedagog.views.school import SchoolTypeListView
 from apps.pedagog.views.science import ScienceListView, ScienceLanguageListView
@@ -86,6 +86,7 @@ urlpatterns = [
         name="ai",
     ),
     path("plan/", PlanApiView.as_view(), name="plan"),
+    path("plan/<int:pk>/", PlanDetailView.as_view(), name="plan"),
     path("topic/", TopicApiView.as_view(), name="topic"),
     path("topic/<int:pk>/", TopicDetailApiView.as_view(), name="topic-detail"),
     path("media/", MediaApiView.as_view(), name="media"),
