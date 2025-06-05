@@ -26,7 +26,7 @@ def custom_exception_handler(exc, context):
         if isinstance(exc, ValidationError):
             response.data = {
                 "success": False,
-                "message": exc.detail,
+                "message": exc,
             }
         elif type(exc) in messages:
             response.data = {
