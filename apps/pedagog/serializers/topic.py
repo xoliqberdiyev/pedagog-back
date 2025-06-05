@@ -20,7 +20,7 @@ class TopicSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        user = self.context["request"].user
+        user = self.context["rq"].user
         topic = Topic.objects.create(**validated_data, user=user)
         return topic
 

@@ -51,7 +51,7 @@ class TopicApiView(APIView):
             )
 
         serializer = TopicSerializer(
-            data=request.data, context={"request": request}
+            data=request.data, context={"rq": request}
         )
         if serializer.is_valid():
             serializer.save()
