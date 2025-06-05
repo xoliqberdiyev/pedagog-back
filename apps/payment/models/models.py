@@ -59,12 +59,6 @@ class Orders(AbstractBaseModel):
         ordering = ("-created_at",)
 
     def __str__(self) -> str:
-        if self.user and self.user.region and self.user.district and self.science:
-            return (
-                f"{self.id} {self.user.last_name} {self.user.first_name} "
-                f"{self.user.father_name} - {self.science.name} {self.user.region.region} "
-                f"{self.user.district.district} {self.user.role}"
-            )
         return f"{self.id} - Incomplete User Information"
 
     def save(self, *args, **kwargs):
