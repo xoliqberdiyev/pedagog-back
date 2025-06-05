@@ -366,6 +366,14 @@ PAGES = [
                     request.user, "view_plans"
                 ),
             },
+            {
+                "title": _("Transaksiyalar"),
+                "icon": "receipt_long",
+                "link": reverse_lazy("admin:payment_transactionmodel_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_transactionmodel"
+                ),
+            },
         ],
     },
     {

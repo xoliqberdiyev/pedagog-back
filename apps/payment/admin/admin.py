@@ -32,6 +32,7 @@ class TransactionModelAdmin(ModelAdmin):
         "moderator__user__last_name",
         "moderator__user__phone",
     ]
+    autocomplete_fields = ("moderator",)
 
 
 @admin.register(Orders)
