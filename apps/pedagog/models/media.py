@@ -73,9 +73,8 @@ class Media(AbstractBaseModel):
         return str(self.name) if self.name is not None else f"Media {self.id}"
 
     def save(self, *args, **kwargs):
-        if self.type is None and self.file is not None:
-            self.type = self.file.name.split(".")[-1] if "." in self.file.name else None
-            self.size = self.file.size if self.file.size is not None else 0
+        self.type = self.file.name.split(".")[-1] if "." in self.file.name else None
+        self.size = self.file.size if self.file.size is not None else 0
         if self.name is None:
             self.name = (
                 self.file.name if self.file.name is not None else f"Media {self.id}"
