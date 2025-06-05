@@ -132,14 +132,22 @@ class TransactionViewSet(ViewSet):
 
     def list(self, request):
         transactions = TransactionModel.objects.all()
-        serializer = TransactionSerializer(transactions, many=True)
-        return Response(serializer.data)
+        paginator = CustomPagination()
+        paginated_transactions = paginator.paginate_queryset(transactions, request)
+        serializer = TransactionSerializer(
+            paginated_transactions, many=True
+        )
+        return paginator.get_paginated_response(serializer.data)
 
     @action(detail=False, methods=["get"], url_path=r"(?P<moderator_id>\d+)")
     def moderator_transactions(self, request, moderator_id=None):
         transactions = TransactionModel.objects.filter(moderator_id=moderator_id)
-        serializer = TransactionSerializer(transactions, many=True)
-        return Response(serializer.data)
+        paginator = CustomPagination()
+        paginated_transactions = paginator.paginate_queryset(transactions, request)
+        serializer = TransactionSerializer(
+            paginated_transactions, many=True
+        )
+        return paginator.get_paginated_response(serializer.data)
 
     @action(detail=False, methods=["get"], url_path=r"me")
     def my_transactions(self, request):
