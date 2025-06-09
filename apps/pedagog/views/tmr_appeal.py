@@ -20,6 +20,7 @@ class IsModerator(permissions.BasePermission):
 
 class TMRAppealAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsModerator]
+    serializer_class = TMRAppealSerializer
 
     def get(self, request):
         user = request.user
@@ -71,6 +72,7 @@ class TMRAppealAPIView(APIView):
 
 class TmrFilesAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsModerator]
+    serializer_class = TmrFilesSerializer
 
     def post(self, request, *args, **kwargs):
         tmr_id = request.data.get("tmr_appeal")
