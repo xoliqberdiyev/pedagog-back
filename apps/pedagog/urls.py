@@ -34,6 +34,7 @@ from apps.pedagog.views.moderator import (
 )
 from apps.pedagog.views.plan import PlanApiView, PlanAdminListAPIView, PlanDetailView
 from apps.pedagog.views.quarter import QuarterListView, ModeratorQuarterApiView
+from apps.pedagog.views.schedule import LessonScheduleView, LessonScheduleDetailView
 from apps.pedagog.views.school import SchoolTypeListView
 from apps.pedagog.views.science import ScienceListView, ScienceLanguageListView
 from apps.pedagog.views.tmr_appeal import TMRAppealAPIView, TmrFilesAPIView
@@ -85,6 +86,8 @@ urlpatterns = [
         AiAPIView.as_view(),
         name="ai",
     ),
+    path("schedule/", LessonScheduleView.as_view(), name="schedule"),
+    path("schedule/<int:pk>/", LessonScheduleDetailView.as_view(), name="schedule-detail"),
     path("plan/", PlanApiView.as_view(), name="plan"),
     path("plan/<int:pk>/", PlanDetailView.as_view(), name="plan"),
     path("topic/", TopicApiView.as_view(), name="topic"),

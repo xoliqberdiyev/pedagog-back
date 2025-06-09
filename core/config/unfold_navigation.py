@@ -250,6 +250,14 @@ PAGES = [
                     request.user, "view_quarter"
                 ),
             },
+            {
+                "title": _("Dars jadvali"),
+                "icon": "edit_calendar",
+                "link": reverse_lazy("admin:pedagog_lessonschedule_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_lessonschedule"
+                ),
+            },
         ],
     },
     {

@@ -69,7 +69,7 @@ class LessonSchedule(AbstractBaseModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["classes", "date", "start_time"],
+                fields=["classes", "date", "start_time", "shift"],
                 name="unique_schedule_per_class_date_time",
             )
         ]
