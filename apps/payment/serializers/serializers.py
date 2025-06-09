@@ -3,6 +3,7 @@ from rest_framework import serializers
 from apps.payment.models.models import Orders, TransactionModel
 from apps.pedagog.serializers.classes import ClassesSerializer
 from apps.pedagog.serializers.moderator import ModeratorListSerializer
+from apps.pedagog.serializers.quarter import QuarterMiniSerializer
 from apps.pedagog.serializers.science import ScienceSerializer, ScienceLanguageSerializer
 
 
@@ -15,6 +16,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "science",
             "science_language",
             "classes",
+            "quarter",
             "price",
             "status",
         )
@@ -30,6 +32,7 @@ class OrderSerializer(serializers.ModelSerializer):
         data["science"] = ScienceSerializer(instance.science).data
         data["science_language"] = ScienceLanguageSerializer(instance.science_language).data
         data["classes"] = ClassesSerializer(instance.classes).data
+        data["quarter"] = QuarterMiniSerializer(instance.classes).data
         return data
 
 
