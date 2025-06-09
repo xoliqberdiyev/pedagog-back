@@ -1,5 +1,6 @@
 from django.db.models import Q
 from rest_framework import status, permissions
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -12,15 +13,16 @@ from apps.users.choices.role import Role
 class IsModerator(permissions.BasePermission):
     def has_permission(self, request, view):
         return (
-            request.user
-            and request.user.role == Role.MODERATOR
-            or request.user.role == Role.ADMIN
+                request.user
+                and request.user.role == Role.MODERATOR
+                or request.user.role == Role.ADMIN
         )
 
 
 class TMRAppealAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated, IsModerator]
+    permission_classes = [IsAuthenticated, IsModerator]
     serializer_class = TMRAppealSerializer
+    pagination_class = CustomPagination
 
     def get(self, request):
         user = request.user
@@ -28,11 +30,11 @@ class TMRAppealAPIView(APIView):
         queryset = TMRAppeal.objects.filter(user=user)
         status = request.query_params.get("status")
         science = request.query_params.get("science")
-        science_type = request.query_params.get("science_type")
+        science_language = request.query_params.get("science_language")
         classes = request.query_params.get("classes")
-        class_groups = request.query_params.get("class_groups")
+        school_type = request.query_params.get("school_type")
 
-        if id or status or science or science_type or classes or class_groups:
+        if id or status or science or science_language or classes or school_type:
             filters = Q()
             if id:
                 filters &= Q(id=id)
@@ -40,12 +42,12 @@ class TMRAppealAPIView(APIView):
                 filters &= Q(status=status)
             if science:
                 filters &= Q(science=science)
-            if science_type:
-                filters &= Q(science_type__id=science_type)
+            if science_language:
+                filters &= Q(science_language=science_language)
             if classes:
                 filters &= Q(classes=classes)
-            if class_groups:
-                filters &= Q(class_groups=class_groups)
+            if school_type:
+                filters &= Q(school_type=school_type)
             queryset = queryset.filter(filters)
 
         paginator = CustomPagination()

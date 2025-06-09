@@ -1,6 +1,9 @@
 from rest_framework import serializers
 
 from apps.pedagog.models.tmr_appeal import TMRAppeal, TmrFiles
+from apps.pedagog.serializers.classes import ClassesSerializer
+from apps.pedagog.serializers.school import SchoolTypeSerializer
+from apps.pedagog.serializers.science import ScienceSerializer, ScienceLanguageSerializer
 
 
 class TmrFilesSerializer(serializers.ModelSerializer):
@@ -32,10 +35,10 @@ class TMRAppealSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "status",
-            "science",
-            "science_type",
+            "school_type",
             "classes",
-            "class_groups",
+            "science",
+            "science_language",
             "created_at",
             "updated_at",
         )
@@ -44,10 +47,10 @@ class TMRAppealSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         context = super().to_representation(instance)
         context["status"] = instance.status
-        context["science"] = instance.science.name
-        context["science_type"] = instance.science_type.name
-        context["classes"] = instance.classes.name
-        context["class_groups"] = instance.class_groups.name
+        context["school_type"] = SchoolTypeSerializer(instance.school_type).data
+        context["classes"] = ClassesSerializer(instance.classes).data
+        context["science"] = ScienceSerializer(instance.science).data
+        context["science_language"] = ScienceLanguageSerializer(instance.science_language).data
         context["files"] = TmrFilesSerializer(instance.files.all(), many=True).data
         return context
 
