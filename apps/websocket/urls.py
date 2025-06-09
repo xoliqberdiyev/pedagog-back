@@ -1,5 +1,4 @@
-from django.urls import re_path, path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import re_path, path
 
 from apps.websocket.chatconsumer import ChatConsumer
 from apps.websocket.consumers import NotificationConsumer
@@ -9,14 +8,12 @@ from apps.websocket.views.chat import (
     ModeratorMessageUpdate,
     CreateChatRoomApiViews,
 )
-from apps.websocket.views.notification import NotificationViewSet
-
-router = DefaultRouter()
-router.register("notification", NotificationViewSet, basename="notification")
+from apps.websocket.views.notification import NotificationApiView, NotificationDetailApiView
 
 urlpatterns = [
-    path("", include(router.urls)),
     path("chat/rooms/", ChatRoomList.as_view(), name="chat"),
+    path("notification/", NotificationApiView.as_view(), name="notification"),
+    path("notification/<int:pk>/", NotificationDetailApiView.as_view(), name="notification-detail"),
     path("message/", MessageList.as_view(), name="message"),
     path("message/<int:pk>/", MessageList.as_view(), name="message"),
     path(

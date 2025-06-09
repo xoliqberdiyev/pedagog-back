@@ -31,3 +31,4 @@ class Notification(AbstractBaseModel):
         db_table = "notification"
         verbose_name = _("Bildirishnoma")
         verbose_name_plural = _("Bildirishnomalar")
+        ordering = ["-created_at"]
