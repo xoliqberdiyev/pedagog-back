@@ -88,4 +88,4 @@ class LessonSchedule(AbstractBaseModel):
         ordering = ["weekday", "lesson_number", "start_time"]
 
     def __str__(self):
-        return f"{self.classes} - {self.science} - {self.date} - {self.start_time} - {self.end_time}"
+        return f"{self.classes} - {self.science} - {self.start_time} - {self.end_time}"
