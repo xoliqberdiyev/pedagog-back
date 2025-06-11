@@ -11,7 +11,6 @@ class LessonScheduleAdmin(ModelAdmin):
         "user",
         "quarter",
         "shift",
-        "topic",
         "classes",
         "class_group",
         "science",
@@ -21,5 +20,5 @@ class LessonScheduleAdmin(ModelAdmin):
     list_filter = ("quarter", "shift", "classes", "science")
     ordering = ("-created_at",)
     date_hierarchy = "created_at"
-    autocomplete_fields = ("user", "quarter", "classes", "class_group", "science", "topic", "science_language")
+    autocomplete_fields = ("user", "quarter", "classes", "class_group", "science", "science_language")
     readonly_fields = ("created_at", "updated_at")

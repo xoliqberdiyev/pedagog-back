@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.pedagog.models.schedule import LessonSchedule
+from apps.pedagog.models.schedule import LessonSchedule, ScheduleType
 from apps.pedagog.serializers.schedule import LessonScheduleSerializer
 from apps.shared.pagination.custom import CustomPagination
 
@@ -25,7 +25,10 @@ class LessonScheduleView(APIView):
         """
         Handles GET requests to retrieve the lesson schedule for the authenticated user.
         """
+        schedule_type = request.query_params.get("schedule_type", None)
         queryset = self.get_queryset()
+        if schedule_type and schedule_type == ScheduleType.SECOND_WEEK:
+            queryset = queryset.filter(schedule_type=schedule_type)
         paginator = self.pagination_class()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
         serializer = self.serializer_class(paginated_queryset, many=True)

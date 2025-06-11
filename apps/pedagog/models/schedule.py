@@ -24,12 +24,16 @@ class WeekDay(models.IntegerChoices):
     SUNDAY = 6, _("Yakshanba")
 
 
+class ScheduleType(models.TextChoices):
+    FIRST_WEEK = "FIRST_WEEK", _("Birinchi hafta")
+    SECOND_WEEK = "SECOND_WEEK", _("Ikkinchi hafta")
+
+
 class LessonSchedule(AbstractBaseModel):
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
     quarter = models.ForeignKey(Quarter, on_delete=models.CASCADE)
     shift = models.CharField(max_length=1, choices=Shift.choices, default=Shift.FIRST)
 
-    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True, blank=True)
     classes = models.ForeignKey(
         Classes,
         on_delete=models.CASCADE,
@@ -61,8 +65,18 @@ class LessonSchedule(AbstractBaseModel):
 
     weekday = models.IntegerField(choices=WeekDay.choices)
     lesson_number = models.PositiveSmallIntegerField()
-
-    date = models.DateField(default=timezone.now)
+    color = models.CharField(
+        max_length=10,
+        default="#FFFFFF",
+        help_text=_("Color in hex format, e.g., #FF5733"),
+    )
+    schedule_type = models.CharField(
+        max_length=20,
+        choices=ScheduleType.choices,
+        default=ScheduleType.FIRST_WEEK,
+        verbose_name=_("Reja turi"),
+        help_text=_("Reja turi: Birinchi hafta yoki Ikkinchi hafta"),
+    )
     start_time = models.TimeField()
     end_time = models.TimeField()
 

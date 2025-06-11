@@ -6,7 +6,7 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-ID = "678d08e257d6a46ffa3378bc"
+ID = "6545e2f91cfa8764c963f550"
 URL = f"https://cdn.amediatv.uz/api/season/v2/{ID}"
 OUTPUT_FILE = "data.txt"
 
