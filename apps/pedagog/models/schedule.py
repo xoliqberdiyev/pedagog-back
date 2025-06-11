@@ -1,11 +1,9 @@
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from apps.pedagog.models.classes import Classes, ClassGroup
 from apps.pedagog.models.quarter import Quarter
 from apps.pedagog.models.science import Science, ScienceLanguage
-from apps.pedagog.models.topic import Topic
 from apps.shared.models.base import AbstractBaseModel
 
 
@@ -87,7 +85,7 @@ class LessonSchedule(AbstractBaseModel):
                 name="unique_schedule_per_class_date_time",
             )
         ]
-        ordering = ["date", "start_time"]
+        ordering = ["weekday", "lesson_number", "start_time"]
 
     def __str__(self):
         return f"{self.classes} - {self.science} - {self.date} - {self.start_time} - {self.end_time}"
