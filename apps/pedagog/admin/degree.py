@@ -11,6 +11,6 @@ class DegreeAdmin(ModelAdmin, TabbedTranslationAdmin):
     Admin interface for managing degrees.
     """
 
-    list_display = ("name", "created_at")
+    list_display = ("id", "name", "created_at")
     search_fields = ("name",)
     ordering = ("name",)
