@@ -62,7 +62,9 @@ class LessonScheduleDetailView(APIView):
         Handles PATCH requests to update a specific lesson schedule entry.
         """
         lesson_schedule = get_object_or_404(LessonSchedule, pk=pk, user=request.user)
-        serializer = self.serializer_class(lesson_schedule, data=request.data, partial=True)
+        serializer = self.serializer_class(
+            lesson_schedule, data=request.data, partial=True
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

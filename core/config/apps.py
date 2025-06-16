@@ -32,4 +32,5 @@ PROJECT_APPS = [
     "apps.payment.apps.PaymentConfig",
     "apps.pedagog.apps.PedagogConfig",
     "apps.websocket.apps.WebsocketConfig",
+    "apps.moderator.apps.ModeratorConfig",
 ]

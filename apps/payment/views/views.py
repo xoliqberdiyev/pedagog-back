@@ -134,9 +134,7 @@ class TransactionViewSet(ViewSet):
         transactions = TransactionModel.objects.all()
         paginator = CustomPagination()
         paginated_transactions = paginator.paginate_queryset(transactions, request)
-        serializer = TransactionSerializer(
-            paginated_transactions, many=True
-        )
+        serializer = TransactionSerializer(paginated_transactions, many=True)
         return paginator.get_paginated_response(serializer.data)
 
     @action(detail=False, methods=["get"], url_path=r"(?P<moderator_id>\d+)")
@@ -144,9 +142,7 @@ class TransactionViewSet(ViewSet):
         transactions = TransactionModel.objects.filter(moderator_id=moderator_id)
         paginator = CustomPagination()
         paginated_transactions = paginator.paginate_queryset(transactions, request)
-        serializer = TransactionSerializer(
-            paginated_transactions, many=True
-        )
+        serializer = TransactionSerializer(paginated_transactions, many=True)
         return paginator.get_paginated_response(serializer.data)
 
     @action(detail=False, methods=["get"], url_path=r"me")
@@ -154,7 +150,5 @@ class TransactionViewSet(ViewSet):
         transactions = TransactionModel.objects.filter(moderator__user=request.user)
         paginator = CustomPagination()
         paginated_transactions = paginator.paginate_queryset(transactions, request)
-        serializer = TransactionSerializer(
-            paginated_transactions, many=True
-        )
+        serializer = TransactionSerializer(paginated_transactions, many=True)
         return paginator.get_paginated_response(serializer.data)

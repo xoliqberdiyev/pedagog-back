@@ -31,7 +31,9 @@ class NotificationDetailApiView(APIView):
 
     def patch(self, request, pk):
         notification = get_object_or_404(Notification, pk=pk)
-        serializer = self.serializer_class(notification, data=request.data, partial=True)
+        serializer = self.serializer_class(
+            notification, data=request.data, partial=True
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

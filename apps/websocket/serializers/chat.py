@@ -63,7 +63,6 @@ class ChatRoomSerializer(serializers.ModelSerializer):
 
 
 class ChatMiniRoomSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = ChatRoom
         fields = (

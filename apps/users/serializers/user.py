@@ -209,5 +209,14 @@ class UserMiniSerializer(serializers.ModelSerializer):
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ["id", "avatar", "first_name", "last_name", "father_name", "region", "district", "institution_number"]
+        fields = [
+            "id",
+            "avatar",
+            "first_name",
+            "last_name",
+            "father_name",
+            "region",
+            "district",
+            "institution_number",
+        ]
         model = User
