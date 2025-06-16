@@ -112,7 +112,9 @@ class ElectronResourceSubCategoryDetailView(APIView):
         return Response(serializer.data)
 
     def patch(self, request, pk):
-        sub_category = get_object_or_404(ElectronResourceSubCategory, pk=pk, user=request.user)
+        sub_category = get_object_or_404(
+            ElectronResourceSubCategory, pk=pk, user=request.user
+        )
         serializer = self.serializer_class(sub_category, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -212,13 +214,13 @@ class ElectronResourceAdminView(APIView):
         category_count = queryset.values("category__category").distinct().count()
         sub_category_count = queryset.values("category").distinct().count()
         total_count = (
-                user_count
-                + file_count
-                + file_type_count
-                + file_size_count
-                + file_create_count
-                + category_count
-                + sub_category_count
+            user_count
+            + file_count
+            + file_type_count
+            + file_size_count
+            + file_create_count
+            + category_count
+            + sub_category_count
         )
 
         # ⏬ Pagination

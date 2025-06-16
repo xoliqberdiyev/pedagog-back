@@ -13,9 +13,9 @@ from apps.users.choices.role import Role
 class IsModerator(permissions.BasePermission):
     def has_permission(self, request, view):
         return (
-                request.user
-                and request.user.role == Role.MODERATOR
-                or request.user.role == Role.ADMIN
+            request.user
+            and request.user.role == Role.MODERATOR
+            or request.user.role == Role.ADMIN
         )
 
 

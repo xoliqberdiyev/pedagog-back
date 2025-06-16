@@ -87,7 +87,9 @@ urlpatterns = [
         name="ai",
     ),
     path("schedule/", LessonScheduleView.as_view(), name="schedule"),
-    path("schedule/<int:pk>/", LessonScheduleDetailView.as_view(), name="schedule-detail"),
+    path(
+        "schedule/<int:pk>/", LessonScheduleDetailView.as_view(), name="schedule-detail"
+    ),
     path("plan/", PlanApiView.as_view(), name="plan"),
     path("plan/<int:pk>/", PlanDetailView.as_view(), name="plan"),
     path("topic/", TopicApiView.as_view(), name="topic"),

@@ -6,7 +6,11 @@ from rest_framework.views import APIView
 from apps.pedagog.models.moderator import Moderator
 from apps.pedagog.models.plan import Plan
 from apps.pedagog.models.topic import Topic
-from apps.pedagog.serializers.topic import TopicDetailSerializer, TopicSerializer, TopicAllDetailSerializer
+from apps.pedagog.serializers.topic import (
+    TopicDetailSerializer,
+    TopicSerializer,
+    TopicAllDetailSerializer,
+)
 from rest_framework.generics import get_object_or_404
 from apps.shared.pagination.custom import CustomPagination
 
@@ -50,9 +54,7 @@ class TopicApiView(APIView):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        serializer = TopicSerializer(
-            data=request.data, context={"rq": request}
-        )
+        serializer = TopicSerializer(data=request.data, context={"rq": request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

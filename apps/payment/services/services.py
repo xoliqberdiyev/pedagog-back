@@ -150,11 +150,11 @@ class UzumService:
         return self._get_balance()
 
     def generate_link(
-            self,
-            client_id: str,
-            order_id: str,
-            amount: int,
-            detail: str,
+        self,
+        client_id: str,
+        order_id: str,
+        amount: int,
+        detail: str,
     ) -> Tuple:
         url = "https://checkout-key.inplat-tech.com/api/v1/payment/register"
 

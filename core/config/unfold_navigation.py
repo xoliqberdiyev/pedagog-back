@@ -48,6 +48,17 @@ PAGES = [
                     "apps.pedagog.models.moderator"
                 ).pedagog.models.moderator.Moderator.moderator_get_status_count(),
             },
+            {
+                "title": _("Moderator ruxsatnomalari"),
+                "icon": "admin_panel_settings",
+                "link": reverse_lazy("admin:moderator_moderatorpermission_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_moderatorpermission"
+                ),
+                "badge": lambda: __import__(
+                    "apps.moderator.models.permission"
+                ).moderator.models.permission.ModeratorPermission.moderator_get_status_count(),
+            },
         ],
     },
     {

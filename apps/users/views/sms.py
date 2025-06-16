@@ -34,7 +34,11 @@ from apps.users.serializers.auth import (
 )
 from apps.users.serializers.custom_token import CustomTokenObtainPairSerializer
 from apps.users.serializers.set_password import SetPasswordSerializer
-from apps.users.serializers.user import UserDetailSerializer, UserSerializer, UserUpdateSerializer
+from apps.users.serializers.user import (
+    UserDetailSerializer,
+    UserSerializer,
+    UserUpdateSerializer,
+)
 from apps.users.views.auth import AbstractSendSms
 
 redis_instance = redis.StrictRedis.from_url(os.getenv("REDIS_CACHE_URL"))

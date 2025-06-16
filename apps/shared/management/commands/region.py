@@ -14,18 +14,14 @@ class Command(base.BaseCommand):
         parser.add_argument(
             "csv_path",
             nargs="?",
-            default=os.path.join(
-                settings.BASE_DIR, "assets/resources/regions.csv"
-            ),
+            default=os.path.join(settings.BASE_DIR, "assets/resources/regions.csv"),
         )
 
     def handle(self, *args, **options):
         csv_path = options.get("csv_path")
 
         if not os.path.exists(csv_path):
-            self.stdout.write(
-                self.style.ERROR(f"CSV file not found at {csv_path}")
-            )
+            self.stdout.write(self.style.ERROR(f"CSV file not found at {csv_path}"))
             return
 
         try:
@@ -51,9 +47,7 @@ class Command(base.BaseCommand):
 
                     if not region_id:
                         self.stdout.write(
-                            self.style.ERROR(
-                                f"Skipping row with missing id: {row}"
-                            )
+                            self.style.ERROR(f"Skipping row with missing id: {row}")
                         )
                         continue
 
@@ -68,9 +62,7 @@ class Command(base.BaseCommand):
                         if soato_id:
                             region.soato_id = soato_id
                         region.save()
-                        self.stdout.write(
-                            self.style.SUCCESS(f"Region updated: {row}")
-                        )
+                        self.stdout.write(self.style.SUCCESS(f"Region updated: {row}"))
                     except Region.DoesNotExist:
                         Region.objects.create(
                             id=region_id,
@@ -79,9 +71,7 @@ class Command(base.BaseCommand):
                             name_ko=region_ko,
                             soato_id=soato_id,
                         )
-                        self.stdout.write(
-                            self.style.SUCCESS(f"Region created: {row}")
-                        )
+                        self.stdout.write(self.style.SUCCESS(f"Region created: {row}"))
 
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"Error: {e}"))

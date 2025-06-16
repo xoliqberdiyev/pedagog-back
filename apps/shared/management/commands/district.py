@@ -11,13 +11,9 @@ class Command(base.BaseCommand):
     help = "Import district data from CSV"
 
     def handle(self, *args, **options):
-        csv_path = os.path.join(
-            settings.BASE_DIR, "assets/resources/districts.csv"
-        )
+        csv_path = os.path.join(settings.BASE_DIR, "assets/resources/districts.csv")
         if not os.path.exists(csv_path):
-            self.stdout.write(
-                self.style.ERROR(f"CSV file not found at {csv_path}")
-            )
+            self.stdout.write(self.style.ERROR(f"CSV file not found at {csv_path}"))
             return
 
         try:
@@ -36,16 +32,12 @@ class Command(base.BaseCommand):
 
                     if not district_id or not region_id:
                         self.stdout.write(
-                            self.style.ERROR(
-                                f"Skipping row with missing data: {row}"
-                            )
+                            self.style.ERROR(f"Skipping row with missing data: {row}")
                         )
                         continue
 
                     try:
-                        region = Region.objects.filter(
-                            id=int(region_id)
-                        ).first()
+                        region = Region.objects.filter(id=int(region_id)).first()
                         if not region:
                             self.stdout.write(
                                 self.style.ERROR(
@@ -67,22 +59,16 @@ class Command(base.BaseCommand):
 
                         if created:
                             self.stdout.write(
-                                self.style.SUCCESS(
-                                    f"District {district_uz} added"
-                                )
+                                self.style.SUCCESS(f"District {district_uz} added")
                             )
                         else:
                             self.stdout.write(
-                                self.style.SUCCESS(
-                                    f"District {district_uz} updated"
-                                )
+                                self.style.SUCCESS(f"District {district_uz} updated")
                             )
 
                     except Exception as e:
                         self.stdout.write(
-                            self.style.ERROR(
-                                f"Error while processing row {row}: {e}"
-                            )
+                            self.style.ERROR(f"Error while processing row {row}: {e}")
                         )
 
         except Exception as e:

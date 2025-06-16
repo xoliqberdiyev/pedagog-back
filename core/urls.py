@@ -19,6 +19,7 @@ urlpatterns = (
         path("api/v2/", include("apps.payment.urls")),
         path("api/v2/", include("apps.pedagog.urls")),
         path("api/v2/", include("apps.users.urls")),
+        path("api/v2/", include("apps.moderator.urls")),
         path("api/v2/", include("apps.websocket.urls")),
         path("ckeditor5/", include("django_ckeditor_5.urls")),
         path("rosetta/", include("rosetta.urls")),

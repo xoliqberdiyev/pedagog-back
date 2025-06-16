@@ -8,12 +8,19 @@ from apps.websocket.views.chat import (
     ModeratorMessageUpdate,
     CreateChatRoomApiViews,
 )
-from apps.websocket.views.notification import NotificationApiView, NotificationDetailApiView
+from apps.websocket.views.notification import (
+    NotificationApiView,
+    NotificationDetailApiView,
+)
 
 urlpatterns = [
     path("chat/rooms/", ChatRoomList.as_view(), name="chat"),
     path("notification/", NotificationApiView.as_view(), name="notification"),
-    path("notification/<int:pk>/", NotificationDetailApiView.as_view(), name="notification-detail"),
+    path(
+        "notification/<int:pk>/",
+        NotificationDetailApiView.as_view(),
+        name="notification-detail",
+    ),
     path("message/", MessageList.as_view(), name="message"),
     path("message/<int:pk>/", MessageList.as_view(), name="message"),
     path(
