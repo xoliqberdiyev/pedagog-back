@@ -3,7 +3,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.moderator.models.permission import ModeratorPermission
 from apps.moderator.serializers.permission import ModeratorPermissionSerializer
+from apps.shared.pagination.custom import CustomPagination
 
 
 class ModeratorPermissionView(APIView):
@@ -13,6 +15,23 @@ class ModeratorPermissionView(APIView):
 
     serializer_class = ModeratorPermissionSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
+        """
+        Returns the queryset for the moderator permissions.
+        """
+        return ModeratorPermission.objects.filter(user=self.request.user)
+
+    def get(self, request):
+        """
+        List all moderator permissions.
+        """
+        queryset = self.get_queryset()
+        paginator = self.pagination_class()
+        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        serializer = self.serializer_class(paginated_queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         """
