@@ -4,6 +4,6 @@ from apps.moderator.views.permission import ModeratorPermissionView
 
 urlpatterns = [
     path(
-        "permissions/", ModeratorPermissionView.as_view(), name="moderator-permissions"
+        "moderator/permissions/", ModeratorPermissionView.as_view(), name="moderator-permissions"
     ),
 ]
