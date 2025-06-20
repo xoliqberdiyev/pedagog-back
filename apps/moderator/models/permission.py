@@ -59,10 +59,9 @@ class ModeratorPermission(AbstractBaseModel):
     class Meta:
         verbose_name = "Moderator Permission"
         verbose_name_plural = "Moderator Permissions"
-        unique_together = ("user", "status")
 
     def __str__(self):
-        return f"{self.user.username} - {self.status}"
+        return f"{self.user.phone} - {self.status}"
 
     @classmethod
     def moderator_get_status_count(cls):
