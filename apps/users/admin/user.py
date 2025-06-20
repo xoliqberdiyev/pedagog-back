@@ -57,7 +57,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin, ImportExportModelAdmin):
         "last_name",
         "father_name",
         "role",
-        "show_status_customized_color",
+        # "show_status_customized_color",
         "created_at",
     ]
     filter_horizontal = ("groups", "user_permissions")
@@ -147,15 +147,15 @@ class UserAdmin(BaseUserAdmin, ModelAdmin, ImportExportModelAdmin):
 
     docs_links.short_description = _("Hujjatlar")
 
-    @display(
-        description="Status",
-        ordering="status",
-        label={
-            ContractStatus.ACCEPTED: "success",  # green
-            ContractStatus.NO_FILE: "info",  # orange
-            ContractStatus.WAITING: "warning",  # red
-            ContractStatus.REJECTED: "danger",  # red
-        },
-    )
-    def show_status_customized_color(self, obj):
-        return obj.profile.status_file, obj.get_status_file_display()
+    # @display(
+    #     description="Status",
+    #     ordering="status",
+    #     label={
+    #         ContractStatus.ACCEPTED: "success",  # green
+    #         ContractStatus.NO_FILE: "info",  # orange
+    #         ContractStatus.WAITING: "warning",  # red
+    #         ContractStatus.REJECTED: "danger",  # red
+    #     },
+    # )
+    # def show_status_customized_color(self, obj):
+    #     return obj.profile.status_file, obj.get_status_file_display()

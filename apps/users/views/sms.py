@@ -18,6 +18,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from apps.pedagog.models.degree import Degree
+from apps.pedagog.models.documents import Document
 from apps.pedagog.models.moderator import Moderator
 from apps.shared.enums import Messages
 from apps.shared.exceptions.core import SmsException
@@ -168,6 +169,12 @@ class ConfirmView(APIView):
                                     user_data[b"docs"].decode("utf-8")
                                 )
                                 for doc_data in docs_data:
+                                    try:
+                                        doc = Document.objects.get(id=doc_data)
+                                    except Document.DoesNotExist:
+                                        continue
+                                    doc.user = user
+                                    doc.save(update_fields=["user"])
                                     moderator.docs.add(doc_data)
                             redis_instance.delete(phone)
                         except IntegrityError as e:
