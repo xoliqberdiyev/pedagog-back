@@ -7,8 +7,10 @@ from rest_framework_simplejwt.views import TokenVerifyView, TokenRefreshView
 
 from apps.users.views.change_password import ChangePasswordView
 from apps.users.views.delete_account import DeleteAccountView
+from apps.users.views.document import DocumentView, DocumentDetailView
 from apps.users.views.locations import RegionAPIView, DistrictAPIView
 from apps.users.views.moderator import ModeratorRegisterView
+from apps.users.views.profile import UserProfileView, UserProfileDetailView
 from apps.users.views.sms import (
     ConfirmView,
     RegisterView,
@@ -74,4 +76,16 @@ urlpatterns = [
     ),
     path("region/", RegionAPIView.as_view(), name="region"),
     path("district/", DistrictAPIView.as_view(), name="district"),
+    path("user/profile/", UserProfileView.as_view(), name="user-profile"),
+    path(
+        "user/profile/<int:pk>/",
+        UserProfileDetailView.as_view(),
+        name="user-profile-detail",
+    ),
+    path("user/document/", DocumentView.as_view(), name="user-profile-document"),
+    path(
+        "user/document/<int:pk>/",
+        DocumentDetailView.as_view(),
+        name="user-profile-document-detail",
+    ),
 ]

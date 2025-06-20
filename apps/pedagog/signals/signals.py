@@ -3,7 +3,7 @@ from django.dispatch import receiver
 
 from apps.pedagog.models.moderator import Moderator
 from apps.users.choices.role import Role
-from apps.users.models.user import User, ContractStatus
+from apps.users.models.user import User, ContractStatus, UserProfile
 from apps.websocket.models.notification import Notification
 
 
@@ -29,7 +29,7 @@ from apps.websocket.models.notification import Notification
 #     Topic.objects.bulk_update(related_topics, ["sequence_number"])
 
 
-@receiver(m2m_changed, sender=User.document.through)  # M2M relationship changes
+@receiver(m2m_changed, sender=UserProfile.document.through)  # M2M relationship changes
 def file_status_m2m(sender, instance, action, **kwargs):
     if action == "post_add":  # Trigger after documents are added
         if (
@@ -40,27 +40,27 @@ def file_status_m2m(sender, instance, action, **kwargs):
             instance.status_file = ContractStatus.WAITING
             instance.save()
             Notification.objects.create(
-                user=instance,
+                user=instance.user,
                 message_uz="Sizning hujjatingiz qabul qilindi",
                 message_ru="Ваш документ принят",
             )
 
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=UserProfile)
 def file_status_pre_save(sender, instance, **kwargs):
     if (
         instance.response_file
         and instance.status_file == ContractStatus.WAITING
         and instance.status is False
-        and instance.role == Role.MODERATOR
+        and instance.profile.role == Role.MODERATOR
     ):
-        User.objects.filter(pk=instance.pk).update(
+        UserProfile.objects.filter(pk=instance.pk).update(
             status_file=ContractStatus.ACCEPTED, status=True
         )
-        if Moderator.objects.filter(user=instance).exists():
-            Moderator.objects.filter(user=instance).update(status=True)
+        if Moderator.objects.filter(user=instance.user).exists():
+            Moderator.objects.filter(user=instance.user).update(status=True)
         Notification.objects.create(
-            user=instance,
+            user=instance.user,
             message_uz="Shartnoma qabul qilindi",
             message_ru="Договор принят",
         )

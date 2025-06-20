@@ -34,8 +34,12 @@ class ModeratorPermissionSerializer(serializers.ModelSerializer):
         Custom representation to include user details.
         """
         representation = super().to_representation(instance)
-        representation["school_type"] = SchoolTypeSerializer(instance.school_type, many=True).data
+        representation["school_type"] = SchoolTypeSerializer(
+            instance.school_type, many=True
+        ).data
         representation["classes"] = ClassesSerializer(instance.classes, many=True).data
         representation["science"] = ScienceSerializer(instance.science, many=True).data
-        representation["science_language"] = ScienceSerializer(instance.science_language, many=True).data
+        representation["science_language"] = ScienceSerializer(
+            instance.science_language, many=True
+        ).data
         return representation

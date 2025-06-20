@@ -7,9 +7,9 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.users.choices.role import Role
 from apps.pedagog.models.documents import Document
 from apps.shared.models.base import AbstractBaseModel
+from apps.users.choices.role import Role
 from apps.users.managers.user import UserManager
 
 
@@ -66,24 +66,6 @@ class User(AbstractUser, AbstractBaseModel):
         blank=True,
         verbose_name=_("Muassasa raqami"),
     )
-    document = models.ManyToManyField(
-        Document,
-        blank=True,
-        verbose_name=_("Hujjat"),
-    )
-    response_file = models.FileField(
-        upload_to="response_file/",
-        null=True,
-        blank=True,
-        verbose_name=_("Javob hujjati"),
-    )
-    status_file = models.CharField(
-        max_length=255,
-        choices=ContractStatus.choices,
-        default=ContractStatus.NO_FILE,
-        verbose_name=_("Status"),
-    )
-    status = models.BooleanField(default=False, verbose_name=_("Shartnoma statusi"))
 
     USERNAME_FIELD = "phone"
 
@@ -91,12 +73,6 @@ class User(AbstractUser, AbstractBaseModel):
 
     def __str__(self) -> str:
         return f"{self.last_name} {self.first_name} {self.father_name} | {self.phone}"
-
-    @classmethod
-    def user_get_status_count(cls):
-        return cls.objects.filter(
-            status_file=ContractStatus.WAITING, role=Role.MODERATOR
-        ).count()
 
     def tokens(self):
         refresh = RefreshToken.for_user(self)
@@ -117,6 +93,59 @@ class User(AbstractUser, AbstractBaseModel):
         verbose_name = _("Foydalanuvchilar")
         verbose_name_plural = _("Foydalanuvchilar")
         ordering = ["-created_at"]
+
+
+class UserProfile(AbstractBaseModel):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="profile",
+        verbose_name=_("Foydalanuvchi"),
+    )
+    document = models.ManyToManyField(
+        Document,
+        blank=True,
+        verbose_name=_("Hujjat"),
+    )
+    response_file = models.FileField(
+        upload_to="response_file/",
+        null=True,
+        blank=True,
+        verbose_name=_("Javob hujjati"),
+    )
+    status_file = models.CharField(
+        max_length=255,
+        choices=ContractStatus.choices,
+        default=ContractStatus.NO_FILE,
+        verbose_name=_("Status"),
+    )
+    status = models.BooleanField(default=False, verbose_name=_("Shartnoma statusi"))
+    balance = models.DecimalField(
+        max_digits=100,
+        decimal_places=5,
+        default=0.00,
+        verbose_name=_("Balans"),
+    )
+    card_number = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        verbose_name=_("Karta raqami"),
+    )
+
+    @classmethod
+    def user_get_status_count(cls):
+        return cls.objects.filter(
+            status_file=ContractStatus.WAITING, user__role=Role.MODERATOR
+        ).count()
+
+    class Meta:
+        verbose_name = _("Foydalanuvchi profili")
+        verbose_name_plural = _("Foydalanuvchi profillari")
+        ordering = ["-created_at"]
+
+    def __str__(self) -> str:
+        return f"{self.user.last_name} {self.user.first_name} {self.user.father_name} | {self.user.phone}"
 
 
 class SmsConfirm(AbstractBaseModel):
