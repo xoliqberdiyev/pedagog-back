@@ -115,7 +115,7 @@ class ModeratorAdmin(ModelAdmin):
             links = [
                 format_html(
                     '<a href="{}" target="_blank">{}</a><br>',
-                    obj.user.response_file.url,
+                    obj.user.profile.response_file.url,
                     _("Shartnoma"),
                 )
             ]
