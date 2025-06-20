@@ -104,7 +104,7 @@ class ModeratorAdmin(ModelAdmin):
                 doc.file.url,
                 doc.title,
             )
-            for doc in obj.user.document.all()
+            for doc in obj.user.profile.document.all()
         ]
         return format_html("<br>".join(links))
 
