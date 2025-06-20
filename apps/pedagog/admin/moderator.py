@@ -104,7 +104,7 @@ class ModeratorAdmin(ModelAdmin):
                 doc.file.url,
                 doc.title,
             )
-            for doc in obj.user.document.all()
+            for doc in obj.user.profile.document.all()
         ]
         return format_html("<br>".join(links))
 
@@ -115,7 +115,7 @@ class ModeratorAdmin(ModelAdmin):
             links = [
                 format_html(
                     '<a href="{}" target="_blank">{}</a><br>',
-                    obj.user.response_file.url,
+                    obj.user.profile.response_file.url,
                     _("Shartnoma"),
                 )
             ]
