@@ -111,7 +111,7 @@ class ModeratorAdmin(ModelAdmin):
     contract_links.short_description = _("Kelgan shartnoma")
 
     def send_contract(self, obj):
-        if obj.user.response_file and hasattr(obj.user.response_file, "url"):
+        if obj.user.profile.response_file and hasattr(obj.user.profile.response_file, "url"):
             links = [
                 format_html(
                     '<a href="{}" target="_blank">{}</a><br>',
