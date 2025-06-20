@@ -7,6 +7,6 @@ from apps.users.models.user import UserProfile
 
 @receiver(post_save, sender=Document)
 def document_save(sender, instance, created, **kwargs):
-    if created:
+    if created and instance.user:
         profile, _ = UserProfile.objects.get_or_create(user=instance.user)
         profile.document.add(instance)
