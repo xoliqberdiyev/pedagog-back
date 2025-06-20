@@ -5,6 +5,14 @@ from apps.shared.models.base import AbstractBaseModel
 
 
 class Document(AbstractBaseModel):
+    user = models.ForeignKey(
+        "users.User",
+        verbose_name=_("Foydalanuvchi"),
+        on_delete=models.CASCADE,
+        related_name="documents",
+        blank=True,
+        null=True,
+    )
     title = models.CharField(_("Nomi"), max_length=255, blank=True, null=True)
     description = models.TextField(_("Tasnifi"), blank=True, null=True)
     file = models.FileField(_("Fayl"), upload_to="documents/%Y/%m/%d/")

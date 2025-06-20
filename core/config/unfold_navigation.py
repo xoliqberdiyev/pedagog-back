@@ -27,7 +27,7 @@ PAGES = [
                 ),
                 "badge": lambda: __import__(
                     "apps.users.models.user"
-                ).users.models.user.User.user_get_status_count(),
+                ).users.models.user.UserProfile.user_get_status_count(),
             },
             {
                 "title": _("Guruhlar"),

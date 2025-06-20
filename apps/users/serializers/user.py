@@ -2,7 +2,6 @@ from django.conf import settings
 from rest_framework import serializers
 
 from apps.pedagog.models.moderator import Moderator
-from apps.pedagog.serializers.document import DocumentSerializer
 from apps.users.choices.role import Role
 from apps.users.models.user import User
 
@@ -13,7 +12,6 @@ class UserSerializer(serializers.ModelSerializer):
     plan_creatable = serializers.SerializerMethodField(read_only=True)
     topic_creatable = serializers.SerializerMethodField(read_only=True)
     is_contracted = serializers.SerializerMethodField(read_only=True)
-    document = DocumentSerializer(many=True)
 
     class Meta:
         fields = [
@@ -27,8 +25,6 @@ class UserSerializer(serializers.ModelSerializer):
             "region",
             "district",
             "institution_number",
-            "document",
-            "response_file",
             "resource_creatable",
             "plan_creatable",
             "topic_creatable",
@@ -119,7 +115,6 @@ class UserDetailSerializer(serializers.ModelSerializer):
     plan_creatable = serializers.SerializerMethodField(read_only=True)
     topic_creatable = serializers.SerializerMethodField(read_only=True)
     is_contracted = serializers.SerializerMethodField(read_only=True)
-    document = DocumentSerializer(many=True)
 
     class Meta:
         fields = [
@@ -133,8 +128,6 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "region",
             "district",
             "institution_number",
-            "document",
-            "response_file",
             "resource_creatable",
             "plan_creatable",
             "topic_creatable",

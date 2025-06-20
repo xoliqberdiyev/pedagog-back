@@ -14,7 +14,22 @@ from unfold.forms import (
 )
 
 from apps.pedagog.models.moderator import Moderator
-from apps.users.models.user import ContractStatus, User
+from apps.users.models.user import ContractStatus, User, UserProfile
+
+
+class UserProfileInline(StackedInline):
+    model = UserProfile
+    fields = [
+        "document",
+        "response_file",
+        "status_file",
+        "status",
+        "balance",
+        "card_number",
+    ]
+    autocomplete_fields = ["document"]
+    extra = 0
+    tab = True
 
 
 class ModeratorInline(StackedInline):
@@ -43,7 +58,6 @@ class UserAdmin(BaseUserAdmin, ModelAdmin, ImportExportModelAdmin):
         "father_name",
         "role",
         "show_status_customized_color",
-        "status",
         "created_at",
     ]
     filter_horizontal = ("groups", "user_permissions")
@@ -51,15 +65,12 @@ class UserAdmin(BaseUserAdmin, ModelAdmin, ImportExportModelAdmin):
     readonly_fields = ("docs_links",)
     list_filter = [
         "role",
-        "status_file",
-        "status",
         ("created_at", RangeDateTimeFilter),
     ]
-    inlines = [ModeratorInline]
+    inlines = [ModeratorInline, UserProfileInline]
     autocomplete_fields = [
         "region",
         "district",
-        "document",
     ]
     ordering = ["-updated_at"]
     fieldsets = (
@@ -71,7 +82,6 @@ class UserAdmin(BaseUserAdmin, ModelAdmin, ImportExportModelAdmin):
                     "phone",
                     "password",
                     "docs_links",
-                    "response_file",
                 )
             },
         ),
@@ -131,7 +141,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin, ImportExportModelAdmin):
                 doc.response_file.url if doc.response_file else "#",
                 (_("Response File") if doc.response_file else _("No Response File")),
             )
-            for doc in obj.document.all()
+            for doc in obj.profile.document.all()
         ]
         return format_html("<br>".join(links))
 
@@ -148,4 +158,4 @@ class UserAdmin(BaseUserAdmin, ModelAdmin, ImportExportModelAdmin):
         },
     )
     def show_status_customized_color(self, obj):
-        return obj.status_file, obj.get_status_file_display()
+        return obj.profile.status_file, obj.get_status_file_display()
