@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.shared.exceptions.core import SmsException
 from apps.users.models.user import SmsConfirm
+import random
 
 
 class SmsService:
@@ -16,8 +17,8 @@ class SmsService:
             code = 1111
         else:
             # TODO: Deploy this change when deploying -> code = random.randint(1000, 9999) # noqa
-            # code = random.randint(1000, 9999)
-            code = 1111
+            code = random.randint(1000, 9999)
+            # code = 1111
         sms_confirm, status = SmsConfirm.objects.get_or_create(
             phone=phone, defaults={"code": code}
         )
