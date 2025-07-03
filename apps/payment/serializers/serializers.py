@@ -38,7 +38,7 @@ class OrderSerializer(serializers.ModelSerializer):
             instance.science_language
         ).data
         data["classes"] = ClassesSerializer(instance.classes).data
-        data["quarter"] = QuarterMiniSerializer(instance.classes).data
+        data["quarter"] = QuarterMiniSerializer(instance.quarter).data
         return data
 
 
