@@ -1,9 +1,18 @@
 from rest_framework import serializers
 
 from apps.pedagog.models.schedule import LessonSchedule
+from apps.pedagog.serializers.quarter import QuarterMiniSerializer
+from apps.pedagog.serializers.classes import ClassesSerializer, ClassGroupSerializer
+from apps.pedagog.serializers.science import ScienceSerializer, ScienceLanguageSerializer
 
 
 class LessonScheduleSerializer(serializers.ModelSerializer):
+    quarter = QuarterMiniSerializer()
+    classes = ClassesSerializer()
+    class_group = ClassGroupSerializer()
+    science = ScienceSerializer()
+    science_language = ScienceLanguageSerializer()
+
     class Meta:
         model = LessonSchedule
         fields = (
