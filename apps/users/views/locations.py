@@ -9,7 +9,7 @@ from apps.users.models.locations import Region, District
 class RegionAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = RegionSerializer
-    pagination_class = CustomPagination
+    pagination_class = None
     queryset = Region.objects.all()
 
     def get(self, request):
@@ -23,7 +23,7 @@ class RegionAPIView(APIView):
 class DistrictAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = DistrictSerializer
-    pagination_class = CustomPagination
+    pagination_class = None
     queryset = District.objects.all()
 
     def get(self, request):
