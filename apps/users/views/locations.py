@@ -13,11 +13,7 @@ class RegionAPIView(APIView):
     queryset = Region.objects.all()
 
     def get(self, request):
-        queryset = self.queryset
-        paginator = self.pagination_class()
-        paginated_queryset = paginator.paginate_queryset(queryset, request)
-        serializer = self.serializer_class(paginated_queryset, many=True)
-        return paginator.get_paginated_response(serializer.data)
+        return self.serializer_class(self.queryset, many=True).data
 
 
 class DistrictAPIView(APIView):
@@ -31,7 +27,4 @@ class DistrictAPIView(APIView):
         queryset = self.queryset
         if region:
             queryset = queryset.filter(region=int(region))
-        paginator = self.pagination_class()
-        paginated_queryset = paginator.paginate_queryset(queryset, request)
-        serializer = self.serializer_class(paginated_queryset, many=True)
-        return paginator.get_paginated_response(serializer.data)
+        return self.serializer_class(queryset, many=True).data
