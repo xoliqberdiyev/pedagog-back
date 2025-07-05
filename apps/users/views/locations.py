@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from apps.users.serializers.locations import RegionSerializer, DistrictSerializer
 from apps.users.models.locations import Region, District
 from rest_framework.response import Response
-from django_core.paginations import CustomPagination
+from apps.shared.pagination.custom import CustomPagination
 
 
 class RegionAPIView(APIView):
