@@ -2,29 +2,29 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
 from apps.users.serializers.locations import RegionSerializer, DistrictSerializer
-from apps.shared.pagination.custom import CustomPagination
 from apps.users.models.locations import Region, District
+from rest_framework.response import Response
 
 
 class RegionAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = RegionSerializer
-    pagination_class = None
-    queryset = Region.objects.all()
 
     def get(self, request):
-        return self.serializer_class(self.queryset, many=True).data
+        queryset = Region.objects.all()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
 
 
 class DistrictAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = DistrictSerializer
-    pagination_class = None
-    queryset = District.objects.all()
 
     def get(self, request):
         region = request.query_params.get("region", None)
-        queryset = self.queryset
+        queryset = District.objects.all()
         if region:
             queryset = queryset.filter(region=int(region))
-        return self.serializer_class(queryset, many=True).data
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+
