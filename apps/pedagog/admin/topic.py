@@ -1,6 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from unfold.admin import ModelAdmin
+from unfold.decorators import display
 
 from apps.pedagog.models.topic import Topic
 from apps.pedagog.resources.topic import TopicResource
@@ -24,6 +25,7 @@ class TopicAdmin(ModelAdmin, ImportExportModelAdmin):
         "hours",
         "weeks",
         "plan_id",
+        "downloads_count",
     )
     search_fields = (
         "name",
@@ -33,3 +35,7 @@ class TopicAdmin(ModelAdmin, ImportExportModelAdmin):
         "plan_id",
         "user",
     )
+
+    @display(label=True)
+    def downloads_count():
+        return 0

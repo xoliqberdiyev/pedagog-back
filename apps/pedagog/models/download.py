@@ -14,7 +14,10 @@ class Download(AbstractBaseModel):
     )
     date = models.DateField(verbose_name=_("Sanasi"))
     media = models.ForeignKey(
-        "Media", on_delete=models.CASCADE, verbose_name=_("Media")
+        "Media",
+        on_delete=models.CASCADE,
+        verbose_name=_("Media"),
+        related_name="downloads",
     )
     object_type = models.CharField(
         max_length=255, verbose_name=_("Yuklash turi"), blank=True, null=True
