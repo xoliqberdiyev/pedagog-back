@@ -15,8 +15,8 @@ def update_permission_cache(sender, instance, created, **kwargs):
     user = instance.user
     moderator = Moderator.objects.filter(user=user).first()
     if (
-        instance._status == ModeratorPermissionStatus.PENDING.value
-        and instance.status == ModeratorPermissionStatus.APPROVED
+        instance._status != ModeratorPermissionStatus.APPROVED.value
+        and instance.status == ModeratorPermissionStatus.APPROVED.value
     ):
         send_message(
             user.phone,
