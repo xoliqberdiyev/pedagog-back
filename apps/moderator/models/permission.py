@@ -18,6 +18,10 @@ class ModeratorPermission(AbstractBaseModel):
     Model to represent a moderator permission.
     """
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._status = self.status
+
     user = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,

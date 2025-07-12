@@ -1,14 +1,32 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from apps.moderator.models.permission import ModeratorPermission
+from apps.moderator.models.permission import (
+    ModeratorPermission,
+    ModeratorPermissionStatus,
+)
 from apps.pedagog.models.moderator import Moderator
 from apps.shared.utils.logger import logger
+from apps.shared.utils.sms import send_message
 
 
 @receiver(post_save, sender=ModeratorPermission)
 def update_permission_cache(sender, instance, created, **kwargs):
-    moderator = Moderator.objects.filter(user=instance.user).first()
+    user = instance.user
+    moderator = Moderator.objects.filter(user=user).first()
+    if (
+        instance._status == ModeratorPermissionStatus.PENDING.value
+        and instance.status == ModeratorPermissionStatus.APPROVED
+    ):
+        send_message(
+            user.phone,
+            "{first_name} {last_name} sizning {classroom} {science} fanidan pedagog.uz da resurslarni yuklash uchun topshirgan arizangiz tasdiqlandi!".format(
+                first_name=user.first_name,
+                last_name=user.last_name,
+                classroom=instance.classes.first().name,
+                science=instance.science.first().name,
+            ),
+        )
     if moderator:
         if hasattr(instance, "science"):
             for sci in instance.science.all():
