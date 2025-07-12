@@ -25,3 +25,14 @@ def SendConfirm(phone, code, language):
         Console().error(
             "Error: {phone}-{code}\n\n{error}".format(phone=phone, code=code, error=e)
         )  # noqa
+
+
+@shared_task
+def SendMessage(phone, message):
+    try:
+        service = SendService()
+        service.send_sms(phone, message)
+    except Exception as e:
+        Console().error(
+            "Send Message error: {phone}\n\n{error}".format(phone=phone, error=e)
+        )  # noqa

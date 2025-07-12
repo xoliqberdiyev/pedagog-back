@@ -38,4 +38,4 @@ class TopicAdmin(ModelAdmin, ImportExportModelAdmin):
 
     @display(label=True)
     def downloads_count(self, obj):
-        return 0
+        return 10
