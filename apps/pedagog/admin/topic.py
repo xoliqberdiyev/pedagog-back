@@ -5,6 +5,7 @@ from unfold.decorators import display
 
 from apps.pedagog.models.topic import Topic
 from apps.pedagog.resources.topic import TopicResource
+from django.db import models
 
 
 @admin.register(Topic)
@@ -38,4 +39,4 @@ class TopicAdmin(ModelAdmin, ImportExportModelAdmin):
 
     @display(label=True)
     def downloads_count(self, obj):
-        return 10
+        return obj.medias.aggregate(total_downloads=models.Count("downloads"))['total_downloads'] or 0
