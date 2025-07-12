@@ -18,15 +18,18 @@ def update_permission_cache(sender, instance, created, **kwargs):
         instance._status != ModeratorPermissionStatus.APPROVED.value
         and instance.status == ModeratorPermissionStatus.APPROVED.value
     ):
-        send_message(
-            user.phone,
-            "{first_name} {last_name} sizning {classroom} {science} fanidan pedagog.uz da resurslarni yuklash uchun topshirgan arizangiz tasdiqlandi!".format(
-                first_name=user.first_name,
-                last_name=user.last_name,
-                classroom=instance.classes.first().name,
-                science=instance.science.first().name,
-            ),
-        )
+        classroom = instance.classes.first()
+        science = instance.science.first()
+        if classroom is not None or science is not None:
+            send_message(
+                user.phone,
+                "{first_name} {last_name} sizning {classroom} {science} fanidan pedagog.uz da resurslarni yuklash uchun topshirgan arizangiz tasdiqlandi!".format(
+                    first_name=user.first_name,
+                    last_name=user.last_name,
+                    classroom=classroom.name,
+                    science=science.name,
+                ),
+            )
     if moderator:
         if hasattr(instance, "science"):
             for sci in instance.science.all():
