@@ -39,11 +39,13 @@ from apps.pedagog.views.quarter import ModeratorQuarterApiView, QuarterListView
 from apps.pedagog.views.schedule import LessonScheduleDetailView, LessonScheduleView
 from apps.pedagog.views.school import SchoolTypeListView
 from apps.pedagog.views.science import ScienceLanguageListView, ScienceListView
+from apps.pedagog.views.services import ServicesViewset
 from apps.pedagog.views.tmr_appeal import TMRAppealAPIView, TmrFilesAPIView
 from apps.pedagog.views.topic import TopicApiView, TopicDetailApiView
 
 router = DefaultRouter()
 router.register("banner", BannerViewset, basename="banner")
+router.register("services", ServicesViewset, basename="services")
 
 urlpatterns = [
     path("", include(router.urls)),
