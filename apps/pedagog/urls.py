@@ -1,46 +1,52 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
 from apps.pedagog.views.admin_site import (
-    ModeratorAdminSiteView,
     ModeratorAdminSiteDetailView,
+    ModeratorAdminSiteView,
 )
 from apps.pedagog.views.ai import AiAPIView
+from apps.pedagog.views.banner import BannerViewset
 from apps.pedagog.views.change_role import ChangeRoleView
 from apps.pedagog.views.classes import ClassesListView, ClassGroupListView
 from apps.pedagog.views.degree import DegreeListView
 from apps.pedagog.views.download import (
-    DownloadMediaView,
     DownloadFileView,
+    DownloadMediaView,
     MobileDownloadHistoryView,
     MobileUploadHistoryView,
 )
 from apps.pedagog.views.electron_resource import (
-    ElectronResourceCategoryView,
-    ElectronResourceCategoryDetailView,
-    ElectronResourceSubCategoryView,
-    ElectronResourceSubCategoryDetailView,
-    ElectronResourceView,
-    ElectronResourceDetailView,
     ElectronResourceAdminView,
+    ElectronResourceCategoryDetailView,
+    ElectronResourceCategoryView,
+    ElectronResourceDetailView,
+    ElectronResourceSubCategoryDetailView,
+    ElectronResourceSubCategoryView,
+    ElectronResourceView,
 )
 from apps.pedagog.views.media import MediaApiView, MediaDetailApiView
 from apps.pedagog.views.moderator import (
     ModeratorCreateViewSet,
-    ModeratorListView,
     ModeratorDetailView,
-    SendMoneyToModerators,
     ModeratorElectronResourcesApiView,
+    ModeratorListView,
     ModeratorTemetikPlanApiView,
+    SendMoneyToModerators,
 )
-from apps.pedagog.views.plan import PlanApiView, PlanAdminListAPIView, PlanDetailView
-from apps.pedagog.views.quarter import QuarterListView, ModeratorQuarterApiView
-from apps.pedagog.views.schedule import LessonScheduleView, LessonScheduleDetailView
+from apps.pedagog.views.plan import PlanAdminListAPIView, PlanApiView, PlanDetailView
+from apps.pedagog.views.quarter import ModeratorQuarterApiView, QuarterListView
+from apps.pedagog.views.schedule import LessonScheduleDetailView, LessonScheduleView
 from apps.pedagog.views.school import SchoolTypeListView
-from apps.pedagog.views.science import ScienceListView, ScienceLanguageListView
+from apps.pedagog.views.science import ScienceLanguageListView, ScienceListView
 from apps.pedagog.views.tmr_appeal import TMRAppealAPIView, TmrFilesAPIView
 from apps.pedagog.views.topic import TopicApiView, TopicDetailApiView
 
+router = DefaultRouter()
+router.register("banner", BannerViewset, basename="banner")
+
 urlpatterns = [
+    path("", include(router.urls)),
     path(
         "download/get/<int:media_id>/",
         DownloadMediaView.as_view(),

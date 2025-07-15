@@ -141,6 +141,11 @@ PAGES = [
         "separator": True,  # Top border
         "items": [
             {
+                "title": _("Banner"),
+                "icon": "banner",
+                "link": reverse_lazy("admin:pedagog_bannermodel_changelist"),
+            },
+            {
                 "title": _("Yangiliklar"),
                 "icon": "campaign",
                 "link": reverse_lazy("admin:home_news_changelist"),
