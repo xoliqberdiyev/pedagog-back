@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from apps.moderator.models.permission import ModeratorPermission
 from apps.moderator.serializers.permission import ModeratorPermissionSerializer
 from apps.shared.pagination.custom import CustomPagination
-from django_filters.rest_framework import DjangoFilterBackend
+from apps.moderator.filters import ModeratorPermissionFilter
 
 
 class ModeratorPermissionView(APIView):
@@ -17,14 +17,6 @@ class ModeratorPermissionView(APIView):
     serializer_class = ModeratorPermissionSerializer
     permission_classes = (IsAuthenticated,)
     pagination_class = CustomPagination
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = [
-        "status",
-        "school_type",
-        "classes",
-        "science",
-        "science_language",
-    ]
 
     def get_queryset(self):
         """
@@ -36,7 +28,8 @@ class ModeratorPermissionView(APIView):
         """
         List all moderator permissions.
         """
-        queryset = self.get_queryset()
+        queryset = ModeratorPermissionFilter(request.GET, queryset=self.get_queryset()).qs
+
         paginator = self.pagination_class()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
         serializer = self.serializer_class(paginated_queryset, many=True)
