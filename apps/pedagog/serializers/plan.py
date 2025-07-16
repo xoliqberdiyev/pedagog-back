@@ -7,12 +7,13 @@ from apps.pedagog.serializers.classes import ClassesSerializer
 from apps.pedagog.serializers.quarter import QuarterMiniSerializer
 from apps.pedagog.serializers.school import SchoolTypeSerializer
 from apps.pedagog.serializers.science import (
-    ScienceSerializer,
     ScienceLanguageSerializer,
+    ScienceSerializer,
 )
 
 
 class PlanSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Plan
         fields = [

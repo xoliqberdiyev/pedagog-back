@@ -6,9 +6,9 @@ from apps.pedagog.models.download import Download
 from apps.pedagog.models.media import Media
 from apps.pedagog.models.moderator import Moderator
 from apps.shared.services.sms import SmsService
-from apps.users.models.locations import Region, District
+from apps.users.models.locations import District, Region
 from apps.users.models.user import User
-from apps.users.serializers.locations import RegionSerializer, DistrictSerializer
+from apps.users.serializers.locations import DistrictSerializer, RegionSerializer
 
 
 class UserModeratorSerializer(serializers.ModelSerializer):
