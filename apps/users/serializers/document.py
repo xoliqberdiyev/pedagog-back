@@ -12,7 +12,7 @@ class DocumentSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "file",
-            "passport_filte",
+            "passport_file",
             "document_file",
             "type",
             "size",
