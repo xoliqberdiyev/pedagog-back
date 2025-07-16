@@ -40,14 +40,14 @@ class MediaDetailSerializer(serializers.ModelSerializer):
             return False
         return obj.user == request.user
 
-    def to_representation(self, obj):
+    def to_representation(self, instance):
         from apps.users.serializers.user import UserMiniSerializer
 
-        data = super().to_representation(obj)
+        data = super().to_representation(instance)
         request = self.context.get("request")
-        data["user"] = UserMiniSerializer(obj.user).data
+        data["user"] = UserMiniSerializer(instance.user).data
         if request and request.user.is_authenticated:
-            data["is_author"] = obj.user == request.user
+            data["is_author"] = instance.user == request.user
 
         return data
 
