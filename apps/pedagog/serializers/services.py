@@ -9,7 +9,9 @@ class ServicesSerializer(serializers.ModelSerializer):
         model = ServicesModel
         fields = [
             "id",
-            "logo",
+            "icon",
             "title",
             "url",
+            "desc",
+            "icon_color",
         ]

@@ -42,10 +42,12 @@ from apps.pedagog.views.science import ScienceLanguageListView, ScienceListView
 from apps.pedagog.views.services import ServicesViewset
 from apps.pedagog.views.tmr_appeal import TMRAppealAPIView, TmrFilesAPIView
 from apps.pedagog.views.topic import TopicApiView, TopicDetailApiView
+from apps.pedagog.views.video import VideoViewset
 
 router = DefaultRouter()
 router.register("banner", BannerViewset, basename="banner")
 router.register("services", ServicesViewset, basename="services")
+router.register("video", VideoViewset, basename="video")
 
 urlpatterns = [
     path("", include(router.urls)),

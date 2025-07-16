@@ -3,23 +3,23 @@ Accounts app urls
 """
 
 from django.urls import path
-from rest_framework_simplejwt.views import TokenVerifyView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
 from apps.users.views.change_password import ChangePasswordView
 from apps.users.views.delete_account import DeleteAccountView
-from apps.users.views.document import DocumentView, DocumentDetailView
-from apps.users.views.locations import RegionAPIView, DistrictAPIView
+from apps.users.views.document import DocumentDetailView, DocumentView
+from apps.users.views.locations import DistrictAPIView, RegionAPIView
 from apps.users.views.moderator import ModeratorRegisterView
-from apps.users.views.profile import UserProfileView, UserProfileDetailView
+from apps.users.views.profile import UserProfileDetailView, UserProfileView
 from apps.users.views.sms import (
     ConfirmView,
+    CustomTokenObtainPairView,
+    MeUpdateView,
+    MeView,
     RegisterView,
     ResendView,
-    MeView,
-    MeUpdateView,
-    CustomTokenObtainPairView,
-    ResetPasswordView,
     ResetConfirmationCodeView,
+    ResetPasswordView,
     ResetSetPasswordView,
 )
 

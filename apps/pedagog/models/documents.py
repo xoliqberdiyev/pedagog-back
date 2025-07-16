@@ -16,6 +16,10 @@ class Document(AbstractBaseModel):
     title = models.CharField(_("Nomi"), max_length=255, blank=True, null=True)
     description = models.TextField(_("Tasnifi"), blank=True, null=True)
     file = models.FileField(_("Fayl"), upload_to="documents/%Y/%m/%d/")
+    passport_file = models.FileField(
+        _("Passport file"), upload_to="passports/")
+    document_file = models.FileField(
+        _("Document file"), upload_to="documents/")
     response_file = models.FileField(
         _("Javob fayli"),
         upload_to="documents/%Y/%m/%d/",
@@ -39,7 +43,9 @@ class Document(AbstractBaseModel):
         self.size = self.file.size
         if self.title is None:
             self.title = (
-                self.file.name if self.file.name is not None else f"Media {self.id}"
+                self.file.name
+                if self.file.name is not None
+                else "Media {}".format(self.id)
             )
             self.description = f"{self.title}"
         super().save(*args, **kwargs)

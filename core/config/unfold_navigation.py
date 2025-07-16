@@ -141,6 +141,11 @@ PAGES = [
         "separator": True,  # Top border
         "items": [
             {
+                "title": _("Videos"),
+                "icon": "cleaning_services",
+                "link": reverse_lazy("admin:pedagog_videomodel_changelist"),
+            },
+            {
                 "title": _("Services"),
                 "icon": "cleaning_services",
                 "link": reverse_lazy("admin:pedagog_servicesmodel_changelist"),
