@@ -4,6 +4,10 @@ from django.utils.translation import gettext_lazy as _
 from apps.shared.models.base import AbstractBaseModel
 
 
+class FileModel(models.Model):
+    file = models.FileField(_("file"), upload_to="files/")
+
+
 class Document(AbstractBaseModel):
     user = models.ForeignKey(
         "users.User",
@@ -16,10 +20,8 @@ class Document(AbstractBaseModel):
     title = models.CharField(_("Nomi"), max_length=255, blank=True, null=True)
     description = models.TextField(_("Tasnifi"), blank=True, null=True)
     file = models.FileField(_("Fayl"), upload_to="documents/%Y/%m/%d/")
-    passport_file = models.FileField(
-        _("Passport file"), upload_to="passports/")
-    document_file = models.FileField(
-        _("Document file"), upload_to="documents/")
+    passport_file = models.ManyToManyField(FileModel)
+    document_file = models.ManyToManyField(FileModel)
     response_file = models.FileField(
         _("Javob fayli"),
         upload_to="documents/%Y/%m/%d/",
