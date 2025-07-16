@@ -14,4 +14,5 @@ class VideoSerializer(serializers.ModelSerializer):
             "duration",
             "badge_title",
             "badge_color",
+            "video",
         ]
