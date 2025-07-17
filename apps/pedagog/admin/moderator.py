@@ -32,7 +32,7 @@ class ModeratorAdmin(ModelAdmin):
         "degree",
         "status",
     )
-    ordering = ("-updated_at",)
+    ordering = ("-updated_at", )
     readonly_fields = ("docs_links", "balance")
     autocomplete_fields = ("user", "degree")
     fieldsets = (
@@ -77,7 +77,10 @@ class ModeratorAdmin(ModelAdmin):
         ),
         (
             _("topic Permissions"),
-            {"classes": ["tab"], "fields": ("topic_creatable",)},
+            {
+                "classes": ["tab"],
+                "fields": ("topic_creatable", )
+            },
         ),
     )
 
@@ -88,10 +91,9 @@ class ModeratorAdmin(ModelAdmin):
         links = [
             format_html(
                 '<a href="{}" target="_blank">{}</a><br>',
-                doc.file.url,
+                doc.document_file.first().url,
                 doc.title,
-            )
-            for doc in obj.docs.all()
+            ) for doc in obj.docs.all()
         ]
         return format_html("<br>".join(links))
 
@@ -103,15 +105,15 @@ class ModeratorAdmin(ModelAdmin):
                 '<a href="{}" target="_blank">{}</a><br>',
                 doc.file.url,
                 doc.title,
-            )
-            for doc in obj.user.profile.document.all()
+            ) for doc in obj.user.profile.document.all()
         ]
         return format_html("<br>".join(links))
 
     contract_links.short_description = _("Kelgan shartnoma")
 
     def send_contract(self, obj):
-        if obj.user.profile.response_file and hasattr(obj.user.profile.response_file, "url"):
+        if obj.user.profile.response_file and hasattr(
+                obj.user.profile.response_file, "url"):
             links = [
                 format_html(
                     '<a href="{}" target="_blank">{}</a><br>',
