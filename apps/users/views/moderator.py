@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
 
-from apps.pedagog.models.documents import Document
+from apps.pedagog.models.documents import Document, FileModel
 from apps.shared.services.sms import SmsService
 from apps.users.serializers.auth import ModeratorRegisterSerializer
 
@@ -34,7 +34,8 @@ class ModeratorRegisterView(APIView):
 
             for file_obj in docs:
                 # Faylni saqlash
-                document = Document.objects.create(document_file=file_obj)
+                document = Document.objects.create()
+                document.document_file.add(FileModel.objects.create(file=file_obj))
                 docs_id.append(document.id)
 
             # Fayl IDlarini JSON shaklida saqlash
