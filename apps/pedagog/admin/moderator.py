@@ -14,7 +14,7 @@ class ModeratorAdmin(ModelAdmin):
         "is_contracted",
         "degree",
         "docs_links",
-        "contract_links",
+        # "contract_links",
         "send_contract",
         "status",
     )
