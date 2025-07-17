@@ -1,17 +1,31 @@
-from django.db.models.signals import post_save, m2m_changed
+from django.db.models.signals import m2m_changed, post_save
 from django.dispatch import receiver
 
+from apps.pedagog.models.documents import Document
 from apps.pedagog.models.moderator import Moderator
 from apps.users.choices.role import Role
-from apps.users.models.user import User, ContractStatus, UserProfile
+from apps.users.models.user import ContractStatus, User, UserProfile
 from apps.websocket.models.notification import Notification
+
+
+@receiver(post_save, sender=Document)
+def document_model(sender, instance, created, **kwargs):
+    if created and False:
+        file = instance.document_file.first()
+        instance.type = file.name.split(".")[-1]
+        instance.size = file.size
+        if instance.title is None:
+            instance.title = (
+                file.name if file.name is not None else "Media {}".format(instance.id)
+            )
+            instance.description = f"{instance.title}"
 
 
 # @receiver(pre_delete, sender=Topic)
 # def reorder_topics_on_delete(sender, instance, **kwargs):
 #     related_topics = list(
 #         Topic.objects.filter(plan_id=instance.plan_id)
-#         .exclude(id=instance.id)
+# u         .exclude(id=instance.id)
 #         .order_by("sequence_number")
 #     )
 #     for index, topic in enumerate(related_topics, start=1):

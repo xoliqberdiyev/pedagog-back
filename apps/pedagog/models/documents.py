@@ -19,7 +19,9 @@ class Document(AbstractBaseModel):
     )
     title = models.CharField(_("Nomi"), max_length=255, blank=True, null=True)
     description = models.TextField(_("Tasnifi"), blank=True, null=True)
-    file = models.FileField(_("Fayl"), upload_to="documents/%Y/%m/%d/")
+    file = models.FileField(
+        _("Fayl"), upload_to="documents/%Y/%m/%d/", null=True, blank=True
+    )
     passport_file = models.ManyToManyField(FileModel, related_name="pdocument")
     document_file = models.ManyToManyField(FileModel, related_name="ddocyment")
     response_file = models.FileField(
@@ -35,19 +37,10 @@ class Document(AbstractBaseModel):
     class Meta:
         verbose_name = _("Hujjat")
         verbose_name_plural = _("Hujjatlar")
-        ordering = ("-created_at", )
+        ordering = ("-created_at",)
 
     def __str__(self):
         return f"{self.title} - {self.file.name} - {self.type}"
-
-    def save(self, *args, **kwargs):
-        self.type = self.file.name.split(".")[-1]
-        self.size = self.file.size
-        if self.title is None:
-            self.title = (self.file.name if self.file.name is not None else
-                          "Media {}".format(self.id))
-            self.description = f"{self.title}"
-        super().save(*args, **kwargs)
 
     @property
     def url(self):

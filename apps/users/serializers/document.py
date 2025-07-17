@@ -14,11 +14,25 @@ class FileSerializer(serializers.ModelSerializer):
 
 
 class DocumentSerializer(serializers.ModelSerializer):
+    passport_file = serializers.ListField(
+        child=serializers.FileField(
+            max_length=100000, allow_empty_file=False, use_url=False
+        ),
+        allow_empty=False,
+        write_only=True,
+    )
+
+    document_file = serializers.ListField(
+        child=serializers.FileField(
+            max_length=100000, allow_empty_file=False, use_url=False
+        ),
+        allow_empty=False,
+        write_only=True,
+    )
 
     def create(self, validated_data):
-        data = super().validated_data(validated_data)
-        passport_files = data.pop("passport_file")
-        document_files = data.pop("document_file")
+        passport_files = validated_data.pop("passport_file")
+        document_files = validated_data.pop("document_file")
         document = Document.objects.create(**validated_data)
 
         for file in passport_files:
@@ -26,12 +40,16 @@ class DocumentSerializer(serializers.ModelSerializer):
 
         for file in document_files:
             document.document_file.add(FileModel.objects.create(file=file))
-        return data
+        return document
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data["passport_file"] = FileSerializer(instance.passport_file, many=True).data
-        data["document_file"] = FileSerializer(instance.document_file, many=True).data
+        data["passport_file"] = FileSerializer(
+            instance.passport_file.all(), many=True, context=self.context
+        ).data
+        data["document_file"] = FileSerializer(
+            instance.document_file.all(), many=True, context=self.context
+        ).data
         return data
 
     class Meta:
@@ -41,7 +59,7 @@ class DocumentSerializer(serializers.ModelSerializer):
             "user",
             "title",
             "description",
-            "file",
+            # "file",
             "passport_file",
             "document_file",
             "type",

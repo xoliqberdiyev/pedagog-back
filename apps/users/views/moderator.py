@@ -34,7 +34,7 @@ class ModeratorRegisterView(APIView):
 
             for file_obj in docs:
                 # Faylni saqlash
-                document = Document.objects.create(file=file_obj)
+                document = Document.objects.create(document_file=file_obj)
                 docs_id.append(document.id)
 
             # Fayl IDlarini JSON shaklida saqlash

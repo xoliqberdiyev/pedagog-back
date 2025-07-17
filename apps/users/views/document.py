@@ -31,11 +31,15 @@ class DocumentView(APIView):
         queryset = self.get_queryset()
         paginator = self.pagination_class()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
-        serializer = self.serializer_class(paginated_queryset, many=True)
+        serializer = self.serializer_class(
+            paginated_queryset, many=True, context={"request": request}
+        )
         return paginator.get_paginated_response(serializer.data)
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
