@@ -88,14 +88,19 @@ class ModeratorAdmin(ModelAdmin):
         links = []
         for doc in obj.docs.all():
             document = doc.document_file.first()
-            if document and document.file:
-                links.append(
-                    format_html(
-                        '<a href="{}" target="_blank">{}</a><br>',
-                        document.file.url,
-                        doc.title,
+            if document and getattr(
+                document, "file", None
+            ):  # file mavjudmi va null emasmi
+                try:
+                    url = document.file.url
+                    links.append(
+                        format_html(
+                            '<a href="{}" target="_blank">{}</a><br>', url, doc.title
+                        )
                     )
-                )
+                except ValueError:
+                    # Fayl physically mavjud emas (yo‘q bo‘lib ketgan bo‘lishi mumkin)
+                    continue
         return format_html("".join(links))
 
     docs_links.short_description = _("Hujjatlar")
