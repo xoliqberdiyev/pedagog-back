@@ -105,19 +105,19 @@ class ModeratorAdmin(ModelAdmin):
 
     docs_links.short_description = _("Hujjatlar")
 
-    def contract_links(self, obj):
-        links = [
-            format_html(
-                '<a href="{}" target="_blank">{}</a><br>',
-                doc.file.url,
-                doc.title,
-            )
-            for doc in obj.user.profile.document.all()
-        ]
-        return format_html("<br>".join(links))
-
-    contract_links.short_description = _("Kelgan shartnoma")
-
+    # def contract_links(self, obj):
+    #     links = [
+    #         format_html(
+    #             '<a href="{}" target="_blank">{}</a><br>',
+    #             doc.file.url,
+    #             doc.title,
+    #         )
+    #         for doc in obj.user.profile.document.all()
+    #     ]
+    #     return format_html("<br>".join(links))
+    #
+    # contract_links.short_description = _("Kelgan shartnoma")
+    #
     def send_contract(self, obj):
         if obj.user.profile.response_file and hasattr(
             obj.user.profile.response_file, "url"
