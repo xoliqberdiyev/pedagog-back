@@ -32,7 +32,7 @@ class ModeratorAdmin(ModelAdmin):
         "degree",
         "status",
     )
-    ordering = ("-updated_at", )
+    ordering = ("-updated_at",)
     readonly_fields = ("docs_links", "balance")
     autocomplete_fields = ("user", "degree")
     fieldsets = (
@@ -77,10 +77,7 @@ class ModeratorAdmin(ModelAdmin):
         ),
         (
             _("topic Permissions"),
-            {
-                "classes": ["tab"],
-                "fields": ("topic_creatable", )
-            },
+            {"classes": ["tab"], "fields": ("topic_creatable",)},
         ),
     )
 
@@ -88,14 +85,18 @@ class ModeratorAdmin(ModelAdmin):
         return f"{obj.user.first_name} {obj.user.last_name}"
 
     def docs_links(self, obj):
-        links = [
-            format_html(
-                '<a href="{}" target="_blank">{}</a><br>',
-                doc.document_file.first().file.url,
-                doc.title,
-            ) for doc in obj.docs.all()
-        ]
-        return format_html("<br>".join(links))
+        links = []
+        for doc in obj.docs.all():
+            document = doc.document_file.first()
+            if document and document.file:
+                links.append(
+                    format_html(
+                        '<a href="{}" target="_blank">{}</a><br>',
+                        document.file.url,
+                        doc.title,
+                    )
+                )
+        return format_html("".join(links))
 
     docs_links.short_description = _("Hujjatlar")
 
@@ -105,7 +106,8 @@ class ModeratorAdmin(ModelAdmin):
                 '<a href="{}" target="_blank">{}</a><br>',
                 doc.file.url,
                 doc.title,
-            ) for doc in obj.user.profile.document.all()
+            )
+            for doc in obj.user.profile.document.all()
         ]
         return format_html("<br>".join(links))
 
@@ -113,7 +115,8 @@ class ModeratorAdmin(ModelAdmin):
 
     def send_contract(self, obj):
         if obj.user.profile.response_file and hasattr(
-                obj.user.profile.response_file, "url"):
+            obj.user.profile.response_file, "url"
+        ):
             links = [
                 format_html(
                     '<a href="{}" target="_blank">{}</a><br>',
