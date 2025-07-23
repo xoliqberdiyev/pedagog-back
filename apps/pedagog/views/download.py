@@ -1,13 +1,15 @@
 import datetime
+import mimetypes
 import os
 from datetime import timedelta
+from urllib.parse import quote
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.encoding import smart_str
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -118,25 +120,34 @@ class DownloadFileView(APIView):
         download_token = get_object_or_404(DownloadToken, token=download_token)
 
         if download_token.is_expired():
-            raise Http404(_("Yuklab olish tokeni topilmadi yoki muddati oʻtgan"))
+            raise Http404(
+                gettext_lazy("Yuklab olish tokeni topilmadi yoki muddati oʻtgan")
+            )
 
         download = download_token.download
-
         media = get_object_or_404(Media, id=download.media.id)
 
         file_path = media.file.path
+        if not os.path.exists(file_path):
+            raise Http404(gettext_lazy("Fayl topilmadi"))
 
-        try:
-            filename = os.path.basename(media.file.name)
-            raise Exception(filename)
-            response = FileResponse(
-                open(file_path, "rb"), as_attachment=True, filename=smart_str(filename)
-            )
-        except FileNotFoundError:
-            raise Http404(_("Fayl topilmadi"))
+        # Fayl nomi va MIME turini aniqlaymiz
+        filename = os.path.basename(media.file.name)
+        mime_type, _ = mimetypes.guess_type(file_path)
+        if mime_type is None:
+            mime_type = "application/octet-stream"  # default MIME
+
+        response = FileResponse(open(file_path, "rb"), as_attachment=True)
+
+        response["Content-Type"] = mime_type
+
+        # Fayl nomi uchun har ikki formatni qo‘shamiz
+        quoted_filename = quote(filename)
+        response["Content-Disposition"] = (
+            f"attachment; filename=\"{smart_str(filename)}\"; filename*=UTF-8''{quoted_filename}"
+        )
 
         download_token.delete()
-
         return response
 
 
