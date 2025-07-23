@@ -8,4 +8,7 @@ pull:
 	git fetch
 	git merge origin/main
 
+logs:
+	docker compose logs -f
+
 deploy: pull down up
