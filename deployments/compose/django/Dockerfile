@@ -1,4 +1,4 @@
-FROM python:3.10-slim-buster
+FROM python:3.10-slim-bullseye
 
 # Set environment variables to ensure UTF-8 encoding
 ENV PYTHONUNBUFFERED=1 \
@@ -10,7 +10,10 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apt update && \
     apt upgrade -y && \
     apt install -y gettext && \
+    apt-get install -y poppler-utils && \
+    apt-get install -y libreoffice && \
     apt clean && rm -rf /var/lib/apt/lists/*
+
 
 # Install other Python dependencies
 RUN pip install --upgrade pip gunicorn uvicorn[standard]

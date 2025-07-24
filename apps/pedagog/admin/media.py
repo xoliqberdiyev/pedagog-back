@@ -2,6 +2,7 @@ from django.contrib import admin
 from unfold.admin import ModelAdmin
 
 from apps.pedagog.models.media import Media
+from apps.pedagog.admin.converted_media import ConvertedMediaInline
 
 
 @admin.register(Media)
@@ -21,3 +22,4 @@ class MediaAdmin(ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
     filter_horizontal = ("download_users",)
     autocomplete_fields = ("download_users", "user", "topic_id")
+    inlines = [ConvertedMediaInline]

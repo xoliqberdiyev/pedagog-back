@@ -1,11 +1,19 @@
+import os
+
 from django.db.models.signals import m2m_changed, post_save
 from django.dispatch import receiver
+from django.core.files import File
+from django.conf import settings
 
 from apps.pedagog.models.documents import Document
 from apps.pedagog.models.moderator import Moderator
 from apps.users.choices.role import Role
 from apps.users.models.user import ContractStatus, User, UserProfile
 from apps.websocket.models.notification import Notification
+from apps.pedagog.models.media import Media
+from apps.pedagog.models.converted_media import ConvertedMedia
+
+from apps.shared.utils.convert_image import convert_pdf_to_images, convert_pptx_to_images, convert_docx_to_images, add_multiple_icons_to_image
 
 
 @receiver(post_save, sender=Document)
@@ -78,3 +86,38 @@ def file_status_pre_save(sender, instance, **kwargs):
             message_uz="Shartnoma qabul qilindi",
             message_ru="Договор принят",
         )
+
+
+@receiver(post_save, sender=Media)
+def convert_image_on_save_media(sender, instance, created, **kwargs):
+    if created:
+        file_path = instance.file.path
+
+        output_dir = os.path.join(settings.MEDIA_ROOT, "temp_images")
+        os.makedirs(output_dir, exist_ok=True)
+
+        type = instance.file.name.split(".")[-1]
+
+        if type == 'pdf':
+            image_data = convert_pdf_to_images(file_path, output_dir)
+        elif type in ['doc', 'docx']:
+            image_data = convert_docx_to_images(file_path, output_dir)
+        elif type == 'pptx':
+            image_data = convert_pptx_to_images(file_path, output_dir)
+        else:
+            raise ValueError(f"Qo‘llab-quvvatlanmaydigan fayl turi: {type}")
+        
+        for page_number, img_path in image_data:
+            add_multiple_icons_to_image(
+                img_path,
+                './logo-3.png',
+                positions=['top-left', 'center', 'bottom-right'],
+                opacity=100, 
+                scale=0.25
+            )
+            with open(img_path, 'rb') as f:
+                ConvertedMedia.objects.create(
+                    media=instance,
+                    page_number=page_number,
+                    image=File(f, name=os.path.basename(img_path))
+                )

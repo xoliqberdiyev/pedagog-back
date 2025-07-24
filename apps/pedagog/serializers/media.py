@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
 from apps.pedagog.models.media import Media
+from apps.pedagog.tasks.convert_file import convert_image_create
+from apps.pedagog.serializers.converted_media import ConvertedMediaSerializer
 
 
 class MediaSerializer(serializers.ModelSerializer):
@@ -13,10 +15,21 @@ class MediaSerializer(serializers.ModelSerializer):
             "file",
             "image",
         )
+    
+    def create(self, validated_data):
+        file = validated_data.pop('file')
+        media = Media.objects.create(file=file, **validated_data)
+
+        if file:
+            convert_image_create.delay(media.id)
+
+        return media
+
 
 
 class MediaDetailSerializer(serializers.ModelSerializer):
     is_author = serializers.SerializerMethodField()
+    converted_medias = ConvertedMediaSerializer(many=True)
 
     class Meta:
         model = Media
@@ -32,6 +45,7 @@ class MediaDetailSerializer(serializers.ModelSerializer):
             "view_count",
             "is_author",
             "user",
+            "converted_medias",
         )
 
     def get_is_author(self, obj):
