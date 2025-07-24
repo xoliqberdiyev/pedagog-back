@@ -7,7 +7,7 @@ from celery import shared_task
 
 from apps.pedagog.models.media import Media
 from apps.pedagog.models.converted_media import ConvertedMedia
-from apps.shared.utils.convert_image import convert_pdf_to_images, convert_pptx_to_images, convert_docx_to_images
+from apps.shared.utils.convert_image import convert_pdf_to_images, convert_pptx_to_images, convert_docx_to_images, add_multiple_icons_to_image
 
 
 @shared_task
@@ -32,6 +32,13 @@ def convert_image_create(media_id):
 
     for page_number, img_path in image_data:
         with open(img_path, 'rb') as f:
+            add_multiple_icons_to_image(
+                img_path,
+                './logo-3.png',
+                positions=['top-left', 'center', 'bottom-right'],
+                opacity=100, 
+                scale=0.25
+            )
             ConvertedMedia.objects.create(
                 media=media,
                 page_number=page_number,

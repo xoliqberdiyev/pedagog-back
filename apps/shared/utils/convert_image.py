@@ -49,32 +49,39 @@ def convert_docx_to_images(docx_path, output_dir, max_pages=6):
 
     return image_paths
 
-def add_icon_to_image(image_path, icon_path, position='top-left', opacity=128, scale=0.2):
+def add_multiple_icons_to_image(image_path, icon_path, positions=None, opacity=128, scale=0.2):
+    if positions is None:
+        positions = ['top-left', 'center', 'bottom-right']
+
     base_image = Image.open(image_path).convert("RGBA")
-    icon = Image.open(icon_path).convert("RGBA")
+    icon_original = Image.open(icon_path).convert("RGBA")
 
+    # Iconni masshtablash
     icon_width = int(base_image.width * scale)
-    icon_ratio = icon_width / icon.width
-    icon_height = int(icon.height * icon_ratio)
-    icon = icon.resize((icon_width, icon_height), Image.FIXED)
+    icon_ratio = icon_width / icon_original.width
+    icon_height = int(icon_original.height * icon_ratio)
+    icon_resized = icon_original.resize((icon_width, icon_height), Image.FIXED)
 
-    if position == 'bottom-right':
-        x = base_image.width - icon.width - 10
-        y = base_image.height - icon.height - 10
-    elif position == 'center':
-        x = (base_image.width - icon.width) // 2
-        y = (base_image.height - icon.height) // 2
-    elif position == 'top-left':
-        x, y = 10, 10
-    else:
-        x, y = 0, 0 
-
+    # Opacity sozlash
     if opacity < 255:
-        alpha = icon.split()[3]
+        alpha = icon_resized.split()[3]
         alpha = alpha.point(lambda p: p * (opacity / 255))
-        icon.putalpha(alpha)
+        icon_resized.putalpha(alpha)
 
-    base_image.paste(icon, (x, y), icon)
+    for pos in positions:
+        if pos == 'top-left':
+            x, y = 10, 10
+        elif pos == 'center':
+            x = (base_image.width - icon_resized.width) // 2
+            y = (base_image.height - icon_resized.height) // 2
+        elif pos == 'bottom-right':
+            x = base_image.width - icon_resized.width - 10
+            y = base_image.height - icon_resized.height - 10
+        else:
+            continue
 
+        base_image.paste(icon_resized, (x, y), icon_resized)
+
+    # Yakuniy rasmni JPG formatda saqlash (agar kerak bo‘lsa)
     base_image = base_image.convert("RGB")
     base_image.save(image_path)
