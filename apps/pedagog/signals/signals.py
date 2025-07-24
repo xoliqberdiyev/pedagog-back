@@ -13,7 +13,7 @@ from apps.websocket.models.notification import Notification
 from apps.pedagog.models.media import Media
 from apps.pedagog.models.converted_media import ConvertedMedia
 
-from apps.shared.utils.convert_image import convert_pdf_to_images, convert_pptx_to_images, convert_docx_to_images
+from apps.shared.utils.convert_image import convert_pdf_to_images, convert_pptx_to_images, convert_docx_to_images, add_icon_to_image
 
 
 @receiver(post_save, sender=Document)
@@ -107,8 +107,8 @@ def convert_image_on_save_media(sender, instance, created, **kwargs):
         else:
             raise ValueError(f"Qo‘llab-quvvatlanmaydigan fayl turi: {type}")
         
-        
         for page_number, img_path in image_data:
+            add_icon_to_image(img_path, './logo-3.png')
             with open(img_path, 'rb') as f:
                 ConvertedMedia.objects.create(
                     media=instance,
