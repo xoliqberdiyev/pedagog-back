@@ -34,7 +34,7 @@ def convert_image_create(media_id):
         with open(img_path, 'rb') as f:
             add_multiple_icons_to_image(
                 img_path,
-                './logo-3.png',
+                './logo.png',
                 positions=['top-left', 'center', 'bottom-right'],
                 opacity=100, 
                 scale=0.25

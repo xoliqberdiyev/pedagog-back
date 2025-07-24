@@ -110,7 +110,7 @@ def convert_image_on_save_media(sender, instance, created, **kwargs):
         for page_number, img_path in image_data:
             add_multiple_icons_to_image(
                 img_path,
-                './logo-3.png',
+                './logo.png',
                 positions=['top-left', 'center', 'bottom-right'],
                 opacity=100, 
                 scale=0.25
