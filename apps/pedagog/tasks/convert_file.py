@@ -7,7 +7,7 @@ from celery import shared_task
 
 from apps.pedagog.models.media import Media
 from apps.pedagog.models.converted_media import ConvertedMedia
-from apps.shared.utils.convert_image import convert_pdf_to_images, convert_pptx_to_images, convert_docx_to_images, add_multiple_icons_to_image
+from apps.shared.utils.convert_image import convert_pdf_to_images, convert_pptx_to_images, convert_docx_to_images, add_multiple_icons_to_image, convert_office_to_pdf
 
 
 @shared_task
@@ -26,12 +26,13 @@ def convert_image_create(media_id):
         image_data = convert_docx_to_images(file_path, output_dir)
     elif type == 'pptx':
         image_data = convert_pptx_to_images(file_path, output_dir)
+    elif type == 'ppt':
+        pdf_path = convert_office_to_pdf(file_path, output_dir)
+        image_data = convert_pdf_to_images(pdf_path, output_dir)
     else:
         raise ValueError(f"Qo‘llab-quvvatlanmaydigan fayl turi: {type}")
-    
-
+        
     for page_number, img_path in image_data:
-        with open(img_path, 'rb') as f:
             add_multiple_icons_to_image(
                 img_path,
                 './logo.png',
@@ -39,8 +40,9 @@ def convert_image_create(media_id):
                 opacity=100, 
                 scale=0.25
             )
-            ConvertedMedia.objects.create(
-                media=media,
-                page_number=page_number,
-                image=File(f, name=os.path.basename(img_path))
-            )
+            with open(img_path, 'rb') as f:
+                ConvertedMedia.objects.create(
+                    media=media,
+                    page_number=page_number,
+                    image=File(f, name=os.path.basename(img_path))
+                )

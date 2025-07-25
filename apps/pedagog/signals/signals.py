@@ -13,7 +13,7 @@ from apps.websocket.models.notification import Notification
 from apps.pedagog.models.media import Media
 from apps.pedagog.models.converted_media import ConvertedMedia
 
-from apps.shared.utils.convert_image import convert_pdf_to_images, convert_pptx_to_images, convert_docx_to_images, add_multiple_icons_to_image
+from apps.shared.utils.convert_image import convert_pdf_to_images, convert_pptx_to_images, convert_docx_to_images, add_multiple_icons_to_image, convert_office_to_pdf
 
 
 @receiver(post_save, sender=Document)
@@ -104,6 +104,9 @@ def convert_image_on_save_media(sender, instance, created, **kwargs):
             image_data = convert_docx_to_images(file_path, output_dir)
         elif type == 'pptx':
             image_data = convert_pptx_to_images(file_path, output_dir)
+        elif type == 'ppt':
+            pdf_path = convert_office_to_pdf(file_path, output_dir)
+            image_data = convert_pdf_to_images(pdf_path, output_dir)
         else:
             raise ValueError(f"Qo‘llab-quvvatlanmaydigan fayl turi: {type}")
         
