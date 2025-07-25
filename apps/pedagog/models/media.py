@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from apps.pedagog.models.topic import Topic
+from apps.pedagog.models.media_type import MediaType
 from apps.shared.models.base import AbstractBaseModel
 
 
@@ -61,6 +62,13 @@ class Media(AbstractBaseModel):
     )
     view_count = models.PositiveIntegerField(
         null=True, blank=True, default=0, verbose_name=_("Ko'rishlar soni")
+    )
+    media_type = models.ForeignKey(
+        MediaType, 
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name=_('Resurs turi')
     )
 
     def calculation_view_count(self):
