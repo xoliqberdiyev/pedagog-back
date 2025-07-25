@@ -14,17 +14,18 @@ class MediaSerializer(serializers.ModelSerializer):
             "desc",
             "file",
             "image",
+            "media_type",
         )
+        extra_kwargs = {"media_type": {"required": False}}
     
     def create(self, validated_data):
         file = validated_data.pop('file')
         media = Media.objects.create(file=file, **validated_data)
 
-        if file:
-            convert_image_create.delay(media.id)
+        # if file:
+        #     convert_image_create.delay(media.id)
 
         return media
-
 
 
 class MediaDetailSerializer(serializers.ModelSerializer):
@@ -43,9 +44,10 @@ class MediaDetailSerializer(serializers.ModelSerializer):
             "statistics",
             "created_at",
             "view_count",
-            "is_author",
+            "is_author", 
             "user",
             "converted_medias",
+            "media_type"
         )
 
     def get_is_author(self, obj):

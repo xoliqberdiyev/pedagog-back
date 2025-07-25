@@ -447,6 +447,14 @@ PAGES = [
                     request.user, "view_degree"
                 ),
             },
+            {
+                "title": _("Resurs turlar"),
+                "icon": "share",
+                "link": reverse_lazy("admin:pedagog_mediatype_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_mediatype"
+                ),
+            },
         ],
     },
 ]
