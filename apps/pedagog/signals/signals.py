@@ -94,36 +94,3 @@ def file_status_pre_save(sender, instance, **kwargs):
 def convert_image_on_save_media(sender, instance, created, **kwargs):
     if created:
         convert_image_create.delay(instance.id)
-        # file_path = instance.file.path
-
-        # output_dir = os.path.join(settings.MEDIA_ROOT, "temp_images")
-        # os.makedirs(output_dir, exist_ok=True)
-
-        # type = instance.file.name.split(".")[-1]
-
-        # if type == 'pdf':
-        #     image_data = convert_pdf_to_images(file_path, output_dir)
-        # elif type in ['doc', 'docx']:
-        #     image_data = convert_docx_to_images(file_path, output_dir)
-        # elif type == 'pptx':
-        #     image_data = convert_pptx_to_images(file_path, output_dir)
-        # elif type == 'ppt':
-        #     pdf_path = convert_office_to_pdf(file_path, output_dir)
-        #     image_data = convert_pdf_to_images(pdf_path, output_dir)
-        # else:
-        #     raise ValueError(f"Qo‘llab-quvvatlanmaydigan fayl turi: {type}")
-        
-        # for page_number, img_path in image_data:
-        #     add_multiple_icons_to_image(
-        #         img_path,
-        #         './logo.png',
-        #         positions=['top-left', 'center', 'bottom-right'],
-        #         opacity=100, 
-        #         scale=0.25
-        #     )
-        #     with open(img_path, 'rb') as f:
-        #         ConvertedMedia.objects.create(
-        #             media=instance,
-        #             page_number=page_number,
-        #             image=File(f, name=os.path.basename(img_path))
-        #         )
