@@ -43,6 +43,7 @@ from apps.pedagog.views.services import ServicesViewset
 from apps.pedagog.views.tmr_appeal import TMRAppealAPIView, TmrFilesAPIView
 from apps.pedagog.views.topic import TopicApiView, TopicDetailApiView
 from apps.pedagog.views.video import VideoViewset
+from apps.pedagog.views.media_type import MediaTypeListApiView
 
 router = DefaultRouter()
 router.register("banner", BannerViewset, basename="banner")
@@ -104,6 +105,7 @@ urlpatterns = [
     path("plan/<int:pk>/", PlanDetailView.as_view(), name="plan"),
     path("topic/", TopicApiView.as_view(), name="topic"),
     path("topic/<int:pk>/", TopicDetailApiView.as_view(), name="topic-detail"),
+    path('media_type/list/', MediaTypeListApiView.as_view(), name='media-type-list'),
     path("media/", MediaApiView.as_view(), name="media"),
     path("media/<int:pk>/", MediaDetailApiView.as_view(), name="media"),
     path("school/type/", SchoolTypeListView.as_view(), name="school-type"),

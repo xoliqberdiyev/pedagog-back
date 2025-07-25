@@ -17,7 +17,7 @@ class MediaApiView(APIView):
         topic_id = request.query_params.get("topic_id")
 
         if topic_id:
-            media = Media.objects.filter(topic_id=topic_id).prefetch_related('converted_medias')
+            media = Media.objects.filter(topic_id=topic_id).prefetch_related('converted_medias').select_related('media_type')
             paginator = self.pagination_class()
             paginated_media = paginator.paginate_queryset(media, request)
             serializer = MediaDetailSerializer(
