@@ -66,6 +66,8 @@ class TopicDetailApiView(APIView):
 
     def get(self, request, pk):
         topic = get_object_or_404(Topic, pk=pk)
+        topic.view_count += 1
+        topic.save()
         serializer = TopicAllDetailSerializer(topic, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
