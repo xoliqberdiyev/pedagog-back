@@ -22,8 +22,8 @@ class MediaSerializer(serializers.ModelSerializer):
         file = validated_data.pop('file')
         media = Media.objects.create(file=file, **validated_data)
 
-        if file:
-            convert_image_create.delay(media.id)
+        # if file:
+        #     convert_image_create.delay(media.id)
 
         return media
 
