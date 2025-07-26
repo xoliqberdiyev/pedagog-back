@@ -92,5 +92,9 @@ def file_status_pre_save(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Media)
 def convert_image_on_save_media(sender, instance, created, **kwargs):
-    if created:
-        convert_image_create.delay(instance.id)
+    media_types = ConvertedMedia.objects.filter(media=instance.id)
+    if media_types:
+        for media in media_types:
+            media.delete()
+    
+    convert_image_create.delay(instance.id)
