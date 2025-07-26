@@ -224,3 +224,27 @@ class ElectronResourceAdminSerializer(serializers.ModelSerializer):
             "first_name": user["first_name"],
             "last_name": user["last_name"],
         }
+
+
+
+class ElectronResourceSubCategorySearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ElectronResourceSubCategory
+        fields = (
+            "id",
+            "name",
+            "description",
+            "created_at",
+        )
+        extra_kwargs = {"user": {"required": False}}
+
+
+class ElectronResourceSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ElectronResource
+        fields = (
+            "id",
+            "name",
+            "description",
+            "created_at",
+        )
