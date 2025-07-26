@@ -17,9 +17,12 @@ class ScienceListView(APIView):
 
     def get(self, request):
         classes = request.query_params.get("classes", None)
+        search = request.query_params.get("search", None)
         queryset = self.queryset
         if classes:
             queryset = queryset.filter(classes__id=int(classes))
+        if search:
+            queryset = queryset.filter(name__istartswith=search)
         paginator = self.pagination_class()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
         serializer = self.serializer_class(paginated_queryset, many=True)
@@ -34,9 +37,12 @@ class ScienceLanguageListView(APIView):
 
     def get(self, request):
         science = request.query_params.get("science", None)
+        search = request.query_params.get("search", None)
         queryset = self.queryset
         if science:
             queryset = queryset.filter(sciences__id=int(science))
+        if search:
+            queryset = queryset.filter(name__istartswith=search)
         paginator = self.pagination_class()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
         serializer = self.serializer_class(paginated_queryset, many=True)
