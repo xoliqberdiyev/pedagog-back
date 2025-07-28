@@ -6,6 +6,6 @@ from apps.shared.views.search import SearchApiView
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
-    path("search/", SearchApiView.as_view(), name='search'),
+    path("api/v2/search/", SearchApiView.as_view(), name='search'),
     # path("admin/dashboard/", DashboardView.as_view(), name="dashboard"),
 ]
