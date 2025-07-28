@@ -252,5 +252,6 @@ class ElectronResourceSearchSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "category",
+            'file',
             "created_at",
         )
