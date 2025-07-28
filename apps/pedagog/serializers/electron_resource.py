@@ -228,23 +228,29 @@ class ElectronResourceAdminSerializer(serializers.ModelSerializer):
 
 
 class ElectronResourceSubCategorySearchSerializer(serializers.ModelSerializer):
+    category = ElectronResourceCategorySerializer()
+
     class Meta:
         model = ElectronResourceSubCategory
         fields = (
             "id",
             "name",
             "description",
+            'category',
             "created_at",
         )
         extra_kwargs = {"user": {"required": False}}
 
 
 class ElectronResourceSearchSerializer(serializers.ModelSerializer):
+    category = ElectronResourceSubCategorySerializer()
+
     class Meta:
         model = ElectronResource
         fields = (
             "id",
             "name",
             "description",
+            "category",
             "created_at",
         )
