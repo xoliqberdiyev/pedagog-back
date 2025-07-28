@@ -142,3 +142,22 @@ class TopicAdminSerializer(serializers.ModelSerializer):
             instance.medias.all(), many=True, context=self.context
         ).data
         return representation
+
+
+
+class TopicSearchSerializer(serializers.ModelSerializer):
+    plan_id = PlanMiniSerializer()
+
+    class Meta:
+        model = Topic
+        fields = [
+            "id",
+            "plan_id",
+            "name",
+            "description",
+            "hours",
+            "sequence_number",
+            "created_at",
+            "weeks",
+            "banner",
+        ]
