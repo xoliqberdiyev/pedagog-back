@@ -31,7 +31,7 @@ class Classes(AbstractBaseModel):
     class Meta:
         verbose_name = _("Class")
         verbose_name_plural = _("Classes")
-        ordering = ["name"]
+        ordering = ["id"]
 
     def __str__(self):
         return f"{self.name}"
