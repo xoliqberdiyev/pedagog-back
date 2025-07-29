@@ -9,7 +9,7 @@ from apps.shared.pagination.custom import CustomPagination
 class ClassesListView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ClassesSerializer
-    queryset = Classes.objects.filter(is_active=True)
+    queryset = Classes.objects.filter(is_active=True).order_by('id')
     pagination_class = CustomPagination
 
     def get(self, request):
