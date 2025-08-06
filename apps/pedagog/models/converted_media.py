@@ -20,4 +20,4 @@ class ConvertedMedia(AbstractBaseModel):
     class Meta:
         verbose_name = _("O'zgartirilgan media")
         verbose_name_plural = _("O'zgartirilgan media")
-        ordering = ("-created_at", "page_number")
+        ordering = ("page_number",)
