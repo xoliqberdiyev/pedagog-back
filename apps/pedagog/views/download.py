@@ -121,7 +121,7 @@ class DownloadFileView(APIView):
 
         if download_token.is_expired():
             raise Http404(
-                gettext_lazy("Yuklab olish tokeni topilmadi yoki muddati oʻtgan")
+                _("Yuklab olish tokeni topilmadi yoki muddati oʻtgan")
             )
 
         download = download_token.download
@@ -129,7 +129,7 @@ class DownloadFileView(APIView):
 
         file_path = media.file.path
         if not os.path.exists(file_path):
-            raise Http404(gettext_lazy("Fayl topilmadi"))
+            raise Http404(_("Fayl topilmadi"))
 
         # Fayl nomi va MIME turini aniqlaymiz
         filename = os.path.basename(media.file.name)
