@@ -12,6 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
+
 DEBUG = os.getenv("DEBUG")
 if DEBUG is not None:
     DEBUG = DEBUG.lower() in ["true", "1"]
@@ -70,8 +71,8 @@ DATABASES = {
         "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": os.getenv("POSTGRES_BOUNCER_HOST"),
-        "PORT": os.getenv("POSTGRES_BOUNCER_PORT"),
+        "HOST": os.getenv("POSTGRES_HOST"),
+        "PORT": os.getenv("POSTGRES_PORT"),
     }
 }
 
@@ -130,3 +131,20 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 734003200  # 700 MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 734003200  # 700 MB
 
 MEDIA_AMOUNT = 6000
+
+
+# click
+CLICK_SERVICE_ID=os.getenv("CLICK_SERVICE_ID")
+CLICK_MERCHANT_ID=os.getenv("CLICK_MERCHANT_ID")
+CLICK_SECRET_KEY=os.getenv("CLICK_SECRET_KEY")
+CLICK_ACCOUNT_MODEL = "apps.payment.models.models.Orders" 
+CLICK_AMOUNT_FIELD = "price" 
+
+#payme
+
+PAYME_ID=os.getenv("PAYME_ID")
+PAYME_KEY=os.getenv("PAYME_KEY")
+PAYME_ACCOUNT_FIELD = "order_id"
+PAYME_AMOUNT_FIELD = "price"
+PAYME_ACCOUNT_MODEL = "apps.payment.models.models.Orders"
+PAYME_ONE_TIME_PAYMENT = True

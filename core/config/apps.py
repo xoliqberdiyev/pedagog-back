@@ -5,6 +5,11 @@ THIRD_PARTY_APPS = [
     "unfold.contrib.import_export",
     "unfold.contrib.guardian",
     "unfold.contrib.simple_history",
+
+    # payment
+    "click_up",
+    "payme",
+
     "modeltranslation",
     "django_ckeditor_5",
     "corsheaders",

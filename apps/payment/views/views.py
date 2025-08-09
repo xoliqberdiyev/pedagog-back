@@ -23,6 +23,9 @@ from apps.payment.services.services import UzumService
 from apps.shared.pagination.custom import CustomPagination
 from apps.shared.utils.logger import logger
 
+from apps.payment.services.payment import PaymentService
+
+
 
 class OrderViewSet(
     RetrieveModelMixin,
@@ -70,21 +73,17 @@ class PaymentViewSet(ViewSet):
             ser.is_valid(raise_exception=True)
             data = ser.validated_data
             order = data.get("order")
-
-            trans_id, redirect_url = UzumService().generate_link(
-                request.user.id,
-                order.id,
-                order.price,
-                f"To'lov miqdori {order.price}, to'lov sanasi {order.created_at.strftime('%d-%m-%Y')}, "
-                f"to'lov buyurtma raqami {order.id}, buyurtma {order.science}",
-            )
+            
+            user_id = request.user.id
+            payment_services = PaymentService(user_id)
+            trans_id, pay_link = payment_services.generate_link(order)
             Payments.objects.get_or_create(
                 order=order, price=order.price, trans_id=trans_id
-            )
+            )   
             return Response(
                 {
                     "detail": _("Payment created"),
-                    "data": {"url": redirect_url},
+                    "data": {"url": pay_link},
                 }
             )
         except Exception as e:
@@ -92,7 +91,7 @@ class PaymentViewSet(ViewSet):
 
             print("Error:", e)
             print(traceback.format_exc())
-            raise APIException(str(e))
+            raise APIException(f"error: {str(e)} ")
 
 
 class WebhookApiView(ViewSet):
