@@ -6,6 +6,7 @@ from apps.pedagog.models.moderator import Moderator
 from apps.pedagog.models.quarter import Quarter
 from apps.pedagog.models.science import Science, ScienceLanguage
 from apps.shared.models.base import AbstractBaseModel
+from apps.payment.enums.payment import PaymentType
 
 
 class Orders(AbstractBaseModel):
@@ -51,6 +52,7 @@ class Orders(AbstractBaseModel):
         related_name="orders",
     )
     price = models.BigIntegerField(default=0, verbose_name=_("Narxi"))
+    payment_type = models.CharField(verbose_name=_("To'lov turi"), max_length=10, choices=PaymentType.choices, default=PaymentType.click)
     status = models.BooleanField(default=False, verbose_name=_("Holati"))
 
     class Meta:
