@@ -58,9 +58,16 @@ class OrderViewSet(
             )
 
         return serializer.save(user=user)
-
+    
     def get_queryset(self):
-        return Orders.objects.filter(user=self.request.user).order_by("-id")
+        queryset = Orders.objects.filter(user=self.request.user).order_by("-id")
+        is_paid = self.request.query_params.get("is_paid")
+
+        if is_paid is not None:
+            is_paid_bool = str(is_paid).lower() == "true"
+            queryset = queryset.filter(status=is_paid_bool)
+
+        return queryset
 
 
 class PaymentViewSet(ViewSet):

@@ -42,6 +42,8 @@ class PlanDetailSerializer(serializers.ModelSerializer):
     science_language = ScienceLanguageSerializer()
     is_author = serializers.SerializerMethodField()
     is_topic = serializers.SerializerMethodField()
+    topic_count = serializers.SerializerMethodField(method_name='get_topic_count')
+    resource_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Plan
@@ -56,6 +58,8 @@ class PlanDetailSerializer(serializers.ModelSerializer):
             "science",
             "science_language",
             "is_topic",
+            "topic_count",
+            "resource_count",
             "created_at",
         ]
 
@@ -67,6 +71,12 @@ class PlanDetailSerializer(serializers.ModelSerializer):
 
     def get_is_topic(self, obj):
         return Topic.objects.filter(plan_id=obj.id).exists()
+
+    def get_topic_count(self, obj):
+        return Topic.objects.filter(plan_id=obj.id).count()
+    
+    def get_resource_count(self, obj):
+        return Media.objects.filter(topic_id__in=obj.topics.all()).count()
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
