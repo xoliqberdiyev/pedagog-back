@@ -52,7 +52,6 @@ class Orders(AbstractBaseModel):
         related_name="orders",
     )
     price = models.BigIntegerField(default=0, verbose_name=_("Narxi"))
-    payment_type = models.CharField(verbose_name=_("To'lov turi"), max_length=10, choices=PaymentType.choices, default=PaymentType.click)
     status = models.BooleanField(default=False, verbose_name=_("Holati"))
 
     class Meta:

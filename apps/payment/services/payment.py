@@ -7,7 +7,6 @@ import os
 
 
 
-
 class PaymentService:
     def __init__(self, user_id):
         self.user_id = user_id
@@ -17,8 +16,8 @@ class PaymentService:
         )
         self.payme = Payme(payme_id=os.getenv("PAYME_ID"))
 
-    def generate_link(self, order):
-        payment_type = getattr(order, "payment_type", None)
+    def generate_link(self, order, payment_type):
+        print(payment_type)
 
         if payment_type == "click":
             pay_link = self.click_up.initializer.generate_pay_link(

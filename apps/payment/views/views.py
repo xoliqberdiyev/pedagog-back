@@ -80,10 +80,11 @@ class PaymentViewSet(ViewSet):
             ser.is_valid(raise_exception=True)
             data = ser.validated_data
             order = data.get("order")
+            payment_type = data.get("payment_type")
             
             user_id = request.user.id
             payment_services = PaymentService(user_id)
-            trans_id, pay_link = payment_services.generate_link(order)
+            trans_id, pay_link = payment_services.generate_link(order, payment_type)
             Payments.objects.get_or_create(
                 order=order, price=order.price, trans_id=trans_id
             )   
