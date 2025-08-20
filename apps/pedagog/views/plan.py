@@ -1,7 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.generics import ListAPIView, get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -19,12 +19,12 @@ from apps.shared.pagination.custom import CustomPagination
 
 
 class PlanApiView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     pagination_class = CustomPagination
 
     def post(self, request):
         self.permission_classes = [
-            IsAuthenticated,
+            AllowAny,
             PlanPermission(["moderator"]),
         ]
         plan_serializer = PlanSerializer(
@@ -72,7 +72,7 @@ class PlanApiView(APIView):
 
 
 class PlanDetailView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, pk):
         plan = get_object_or_404(Plan, pk=pk)
@@ -88,7 +88,7 @@ class PlanDetailView(APIView):
 
 
 class PlanAdminListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     queryset = Media.objects.all()
     serializer_class = PlanAdminListSerializer
     pagination_class = CustomPagination

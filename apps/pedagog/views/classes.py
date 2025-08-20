@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.views import APIView
 
 from apps.pedagog.models.classes import Classes, ClassGroup
@@ -7,7 +7,7 @@ from apps.shared.pagination.custom import CustomPagination
 
 
 class ClassesListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = ClassesSerializer
     queryset = Classes.objects.filter(is_active=True).order_by('id')
     pagination_class = CustomPagination
@@ -27,7 +27,7 @@ class ClassesListView(APIView):
 
 
 class ClassGroupListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = ClassGroupSerializer
     queryset = ClassGroup.objects.all()
     pagination_class = CustomPagination

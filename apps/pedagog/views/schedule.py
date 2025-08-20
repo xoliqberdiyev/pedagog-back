@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,7 +11,7 @@ from apps.shared.pagination.custom import CustomPagination
 
 class LessonScheduleView(APIView):
     serializer_class = LessonScheduleSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     pagination_class = CustomPagination
 
     def get_queryset(self):
@@ -47,7 +47,7 @@ class LessonScheduleView(APIView):
 
 class LessonScheduleDetailView(APIView):
     serializer_class = LessonScheduleSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, pk):
         """

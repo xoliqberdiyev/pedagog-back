@@ -12,7 +12,7 @@ from django.utils.encoding import smart_str
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -29,7 +29,7 @@ from apps.users.choices.role import Role
 
 
 class DownloadMediaView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, media_id, format=None):
         user = request.user
@@ -114,7 +114,7 @@ class DownloadMediaView(APIView):
 
 
 class DownloadFileView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, download_token, format=None):
         download_token = get_object_or_404(DownloadToken, token=download_token)
@@ -179,7 +179,7 @@ class DownloadFileView(APIView):
 )
 class MobileDownloadHistoryView(generics.ListAPIView):
     serializer_class = DownloadHistorySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     pagination_class = CustomPagination
 
     def get_queryset(self):
@@ -237,7 +237,7 @@ class MobileDownloadHistoryView(generics.ListAPIView):
 )
 class MobileUploadHistoryView(generics.ListAPIView):
     serializer_class = UploadMediaSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     pagination_class = CustomPagination
 
     def get_queryset(self):

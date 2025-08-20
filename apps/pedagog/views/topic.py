@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -16,7 +16,7 @@ from apps.shared.pagination.custom import CustomPagination
 
 
 class TopicApiView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     pagination_class = CustomPagination
 
     def get(self, request):
@@ -62,7 +62,7 @@ class TopicApiView(APIView):
 
 
 class TopicDetailApiView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, pk):
         topic = get_object_or_404(Topic, pk=pk)

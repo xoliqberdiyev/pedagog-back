@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 
 from apps.pedagog.models.science import Science, ScienceLanguage
@@ -10,7 +10,7 @@ from apps.shared.pagination.custom import CustomPagination
 
 
 class ScienceListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = ScienceSerializer
     queryset = Science.objects.filter(is_active=True)
     pagination_class = CustomPagination
@@ -30,7 +30,7 @@ class ScienceListView(APIView):
 
 
 class ScienceLanguageListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = ScienceLanguageSerializer
     queryset = ScienceLanguage.objects.filter(is_active=True)
     pagination_class = CustomPagination

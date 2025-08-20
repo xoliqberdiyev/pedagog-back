@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,7 +10,7 @@ from apps.users.views.locations import CustomPagination
 
 
 class MediaApiView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     pagination_class = CustomPagination
 
     def get(self, request):
@@ -42,7 +42,7 @@ class MediaApiView(APIView):
 
 
 class MediaDetailApiView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, pk):
         media = get_object_or_404(Media, pk=pk)

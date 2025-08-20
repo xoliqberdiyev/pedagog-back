@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 
 from apps.pedagog.models.school import SchoolType
@@ -7,7 +7,7 @@ from apps.shared.pagination.custom import CustomPagination
 
 
 class SchoolTypeListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = SchoolTypeSerializer
     queryset = SchoolType.objects.filter(is_active=True)
     pagination_class = CustomPagination
