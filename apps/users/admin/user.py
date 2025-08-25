@@ -55,16 +55,19 @@ class UserAdmin(BaseUserAdmin, ModelAdmin, ImportExportModelAdmin):
         "phone",
         "first_name",
         "last_name",
-        "father_name",
+        "source",
+        "referral_count",
         "role",
+        
         # "show_status_customized_color",
         "created_at",
     ]
     filter_horizontal = ("groups", "user_permissions")
-    search_fields = ["phone", "first_name", "last_name", "father_name"]
+    search_fields = ["phone", "first_name", "last_name", "source"]
     readonly_fields = ("docs_links",)
     list_filter = [
         "role",
+        "source",
         ("created_at", RangeDateTimeFilter),
     ]
     inlines = [ModeratorInline, UserProfileInline]
@@ -72,6 +75,12 @@ class UserAdmin(BaseUserAdmin, ModelAdmin, ImportExportModelAdmin):
         "region",
         "district",
     ]
+    
+    @admin.display(description="Takliflar soni")
+    def referral_count(self, obj):
+        return User.objects.filter(referred_by=obj).count()
+    
+    
     ordering = ["-updated_at"]
     fieldsets = (
         (
@@ -97,6 +106,10 @@ class UserAdmin(BaseUserAdmin, ModelAdmin, ImportExportModelAdmin):
                     "district",
                     "avatar",
                     "institution_number",
+                    "source",
+                    "tg_id",
+                    "referred_by",
+                    "referral_code",
                 ),
             },
         ),

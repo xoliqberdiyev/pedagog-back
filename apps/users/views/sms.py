@@ -40,9 +40,12 @@ from apps.users.serializers.user import (
     UserSerializer,
     UserUpdateSerializer,
 )
+
+from apps.users.models.user import SourceChoice
 from apps.users.views.auth import AbstractSendSms
 
 redis_instance = redis.StrictRedis.from_url(os.getenv("REDIS_CACHE_URL"))
+
 
 
 class RegisterView(APIView):
@@ -54,6 +57,17 @@ class RegisterView(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             phone = serializer.validated_data["phone"]
+
+            referral_code = request.headers.get("Referral-Code", None)
+            ref_user_id = None
+            if referral_code:
+                try:
+                    ref_user = User.objects.get(referral_code=referral_code)
+                    ref_user_id = int(ref_user.id)
+                    print(type(ref_user_id))
+                except User.DoesNotExist:
+                    ref_user_id = None
+
             data = {
                 k: (
                     json.dumps(v, cls=DjangoJSONEncoder)
@@ -62,9 +76,21 @@ class RegisterView(APIView):
                 )
                 for k, v in serializer.validated_data.items()
             }
+
+            if ref_user_id:
+                data["referred_by"] = int(ref_user_id)
+
+            header_source = request.headers.get("source", None)
+            if header_source in SourceChoice.values:
+                source = header_source
+            else:
+                source = SourceChoice.BOT
             data["type"] = "user"
+            data["source"] = source
+
             redis_instance.delete(phone)
             redis_instance.hset(phone, mapping=data)
+
             language = request.headers.get("Accept-Language", "uz")
             sms_service = SmsService()
             sms_service.send_confirm(phone, language)
@@ -76,7 +102,7 @@ class RegisterView(APIView):
                         f"Registration data saved. Please confirm your code. SMS sent to {phone} phone number."
                     ),
                 },
-                status=status.HTTP_201_CREATED,
+                status=201,
             )
 
         return Response(
@@ -85,7 +111,7 @@ class RegisterView(APIView):
                 "message": _("Invalid data."),
                 "data": serializer.errors,
             },
-            status=status.HTTP_400_BAD_REQUEST,
+            status=400,
         )
 
 
@@ -143,6 +169,12 @@ class ConfirmView(APIView):
                                     },
                                     status=status.HTTP_400_BAD_REQUEST,
                                 )
+                                
+                            referred_by_id = user_data.get(b"referred_by")
+                            referrer = None
+                            if referred_by_id:
+                                referrer = User.objects.filter(id=int(referred_by_id)).first()
+                                
                             user = User.objects.create_user(
                                 phone=phone,
                                 first_name=user_data[b"first_name"].decode("utf-8"),
@@ -150,6 +182,8 @@ class ConfirmView(APIView):
                                 father_name=user_data[b"father_name"].decode("utf-8"),
                                 region=region_instance,
                                 district=district_instance,
+                                source=user_data[b"source"].decode("utf-8"),
+                                referred_by=referrer,  
                                 institution_number=user_data[
                                     b"institution_number"
                                 ].decode("utf-8"),

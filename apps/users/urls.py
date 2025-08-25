@@ -22,6 +22,7 @@ from apps.users.views.sms import (
     ResetPasswordView,
     ResetSetPasswordView,
 )
+from apps.users.views.botcheck import CheckUserAPIView, UserByIdView, TopReferrersView
 
 urlpatterns = [
     path("auth/confirm/", ConfirmView.as_view(), name="confirm"),
@@ -88,4 +89,9 @@ urlpatterns = [
         DocumentDetailView.as_view(),
         name="user-profile-document-detail",
     ),
+    path("check-user/", CheckUserAPIView.as_view(), name="check-user"),  
+    path("user-by/", UserByIdView.as_view(), name="user-by"),  
+    path("top-referrers/", TopReferrersView.as_view(), name="top-referrers"),
+
+
 ]

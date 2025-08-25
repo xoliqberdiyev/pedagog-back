@@ -13,11 +13,20 @@ from apps.users.choices.role import Role
 from apps.users.managers.user import UserManager
 
 
+class SourceChoice(models.TextChoices):
+    BOT = "bot", "Bot"
+    MOBILE = "mobile", "Mobile App"
+    WEB = "web", "Web"
+    CLICK_APP = "click_app", "Click App"
+
+
 class ContractStatus(models.TextChoices):
     NO_FILE = "NO_FILE", _("Hujjat yuklanmagan")
     WAITING = "WAITING", _("Hujjat topshirgan")
     ACCEPTED = "ACCEPTED", _("Shartnoma tuzilgan")
     REJECTED = "REJECTED", _("Shartnoma bekor qilingan")
+
+
 
 
 class User(AbstractUser, AbstractBaseModel):
@@ -64,8 +73,31 @@ class User(AbstractUser, AbstractBaseModel):
         max_length=255,
         null=True,
         blank=True,
-        verbose_name=_("Muassasa raqami"),
+        verbose_name=_("Muassasa raqami")
     )
+    source = models.CharField(
+        verbose_name=_("Qayerdan ?"),
+        max_length=100,
+        choices=SourceChoice.choices,
+        default=SourceChoice.BOT,
+        blank=True, null=True
+    )
+
+    # refferal
+    referred_by = models.ForeignKey(
+        "self",
+        verbose_name="Taklif qilingan",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="referrals"
+    )
+    referral_code = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    
+    # bot
+    tg_id = models.BigIntegerField(verbose_name=_("Tg ID"), blank=True, null=True)
+
+    
 
     USERNAME_FIELD = "phone"
 
@@ -93,6 +125,8 @@ class User(AbstractUser, AbstractBaseModel):
         verbose_name = _("Foydalanuvchilar")
         verbose_name_plural = _("Foydalanuvchilar")
         ordering = ["-created_at"]
+
+
 
 
 class UserProfile(AbstractBaseModel):

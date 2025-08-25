@@ -42,6 +42,7 @@ class OrdersAdmin(ModelAdmin):
         "user",
         "status",
         "price",
+        "source",
         "start_date",
         "created_at",
     )
@@ -50,7 +51,7 @@ class OrdersAdmin(ModelAdmin):
         "user__last_name",
         "user__phone",
     )
-    list_filter = ("status",)
+    list_filter = ("status", "source", )
     autocomplete_fields = ("user", "classes", "science", "science_language")
 
 
@@ -70,7 +71,7 @@ class PaymentsAdmin(ModelAdmin):
         "order__plan__name",
         "trans_id",
     )
-    list_filter = ("status",)
+    list_filter = ("status", )
 
 
 @admin.register(Plans)

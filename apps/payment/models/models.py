@@ -7,7 +7,7 @@ from apps.pedagog.models.quarter import Quarter
 from apps.pedagog.models.science import Science, ScienceLanguage
 from apps.shared.models.base import AbstractBaseModel
 from apps.payment.enums.payment import PaymentType
-
+from apps.users.models.user import SourceChoice
 
 class Orders(AbstractBaseModel):
     """Order Model"""
@@ -53,6 +53,14 @@ class Orders(AbstractBaseModel):
     )
     price = models.BigIntegerField(default=0, verbose_name=_("Narxi"))
     status = models.BooleanField(default=False, verbose_name=_("Holati"))
+    
+    source = models.CharField(
+        verbose_name=_("Qayerdan ?"),
+        max_length=100,
+        choices=SourceChoice.choices,
+        default=SourceChoice.BOT,
+        blank=True, null=True
+    )
 
     class Meta:
         verbose_name = _("Buyurtmalar")

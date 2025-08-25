@@ -12,6 +12,9 @@ class UserSerializer(serializers.ModelSerializer):
     plan_creatable = serializers.SerializerMethodField(read_only=True)
     topic_creatable = serializers.SerializerMethodField(read_only=True)
     is_contracted = serializers.SerializerMethodField(read_only=True)
+    
+    referral_count = serializers.SerializerMethodField()
+
 
     class Meta:
         fields = [
@@ -23,6 +26,10 @@ class UserSerializer(serializers.ModelSerializer):
             "phone",
             "role",
             "region",
+            "tg_id",
+            "referral_code",
+            "referral_count",
+            
             "district",
             "institution_number",
             "resource_creatable",
@@ -41,6 +48,9 @@ class UserSerializer(serializers.ModelSerializer):
         if obj.avatar:
             return obj.avatar.url.replace(settings.MEDIA_URL, "/media/")
         return None
+    
+    def get_referral_count(self, obj):
+        return obj.referrals.count()
 
     def is_moderator(self, obj):
         return obj.role == Role.MODERATOR or obj.role == Role.ADMIN

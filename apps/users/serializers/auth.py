@@ -1,6 +1,7 @@
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
+from apps.users.models.user import SourceChoice
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from apps.users.models.locations import Region, District
@@ -29,6 +30,7 @@ class RegisterSerializer(serializers.Serializer):
     region = serializers.CharField(max_length=255)
     district = serializers.CharField(max_length=255)
     institution_number = serializers.CharField(max_length=255, required=False)
+    source = serializers.ChoiceField(choices=SourceChoice.choices, required=False)
 
     def validate_phone(self, value):
         user = User.objects.filter(phone=value)
