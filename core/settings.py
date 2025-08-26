@@ -123,6 +123,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
 
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+    "source",
+    "Referral-Code",
+]
+    
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 LOCALE_MIDDLEWARE_EXCLUDED_PATHS = ["/media/", "/static/"]
