@@ -79,7 +79,7 @@ class User(AbstractUser, AbstractBaseModel):
         verbose_name=_("Qayerdan ?"),
         max_length=100,
         choices=SourceChoice.choices,
-        default=SourceChoice.BOT,
+        default=SourceChoice.WEB,
         blank=True, null=True
     )
 
@@ -94,7 +94,7 @@ class User(AbstractUser, AbstractBaseModel):
     )
     referral_code = models.CharField(max_length=50, unique=True, blank=True, null=True)
     
-    # bot
+    # bot-
     tg_id = models.BigIntegerField(verbose_name=_("Tg ID"), blank=True, null=True)
 
     
