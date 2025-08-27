@@ -84,7 +84,7 @@ class RegisterView(APIView):
             if header_source in SourceChoice.values:
                 source = header_source
             else:
-                source = SourceChoice.BOT
+                source = SourceChoice.WEB
             data["type"] = "user"
             data["source"] = source
 
