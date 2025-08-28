@@ -43,6 +43,8 @@ from apps.users.serializers.user import (
 
 from apps.users.models.user import SourceChoice
 from apps.users.views.auth import AbstractSendSms
+from rest_framework.exceptions import ValidationError
+
 
 redis_instance = redis.StrictRedis.from_url(os.getenv("REDIS_CACHE_URL"))
 
@@ -114,7 +116,6 @@ class RegisterView(APIView):
             status=400,
         )
 
-
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
@@ -126,10 +127,17 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
         try:
             serializer.is_valid(raise_exception=True)
-        except Exception as e:
-            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except ValidationError as e:
+            detail = e.detail
+            if isinstance(detail, dict) and "detail" in detail:
+                detail = detail["detail"]
+            if isinstance(detail, list):
+                detail = detail[0]
+
+            return Response({"detail": detail}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
 
 
 class ConfirmView(APIView):
