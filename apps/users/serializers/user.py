@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from apps.pedagog.models.moderator import Moderator
 from apps.users.choices.role import Role
-from apps.users.models.user import User
+from apps.users.models.user import User, BotUsers
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -223,3 +223,14 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             "institution_number",
         ]
         model = User
+
+
+    
+class BotUsersSerialiers(serializers.ModelSerializer):
+    class Meta:
+        model = BotUsers
+        fields = [
+            "id",
+            "tg_id",
+            "first_name"
+        ]

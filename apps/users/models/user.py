@@ -129,6 +129,21 @@ class User(AbstractUser, AbstractBaseModel):
 
 
 
+
+class BotUsers(AbstractBaseModel):
+    tg_id = models.BigIntegerField(verbose_name=_("Tg id"))
+    first_name = models.CharField(verbose_name=_("Ism"), max_length=100)
+    
+    def __str__(self):
+        return self.first_name
+    
+    class Meta:
+        verbose_name = _("Bot Foydalanuvchilar")
+        verbose_name_plural = _("Bot Foydalanuvchilar")
+        ordering = ["-created_at"]
+
+
+
 class UserProfile(AbstractBaseModel):
     user = models.OneToOneField(
         User,
@@ -180,6 +195,9 @@ class UserProfile(AbstractBaseModel):
 
     def __str__(self) -> str:
         return f"{self.user.last_name} {self.user.first_name} {self.user.father_name} | {self.user.phone}"
+
+
+
 
 
 class SmsConfirm(AbstractBaseModel):

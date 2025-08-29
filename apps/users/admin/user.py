@@ -14,7 +14,19 @@ from unfold.forms import (
 )
 
 from apps.pedagog.models.moderator import Moderator
-from apps.users.models.user import ContractStatus, User, UserProfile
+from apps.users.models.user import ContractStatus, User, UserProfile, BotUsers
+
+
+@admin.register(BotUsers)
+class BotUserAdmin(ModelAdmin):
+    list_display = [
+        "id",
+        "tg_id",
+        "first_name"
+    ]
+    search_fields = ['first_name', ]
+
+
 
 
 class UserProfileInline(StackedInline):

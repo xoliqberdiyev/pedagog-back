@@ -30,6 +30,17 @@ PAGES = [
                 ).users.models.user.UserProfile.user_get_status_count(),
             },
             {
+                "title": _("Bot Foydalanuvchilari"),
+                "icon": "person",
+                "link": reverse_lazy("admin:users_botusers_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_user"
+                ),
+                "badge": lambda: __import__(
+                    "apps.users.models.user"
+                ).users.models.user.UserProfile.user_get_status_count(),
+            },
+            {
                 "title": _("Guruhlar"),
                 "icon": "supervisor_account",
                 "link": reverse_lazy("admin:auth_group_changelist"),

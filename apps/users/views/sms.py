@@ -39,6 +39,7 @@ from apps.users.serializers.user import (
     UserDetailSerializer,
     UserSerializer,
     UserUpdateSerializer,
+    BotUsersSerialiers
 )
 
 from apps.users.models.user import SourceChoice
@@ -47,6 +48,26 @@ from rest_framework.exceptions import ValidationError
 
 
 redis_instance = redis.StrictRedis.from_url(os.getenv("REDIS_CACHE_URL"))
+
+
+
+
+class BotUserView(APIView):
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        serializer = BotUsersSerialiers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "User created successfully", "data": serializer.data},
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            {"errors": serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
 
 
 

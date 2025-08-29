@@ -20,13 +20,15 @@ from apps.users.views.sms import (
     ResendView,
     ResetConfirmationCodeView,
     ResetPasswordView,
-    ResetSetPasswordView,
+    ResetSetPasswordView,BotUserView
 )
 from apps.users.views.botcheck import CheckUserAPIView, UserByIdView, TopReferrersView
 
 urlpatterns = [
     path("auth/confirm/", ConfirmView.as_view(), name="confirm"),
     path("auth/register/", RegisterView.as_view(), name="register"),
+    path("auth/botuser/", BotUserView.as_view(), name="botuser"),
+
     path(
         "auth/register/moderator/",
         ModeratorRegisterView.as_view(),
