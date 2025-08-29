@@ -25,7 +25,7 @@ from apps.shared.exceptions.core import SmsException
 from apps.shared.services.sms import SmsService
 from apps.users.models.locations import Region, District
 from apps.users.models.reset_token import ResetToken
-from apps.users.models.user import User
+from apps.users.models.user import User, BotUsers
 from apps.users.serializers.auth import (
     RegisterSerializer,
     ConfirmSerializer,
@@ -54,8 +54,16 @@ redis_instance = redis.StrictRedis.from_url(os.getenv("REDIS_CACHE_URL"))
 
 class BotUserView(APIView):
     permission_classes = [AllowAny]
-    
+
     def post(self, request):
+        tg_id = request.data.get('tg_id')
+
+        if BotUsers.objects.filter(tg_id=tg_id).exists():
+            return Response(
+                {"message": "User with this tg_id already exists."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         serializer = BotUsersSerialiers(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -67,7 +75,6 @@ class BotUserView(APIView):
             {"errors": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST
         )
-
 
 
 
