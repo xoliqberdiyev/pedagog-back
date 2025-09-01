@@ -74,6 +74,8 @@ class ModeratorRegisterSerializer(serializers.Serializer):
     degree = serializers.CharField(max_length=255, required=False)
     docs = serializers.ListField(child=serializers.FileField(), required=False)
     role = serializers.CharField(max_length=50, default="moderator", required=False)
+    source = serializers.ChoiceField(choices=SourceChoice.choices, required=False)
+    
 
     def validate_phone(self, value):
         user = User.objects.filter(phone=value)

@@ -15,6 +15,8 @@ from apps.pedagog.models.documents import Document, FileModel
 from apps.shared.services.sms import SmsService
 from apps.users.serializers.auth import ModeratorRegisterSerializer
 
+from apps.users.models.user import SourceChoice
+
 redis_instance = redis.StrictRedis.from_url(os.getenv("REDIS_CACHE_URL"))
 
 
@@ -52,6 +54,16 @@ class ModeratorRegisterView(APIView):
             # `docs` maydonini saqlash
             data["docs"] = json.dumps(docs_id)
             data["type"] = "moderator"
+
+
+            header_source = request.headers.get("source", None)
+            if header_source in SourceChoice.values:
+                source = header_source
+            else:
+                source = SourceChoice.WEB
+            data["type"] = "user"
+            data["source"] = source
+
 
             # Redisda saqlash
             redis_instance.delete(phone)
