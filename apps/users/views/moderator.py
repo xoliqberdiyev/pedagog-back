@@ -61,7 +61,7 @@ class ModeratorRegisterView(APIView):
                 source = header_source
             else:
                 source = SourceChoice.WEB
-            data["type"] = "user"
+            data["type"] = "moderator"
             data["source"] = source
 
 
