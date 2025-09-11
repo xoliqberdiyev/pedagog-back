@@ -11,9 +11,10 @@ class ClickWebhookAPIView(ClickWebhook):
         
          
         try:
-            account_id = params.get("account_id")
+            merchant_trans_id = params.merchant_trans_id
+
             
-            payment = Payments.objects.filter(trans_id=account_id).first()
+            payment = Payments.objects.filter(trans_id=merchant_trans_id).first()
             order = payment.order
 
             order.status = True
