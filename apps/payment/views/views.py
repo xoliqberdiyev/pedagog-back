@@ -25,6 +25,7 @@ from apps.shared.utils.logger import logger
 
 from apps.payment.services.payment import PaymentService
 from apps.users.models.user import SourceChoice
+from datetime import timedelta
 
 
 
@@ -43,6 +44,7 @@ class OrderViewSet(
         science = serializer.validated_data.get("science")
         science_language = serializer.validated_data.get("science_language")
         classes = serializer.validated_data.get("classes")
+        
         current_date = timezone.now().date()
         
         header_source = self.request.headers.get("source")
@@ -63,8 +65,10 @@ class OrderViewSet(
             raise APIException(
                 _("Bu foydalanuvchi uchun bu turdagi buyurtma allaqachon mavjud.")
             )
+            
+        end_date = current_date + timedelta(days=30) 
 
-        return serializer.save(user=user, source=source)
+        return serializer.save(user=user, source=source, end_date=end_date)
     
     def get_queryset(self):
         queryset = Orders.objects.filter(user=self.request.user).order_by("-id")
