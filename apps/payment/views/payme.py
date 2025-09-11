@@ -1,5 +1,7 @@
 from payme.views import PaymeWebHookAPIView
 from apps.payment.models.models import Orders, Payments
+from payme.models import PaymeTransactions
+
 
 
 class PaymeCallBackAPIView(PaymeWebHookAPIView):
@@ -11,29 +13,29 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
 
     def handle_successfully_payment(self, params, result, *args, **kwargs):
         
-        order_id = params.get('account', {}).get('order_id')
-        trans_id = params.get('id')
+        try:
+            trans_id = params.get('id')  
+            
+            transaction = PaymeTransactions.objects.filter(transaction_id=trans_id).first()
+    
 
-        print(f"\n--- Payme Callback Received ---\norder_id: {order_id}\ntrans_id: {trans_id}\nparams: {params}\n-----------------------------\n")
+            payment = Payments.objects.filter(trans_id=transaction.account_id).first()
+            if not payment:
+                print(f"\nPayment with trans_id {trans_id} not found\n")
+                return
+            order = payment.order
 
-        if order_id:
-            try:
-                order = Orders.objects.get(id=int(order_id))
-                order.status = True
-                order.save()
-                print(f"\nOrder {order_id} status True qilindi\n")
+            order.status = True
+            order.save()
 
-                payment = Payments.objects.filter(order=order, trans_id=trans_id).first()
-                if payment:
-                    payment.status = True
-                    payment.save()
-                    print(f"\nPayment {payment.id} status True qilindi\n")
-                else:
-                    print(f"\nPayment mavjud emas, faqat Order yangilandi\n")
+            payment.status = True
+            payment.save()
 
-            except Orders.DoesNotExist:
-                print(f"\nOrder with id {order_id} not found\n")
-                
+            print(f"\nOrder {order.id} va Payment {payment.id} status True qilindi")
+            print(f"Params: {params}")
+
+        except Exception as e:
+            print(f"===========\n\n{e}\n\n========================")
                 
 
         """
