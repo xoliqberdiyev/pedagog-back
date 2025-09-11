@@ -23,8 +23,6 @@ class ClickWebhookAPIView(ClickWebhook):
             payment.status = True
             payment.save()
 
-            print(f"\n\nOrder {order.id} va Payment {payment.id} status True qilindi\n\n{account_id}\n\n")
-            print(f"Params: {params}")
 
         except Exception as e:
             print(f"===========\n\n{e}\n\n========================")
