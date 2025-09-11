@@ -11,28 +11,28 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
 
     def handle_successfully_payment(self, params, result, *args, **kwargs):
         
-        print(f"Transaction successfully performed for params: {params} and performed_result: {result}")
-        
-        order_id = params.get('order_id')
-        trans_id = params.get('id')  
+        order_id = params.get('account', {}).get('order_id')
+        trans_id = params.get('id')
+
+        print(f"\n--- Payme Callback Received ---\norder_id: {order_id}\ntrans_id: {trans_id}\nparams: {params}\n-----------------------------\n")
 
         if order_id:
             try:
-                order = Orders.objects.get(id=order_id)
+                order = Orders.objects.get(id=int(order_id))
                 order.status = True
                 order.save()
+                print(f"\nOrder {order_id} status True qilindi\n")
 
                 payment = Payments.objects.filter(order=order, trans_id=trans_id).first()
                 if payment:
                     payment.status = True
                     payment.save()
-                    print(f"Payment {payment.id} muvaffaqiyatli yangilandi")
+                    print(f"\nPayment {payment.id} status True qilindi\n")
                 else:
-                    print(f"Payment mavjud emas, faqat Order yangilandi")
+                    print(f"\nPayment mavjud emas, faqat Order yangilandi\n")
 
-                print(f"Order {order_id} muvaffaqiyatli yangilandi")
             except Orders.DoesNotExist:
-                print(f"Order with id {order_id} not found")
+                print(f"\nOrder with id {order_id} not found\n")
                 
                 
 
