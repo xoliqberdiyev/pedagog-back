@@ -36,23 +36,30 @@ class DownloadMediaView(APIView):
         current_date = datetime.date.today()
         media = get_object_or_404(Media, id=media_id)
 
-        # Check if media has an associated topic
         topic = media.topic_id
         plan = topic.plan_id if topic else None
+        print("\n\ntopic:\n\n", topic)
+        print("\n\Plan:\n\n", plan)
+        
 
         order = None
+        
         if plan:
+            
+            
+            current_date = timezone.now()
+
             order = Orders.objects.filter(
                 user=user,
-                classes=plan.classes,
-                science=plan.science,
-                science_language=plan.science_language,
-                start_date__lte=current_date,
-                end_date__gte=current_date,
+                classes_id=plan.classes.id,
+                science_id=plan.science.id,
+                science_language_id=plan.science_language.id,
                 status=True,
             ).last()
+            print("\nOrder:\n", order)
 
-        # If media has a topic, only the owner or a user with an order can download
+            
+
         if (
             plan
             and media.user != user
