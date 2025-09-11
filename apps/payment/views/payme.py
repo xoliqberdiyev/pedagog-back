@@ -17,7 +17,6 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
             trans_id = params.get('id')  
             
             transaction = PaymeTransactions.objects.filter(transaction_id=trans_id).first()
-    
 
             payment = Payments.objects.filter(trans_id=transaction.account_id).first()
             if not payment:
