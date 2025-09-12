@@ -55,7 +55,7 @@ class Plan(AbstractBaseModel):
 
         self.hour = self.topics.aggregate(models.Sum("hours"))["hours__sum"] or 0
 
-        super().save(update_fields=["hour"])
+        super().save(*args, **kwargs) 
 
     class Meta:
         verbose_name = _("Tematik reja")
