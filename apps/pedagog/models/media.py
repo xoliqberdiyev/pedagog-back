@@ -70,6 +70,9 @@ class Media(AbstractBaseModel):
         blank=True,
         verbose_name=_('Resurs turi')
     )
+    link = models.URLField(
+        null=True, blank=True, verbose_name=_('Link')
+    )
 
     def calculation_view_count(self):
         if self.view_count is None:

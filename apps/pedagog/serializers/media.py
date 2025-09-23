@@ -16,6 +16,7 @@ class MediaSerializer(serializers.ModelSerializer):
             "file",
             "image",
             "media_type",
+            'link',
         )
         extra_kwargs = {"media_type": {"required": False}}
     
@@ -45,6 +46,7 @@ class MediaDetailSerializer(serializers.ModelSerializer):
             "user",
             "converted_medias",
             "media_type",
+            'link',
         )
 
     def get_is_author(self, obj):
@@ -79,6 +81,7 @@ class MediaMiniSerializer(serializers.ModelSerializer):
             "size",
             "is_author",
             "view_count",
+            'link',
             "created_at",
         )
 
