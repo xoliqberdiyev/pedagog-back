@@ -387,7 +387,7 @@ class ResetPasswordView(AbstractSendSms):
 
 class MeView(viewsets.ViewSet):
     """Get user information"""
-
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserDetailSerializer
 
     @extend_schema(
