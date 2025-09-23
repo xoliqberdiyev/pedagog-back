@@ -1,4 +1,12 @@
+import requests
+
+from django.conf import settings
+
+from rest_framework import views, status
+from rest_framework.response import Response
+
 from click_up.views import ClickWebhook
+
 from apps.payment.models.models import Orders, Payments
 
 
@@ -32,3 +40,44 @@ class ClickWebhookAPIView(ClickWebhook):
         cancelled payment method process you can ovveride it
         """
         print(f"payment cancelled params: {params}")
+
+    
+class ClickProfileView(views.APIView):
+    def get(self, request):
+        web_session = request.headers.get('web_session')
+        if not web_session:
+            return Response(
+                {
+                    'error': 'web_session not found',
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f"Bearer {settings.CLICK_SECRET_KEY}",
+            'web_session': web_session,
+        }
+        payload = {
+            'jsonrpc': '2.0',
+            'method': 'user.profile',
+            'id': 321
+        }
+        try:
+            resp = requests.post(
+                'https://api.click.uz/integration',
+                json=payload, headers=headers, timeout=10
+            )
+            data = resp.json()
+            if 'result' in data:
+                user = data['result']
+                return Response(
+                    {
+                        'id': user.get('user_id'),
+                        'phone': user.get('phone'),
+                        'first_name': user.get('first_name'),
+                        'last_name': user.get('last_name')
+                    }
+                )
+            return Response(data, status=200)
+        except requests.RequestException as e:
+            return Response({'error': str(e)}, status=500)
