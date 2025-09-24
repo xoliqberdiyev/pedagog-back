@@ -142,7 +142,7 @@ class PlanAdminListSerializer(serializers.ModelSerializer):
             return None
 
         plan = topic.plan_id
-        resource = plan.science.resource_set.first()
+        resource = plan.science
 
         return {
             "plan_id": plan.id,
@@ -174,24 +174,24 @@ class PlanAdminListSerializer(serializers.ModelSerializer):
                 "id": plan.science_types.id,
                 "name": plan.science_types.name,
             },
-            "resource": (
-                {
-                    "id": resource.id,
-                    "name": resource.name,
-                }
-                if resource
-                else None
-            ),
-            "resource_type": (
-                {
-                    "id": (resource.type.id if resource and resource.type else None),
-                    "name": (
-                        resource.type.name if resource and resource.type else None
-                    ),
-                }
-                if resource
-                else None
-            ),
+            # "resource": (
+            #     {
+            #         "id": resource.id,
+            #         "name": resource.name,
+            #     }
+            #     if resource
+            #     else None
+            # ),
+            # "resource_type": (
+            #     {
+            #         "id": (resource.type.id if resource and resource.type else None),
+            #         "name": (
+            #             resource.type.name if resource and resource.type else None
+            #         ),
+            #     }
+            #     if resource
+            #     else None
+            # ),
         }
 
     def get_size(self, obj):
