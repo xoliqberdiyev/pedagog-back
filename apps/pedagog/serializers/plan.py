@@ -149,7 +149,7 @@ class PlanAdminListSerializer(serializers.ModelSerializer):
             "topic": {
                 "id": topic.id,
                 "name": topic.name,
-            },
+            } if topic else None,
             "science": {
                 "id": plan.science.id,
                 "name": plan.science.name,
