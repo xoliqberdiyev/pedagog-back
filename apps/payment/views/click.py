@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from click_up.views import ClickWebhook
 
 from apps.payment.models.models import Orders, Payments
+from apps.users.models.user import User
 
 
 class ClickWebhookAPIView(ClickWebhook):
@@ -70,6 +71,12 @@ class ClickProfileView(views.APIView):
             data = resp.json()
             if 'result' in data:
                 user = data['result']
+                User.objects.create(
+                    phone=user.get('phone'),
+                    first_name=user.get('first_name'),
+                    last_name=user.get('last_name'),
+                    source='click_app'
+                )
                 return Response(
                     {
                         'id': user.get('user_id'),
