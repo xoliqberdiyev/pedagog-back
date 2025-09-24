@@ -158,22 +158,22 @@ class PlanAdminListSerializer(serializers.ModelSerializer):
                 "id": plan.classes.id,
                 "name": plan.classes.name,
             },
-            "class_type": {
-                "id": plan.classes.type.id if plan.classes.type else None,
-                "name": plan.classes.type.name if plan.classes.type else None,
-            },
-            "class_group": {
-                "id": plan.class_group.id,
-                "name": plan.class_group.name,
-            },
+            # "class_type": {
+            #     "id": plan.classes.type.id if plan.classes.type else None,
+            #     "name": plan.classes.type.name if plan.classes.type else None,
+            # },
+            # "class_group": {
+            #     "id": plan.class_group.id,
+            #     "name": plan.class_group.name,
+            # },
             "quarter": {
                 "id": plan.quarter.id,
                 "name": plan.quarter.name,
             },
-            "science_type": {
-                "id": plan.science_types.id,
-                "name": plan.science_types.name,
-            },
+            # "science_type": {
+            #     "id": plan.science_types.id,
+            #     "name": plan.science_types.name,
+            # },
             # "resource": (
             #     {
             #         "id": resource.id,
