@@ -137,7 +137,7 @@ class PlanAdminListSerializer(serializers.ModelSerializer):
         }
 
     def get_meta(self, obj):
-        topic = obj.topic.first()
+        topic = obj.topic.first() if obj.topic.first() else None
         if topic is None:
             return None
 
