@@ -14,6 +14,10 @@ class PaymentService:
             service_id=os.getenv("CLICK_SERVICE_ID"),
             merchant_id=os.getenv("CLICK_MERCHANT_ID"),
         )
+        self.click_up_2 = ClickUp(
+            service_id=os.getenv('CLICK_SERVICE_2_ID'),
+            merchant_id=os.getenv('CLICK_MERCHANT_2_ID'),
+        )
         self.payme = Payme(payme_id=os.getenv("PAYME_ID"))
 
     def generate_link(self, order, payment_type):
@@ -28,6 +32,14 @@ class PaymentService:
             trans_id = getattr(pay_link, "transaction_id", None) or str(order.id)  
             return trans_id, pay_link 
         
+        elif payment_type == 'click_2':
+            pay_link = self.click_up_2.initializer.generate_pay_link(
+                id=int(order.id),
+                amount=order.price,
+                return_url='https://pedagog.uz'
+            )
+            trans_id = getattr(pay_link, 'transaction_id', None) or str(order.id)
+            return trans_id, pay_link
 
         elif payment_type == "payme":
             pay_link = self.payme.initializer.generate_pay_link(

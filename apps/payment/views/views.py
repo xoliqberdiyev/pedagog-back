@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
 from rest_framework.mixins import (
@@ -11,6 +12,7 @@ from rest_framework.mixins import (
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ViewSet
+from rest_framework.views import APIView
 
 from apps.payment.models.models import Orders, Payments, TransactionModel
 from apps.payment.serializers.serializers import (
@@ -170,3 +172,29 @@ class TransactionViewSet(ViewSet):
         paginated_transactions = paginator.paginate_queryset(transactions, request)
         serializer = TransactionSerializer(paginated_transactions, many=True)
         return paginator.get_paginated_response(serializer.data)
+
+
+class PaymentCreateViaClickApiView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        order_id = request.data.get('order')
+        if not order_id:
+            return Response(
+                {
+                    'detail': 'Order field required',
+                }, status=400
+            )
+        order = get_object_or_404(Orders, id=order_id)
+        user_id = request.user.id
+        payment_services = PaymentService(user_id)
+        trans_id, pay_link = payment_services.generate_link(order, 'click_2')
+        Payments.objects.get_or_create(
+            order=order, price=order.price, trans_id=trans_id
+        )
+        return Response(
+            {
+                "detail": _("Payment created"),
+                "data": {"url": pay_link},
+            }
+        )

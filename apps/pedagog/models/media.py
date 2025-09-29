@@ -73,6 +73,9 @@ class Media(AbstractBaseModel):
     link = models.URLField(
         null=True, blank=True, verbose_name=_('Link')
     )
+    preview = models.FileField(
+        null=True, blank=True, upload_to='media/',
+    )
 
     def calculation_view_count(self):
         if self.view_count is None:

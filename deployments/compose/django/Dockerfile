@@ -12,7 +12,8 @@ RUN apt update && \
     apt install -y gettext && \
     apt-get install -y poppler-utils && \
     apt-get install -y libreoffice && \
-    apt clean && rm -rf /var/lib/apt/lists/*
+    apt clean && rm -rf /var/lib/apt/lists/* \
+    apt install ffmpeg
 
 
 # Install other Python dependencies

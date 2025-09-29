@@ -151,6 +151,8 @@ CLICK_MERCHANT_ID=os.getenv("CLICK_MERCHANT_ID")
 CLICK_SECRET_KEY=os.getenv("CLICK_SECRET_KEY")
 CLICK_ACCOUNT_MODEL = "apps.payment.models.models.Orders" 
 CLICK_AMOUNT_FIELD = "price" 
+CLICK_SERVICE_2_ID=os.getenv('CLICK_SERVICE_2_ID')
+CLICK_MERCHANT_2_ID=os.getenv('CLICK_MERCHANT_2_ID')
 
 #payme
 
