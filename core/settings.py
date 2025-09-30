@@ -132,6 +132,7 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
     "source",
     "Referral-Code",
+    'web_session',
 ]
     
 
