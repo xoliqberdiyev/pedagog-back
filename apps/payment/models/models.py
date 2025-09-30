@@ -87,7 +87,8 @@ class Orders(AbstractBaseModel):
         return f"{self.id} - Incomplete User Information"
 
     def save(self, *args, **kwargs):
-        self.price = Plans.objects.filter(quarter=self.quarter).first().price
+        if Plans.objects.filter(quarter=self.quarter).first():
+            self.price = Plans.objects.filter(quarter=self.quarter).first().price
         super().save(*args, **kwargs)
 
 

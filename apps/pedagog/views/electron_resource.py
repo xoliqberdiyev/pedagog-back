@@ -148,7 +148,7 @@ class ElectronResourceView(APIView):
             queryset = queryset.filter(query)
         paginator = self.pagination_class()
         result_page = paginator.paginate_queryset(queryset, request)
-        serializer = self.serializer_class(result_page, many=True)
+        serializer = self.serializer_class(result_page, many=True, context={'user': request.user})
         return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):

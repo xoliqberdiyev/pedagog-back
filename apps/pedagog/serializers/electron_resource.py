@@ -8,6 +8,7 @@ from apps.pedagog.models.electron_resource import (
     ElectronResourceSubCategory,
     ElectronResource,
 )
+from apps.payment.models.models import Orders, Payments
 
 
 class SeoMetaCategoryDataSerializer(serializers.ModelSerializer):
@@ -144,6 +145,7 @@ class ElectronResourceSubCategorySerializer(serializers.ModelSerializer):
 
 class ElectronResourceSerializer(serializers.ModelSerializer):
     sub_categories = serializers.SerializerMethodField()
+    is_paid = serializers.SerializerMethodField(method_name='get_is_paid')
 
     class Meta:
         model = ElectronResource
@@ -157,6 +159,8 @@ class ElectronResourceSerializer(serializers.ModelSerializer):
             "type",
             "category",
             "sub_categories",
+            'price',
+            'is_paid',
             "created_at",
         )
         extra_kwargs = {
@@ -164,7 +168,14 @@ class ElectronResourceSerializer(serializers.ModelSerializer):
             "size": {"required": False},
             "type": {"required": False},
             "user": {"required": False},
+            'price': {'required': False},
         }
+
+    def get_is_paid(self, obj):
+        user = self.context.get('user')
+        order = Orders.objects.filter(user=user, electronic_resource=obj).first()
+        payment = Payments.objects.filter(order=order).first()
+        return payment.status if payment else False
 
     def get_sub_categories(self, obj):
         if isinstance(obj.category, ElectronResourceCategory):
@@ -177,7 +188,8 @@ class ElectronResourceSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         from apps.users.serializers.user import UserSerializer
-
+        
+        data['file'] = instance.file if data.get('is_paid') is True else None  
         data["user"] = UserSerializer(instance.user).data
         return data
 
@@ -193,6 +205,7 @@ class ElectronResourceMiniSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "sub_category",
+            'price',
             "created_at",
         )
 
@@ -210,6 +223,7 @@ class ElectronResourceAdminSerializer(serializers.ModelSerializer):
             "size",
             "type",
             "category",
+            'price',
             "sub_category",
             "created_at",
         )
@@ -253,6 +267,5 @@ class ElectronResourceSearchSerializer(serializers.ModelSerializer):
             "description",
             "category",
             'file',
-            'price',
             "created_at",
         )

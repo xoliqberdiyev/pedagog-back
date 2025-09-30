@@ -222,7 +222,6 @@ class PayToElectronicResourceApiView(APIView):
                 }, status=400
             )
         current_date = timezone.now().date()
-        print(resource.price)
         order, created = Orders.objects.get_or_create(
             user=request.user,
             electronic_resource=resource,
@@ -231,13 +230,12 @@ class PayToElectronicResourceApiView(APIView):
             end_date__gte=current_date,
             status=True,
         )
-        print(order)
 
         if created:
             logger.info(f"Order created")
         payment_services = PaymentService(request.user.id)
         trans_id, pay_link = payment_services.generate_link(order, payment_type)
-        payment = Payments.objects.get_or_create(
+        Payments.objects.get_or_create(
             order=order,
             price=order.price,
             trans_id=trans_id,
