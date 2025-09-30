@@ -49,8 +49,8 @@ class ClickProfileView(views.APIView):
     def get(self, request):
         web_session = request.headers.get('web_session')
         logging.info(request.headers)
-        logging.info(request.params)
-        logging.info(request.body)
+        # logging.info(request.params)
+        # logging.info(request.body)
         
         if not web_session:
             return Response(
