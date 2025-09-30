@@ -134,6 +134,8 @@ CORS_ALLOW_HEADERS = [
     "Referral-Code",
     'web_session',
 ]
+CORS_ALLOW_ALL_HEADERS = True
+
     
 
 CORS_ALLOW_ALL_ORIGINS = True
