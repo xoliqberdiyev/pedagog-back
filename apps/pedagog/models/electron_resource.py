@@ -89,6 +89,8 @@ class ElectronResource(AbstractBaseModel):
         on_delete=models.CASCADE,
         related_name="resources",
     )
+    price = models.PositiveIntegerField(null=True, blank=True)
+    
     is_active = models.BooleanField(_("Is Active"), default=True)
 
     def __str__(self):

@@ -8,6 +8,7 @@ from apps.pedagog.models.science import Science, ScienceLanguage
 from apps.shared.models.base import AbstractBaseModel
 from apps.payment.enums.payment import PaymentType
 from apps.users.models.user import SourceChoice
+from apps.pedagog.models.electron_resource import ElectronResource
 
 
 
@@ -32,12 +33,16 @@ class Orders(AbstractBaseModel):
         on_delete=models.CASCADE,
         verbose_name=_("Sinf"),
         related_name="orders",
+        null=True,
+        blank=True
     )
     science = models.ForeignKey(
         Science,
         on_delete=models.CASCADE,
         verbose_name=_("Fan"),
         related_name="orders",
+        null=True,
+        blank=True
     )
     science_language = models.ForeignKey(
         ScienceLanguage,
@@ -52,6 +57,15 @@ class Orders(AbstractBaseModel):
         on_delete=models.CASCADE,
         verbose_name=_("Chorak"),
         related_name="orders",
+        null=True,
+        blank=True
+    )
+    electronic_resource = models.ForeignKey(
+        ElectronResource,
+        on_delete=models.CASCADE,
+        related_name='orders',
+        null=True,
+        blank=True
     )
     price = models.BigIntegerField(default=0, verbose_name=_("Narxi"))
     status = models.BooleanField(default=False, verbose_name=_("Holati"))

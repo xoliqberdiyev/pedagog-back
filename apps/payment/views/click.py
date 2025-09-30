@@ -1,4 +1,4 @@
-import requests
+import requests, logging
 
 from django.conf import settings
 
@@ -9,6 +9,8 @@ from click_up.views import ClickWebhook
 
 from apps.payment.models.models import Orders, Payments
 from apps.users.models.user import User
+
+logger = logging.getLogger(__name__)
 
 
 class ClickWebhookAPIView(ClickWebhook):
@@ -46,6 +48,10 @@ class ClickWebhookAPIView(ClickWebhook):
 class ClickProfileView(views.APIView):
     def get(self, request):
         web_session = request.headers.get('web_session')
+        logging.info(request.headers)
+        logging.info(request.params)
+        logging.info(request.body)
+        
         if not web_session:
             return Response(
                 {

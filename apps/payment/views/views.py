@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.shortcuts import get_object_or_404
+
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
 from rest_framework.mixins import (
@@ -24,11 +27,9 @@ from apps.payment.serializers.serializers import (
 from apps.payment.services.services import UzumService
 from apps.shared.pagination.custom import CustomPagination
 from apps.shared.utils.logger import logger
-
 from apps.payment.services.payment import PaymentService
 from apps.users.models.user import SourceChoice
-from datetime import timedelta
-
+from apps.pedagog.models.electron_resource import ElectronResource
 
 
 class OrderViewSet(
@@ -197,4 +198,53 @@ class PaymentCreateViaClickApiView(APIView):
                 "detail": _("Payment created"),
                 "data": {"url": pay_link},
             }
+        )
+
+
+class PayToElectronicResourceApiView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, id):
+        resource = get_object_or_404(ElectronResource, id=id)
+        if resource.price is None:
+            return Response(
+                {
+                    'success': False,
+                    'message': 'Resurs bepul',
+                }, status=400
+            )
+        payment_type = request.data.get('payment_type')
+        if not payment_type and not payment_type in ['click', 'payme', 'click_2']:
+            return Response(
+                {
+                    'success': False,
+                    'error': 'payment_type field is required and choiches -> click, payme, click_2'
+                }, status=400
+            )
+        current_date = timezone.now().date()
+        print(resource.price)
+        order, created = Orders.objects.get_or_create(
+            user=request.user,
+            electronic_resource=resource,
+            price=resource.price,
+            start_date__lte=current_date,
+            end_date__gte=current_date,
+            status=True,
+        )
+        print(order)
+
+        if created:
+            logger.info(f"Order created")
+        payment_services = PaymentService(request.user.id)
+        trans_id, pay_link = payment_services.generate_link(order, payment_type)
+        payment = Payments.objects.get_or_create(
+            order=order,
+            price=order.price,
+            trans_id=trans_id,
+        )
+        return Response(
+            {
+                'success': True,
+                'pay_link': pay_link
+            }, status=200
         )

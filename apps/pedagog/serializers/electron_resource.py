@@ -253,5 +253,6 @@ class ElectronResourceSearchSerializer(serializers.ModelSerializer):
             "description",
             "category",
             'file',
+            'price',
             "created_at",
         )
