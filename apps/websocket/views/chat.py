@@ -30,7 +30,7 @@ class ChatRoomList(APIView):
                 if not chat_room.participants.filter(id=user.id).exists():
                     chat_room.participants.add(user)
         else:
-            chat_rooms = ChatRoom.objects.filter(participants=user)
+            chat_rooms = ChatRoom.objects.filter(participants=user, messages__isnull=False).distinct()
             admins = User.objects.filter(role=Role.ADMIN)
 
             if not chat_rooms.exists():
