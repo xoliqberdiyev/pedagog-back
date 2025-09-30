@@ -47,7 +47,7 @@ class ClickWebhookAPIView(ClickWebhook):
     
 class ClickProfileView(views.APIView):
     def get(self, request):
-        web_session = request.headers.get('Web_session')
+        web_session = request.headers.get('web-session')
         print("Method:", request.method)
         print("Path:", request.path)
         print("Full URL:", request.build_absolute_uri())
