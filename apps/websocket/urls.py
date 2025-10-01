@@ -12,6 +12,8 @@ from apps.websocket.views.notification import (
     NotificationApiView,
     NotificationDetailApiView,
 )
+from apps.websocket.views.fsm_token import FSMTokenApiView
+
 
 urlpatterns = [
     path("chat/rooms/", ChatRoomList.as_view(), name="chat"),
@@ -33,6 +35,7 @@ urlpatterns = [
         CreateChatRoomApiViews.as_view(),
         name="create-chat-room",
     ),
+    path('fsm_token/', FSMTokenApiView.as_view())
 ]
 
 websocket_urlpatterns = [
