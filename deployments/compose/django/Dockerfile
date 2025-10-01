@@ -7,13 +7,10 @@ ENV PYTHONUNBUFFERED=1 \
     LC_ALL=C.UTF-8
 
 # Update and install necessary packages
-RUN apt update && \
-    apt upgrade -y && \
-    apt install -y gettext && \
-    apt-get install -y poppler-utils && \
-    apt-get install -y libreoffice && \
-    apt clean && rm -rf /var/lib/apt/lists/* \
-    apt install ffmpeg
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y gettext poppler-utils libreoffice ffmpeg && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 # Install other Python dependencies

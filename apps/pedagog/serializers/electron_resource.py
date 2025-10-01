@@ -172,10 +172,13 @@ class ElectronResourceSerializer(serializers.ModelSerializer):
         }
 
     def get_is_paid(self, obj):
-        user = self.context.get('user')
-        order = Orders.objects.filter(user=user, electronic_resource=obj).first()
-        payment = Payments.objects.filter(order=order).first()
-        return payment.status if payment else False
+        if obj.price:
+            user = self.context.get('user')
+            order = Orders.objects.filter(user=user, electronic_resource=obj).first()
+            payment = Payments.objects.filter(order=order).first()
+            return payment.status if payment else False
+        else:
+            return True
 
     def get_sub_categories(self, obj):
         if isinstance(obj.category, ElectronResourceCategory):
