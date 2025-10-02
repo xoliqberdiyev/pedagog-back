@@ -4,6 +4,7 @@ from django.conf import settings
 
 from rest_framework import views, status
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from click_up.views import ClickWebhook
 
@@ -72,22 +73,26 @@ class ClickProfileView(views.APIView):
                 'https://api.click.uz/integration',
                 json=payload, headers=headers, timeout=10
             )
-            return Response(resp)
             data = resp.json()
             if 'result' in data:
                 user = data['result']
-                User.objects.create(
-                    phone=user.get('phone'),
-                    first_name=user.get('first_name'),
-                    last_name=user.get('last_name'),
-                    source='click_app'
+                user, created = User.objects.get_or_create(
+                    phone=user.get('phone_number'),
+                    defaults={
+                        'first_name': user.get('name'),
+                        'source': 'click_app',
+                        'last_name': user.get('surname')
+                    }
                 )
+                token = RefreshToken.for_user(user)
                 return Response(
                     {
                         'id': user.get('user_id'),
                         'phone': user.get('phone'),
                         'first_name': user.get('first_name'),
-                        'last_name': user.get('last_name')
+                        'last_name': user.get('last_name'),
+                        'access_token': str(token.access_token),
+                        'refresh_token': str(token) 
                     }
                 )
             return Response(data, status=200)
