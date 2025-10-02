@@ -74,7 +74,7 @@ class ClickProfileView(views.APIView):
                 json=payload, headers=headers, timeout=10
             )
             data = resp.json()
-            if 'result' in data:
+            if 'result' in data and 'error' not in data:
                 user_data = data['result']
                 user, created = User.objects.get_or_create(
                     phone=user_data.get('phone_number'),
@@ -91,6 +91,6 @@ class ClickProfileView(views.APIView):
                         'refresh_token': str(token) 
                     }
                 )
-            return Response(data, status=200)
+            return Response(data, status=400)
         except requests.RequestException as e:
             return Response({'error': str(e)}, status=500)
