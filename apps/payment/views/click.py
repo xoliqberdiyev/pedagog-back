@@ -72,6 +72,7 @@ class ClickProfileView(views.APIView):
                 'https://api.click.uz/integration',
                 json=payload, headers=headers, timeout=10
             )
+            return Response(resp)
             data = resp.json()
             if 'result' in data:
                 user = data['result']
