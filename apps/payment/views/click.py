@@ -75,22 +75,18 @@ class ClickProfileView(views.APIView):
             )
             data = resp.json()
             if 'result' in data:
-                user = data['result']
+                user_data = data['result']
                 user, created = User.objects.get_or_create(
-                    phone=user.get('phone_number'),
+                    phone=user_data.get('phone_number'),
                     defaults={
-                        'first_name': user.get('name'),
+                        'first_name': user_data.get('name'),
                         'source': 'click_app',
-                        'last_name': user.get('surname')
+                        'last_name': user_data.get('surname')
                     }
                 )
                 token = RefreshToken.for_user(user)
                 return Response(
                     {
-                        'id': user.get('user_id'),
-                        'phone': user.get('phone'),
-                        'first_name': user.get('first_name'),
-                        'last_name': user.get('last_name'),
                         'access_token': str(token.access_token),
                         'refresh_token': str(token) 
                     }
