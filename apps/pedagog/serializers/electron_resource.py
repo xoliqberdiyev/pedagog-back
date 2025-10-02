@@ -192,7 +192,7 @@ class ElectronResourceSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         from apps.users.serializers.user import UserSerializer
         
-        data['file'] = instance.file if data.get('is_paid') is True else None  
+        data['file'] = instance.file.url if data.get('is_paid') is True else None  
         data["user"] = UserSerializer(instance.user).data
         return data
 
