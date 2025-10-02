@@ -59,7 +59,7 @@ class ClickProfileView(views.APIView):
             )
         headers = {
             'Content-Type': 'application/json',
-            'Authorization': f"Bearer {settings.CLICK_SECRET_KEY}",
+            'Authorization': f"Bearer {settings.CLICK_TOKEN}",
             'web_session': web_session,
         }
         payload = {
