@@ -127,7 +127,6 @@ class ElectronResourceView(GenericAPIView):
     serializer_class = ElectronResourceSerializer
     permission_classes = [AllowAny]
     pagination_class = CustomPagination
-    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
 
     def get_permissions(self):
         if self.request.method in ["POST", "PATCH", "DELETE"]:
@@ -135,12 +134,6 @@ class ElectronResourceView(GenericAPIView):
         elif self.request.method == "GET":
             return [AllowAny()]
         return super().get_permissions()
-
-    def get_serializer_class(self):
-        if self.request.method == ["POST"]:
-            return ElectronResourceCreateSerializer
-        else:
-            return ElectronResourceSerializer
 
     def get(self, request):
         queryset = ElectronResource.objects.filter(is_active=True)
@@ -161,12 +154,19 @@ class ElectronResourceView(GenericAPIView):
         )
         return paginator.get_paginated_response(serializer.data)
 
+
+class ElectronResourceCreateApiView(GenericAPIView):
+    serializer_class = ElectronResourceCreateSerializer
+    queryset = ElectronResource.objects.all()
+    permission_classes = [IsAuthenticated]
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
+
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 class ElectronResourceDetailView(APIView):
