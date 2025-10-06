@@ -1,5 +1,5 @@
 from django.db.models import Q
-from rest_framework import status
+from rest_framework import parsers, status
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -127,6 +127,7 @@ class ElectronResourceView(GenericAPIView):
     serializer_class = ElectronResourceSerializer
     permission_classes = [AllowAny]
     pagination_class = CustomPagination
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
 
     def get_permissions(self):
         if self.request.method in ["POST", "PATCH", "DELETE"]:
