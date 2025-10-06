@@ -1,22 +1,23 @@
 from django.db.models import Q
 from rest_framework import status
-from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.generics import GenericAPIView, get_object_or_404
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.pedagog.filters.electron_resource import ElectronResourceFilter
 from apps.pedagog.models.electron_resource import (
+    ElectronResource,
     ElectronResourceCategory,
     ElectronResourceSubCategory,
-    ElectronResource,
 )
 from apps.pedagog.serializers.electron_resource import (
-    ElectronResourceCategorySerializer,
-    ElectronResourceCategoryDetailSerializer,
-    ElectronResourceSubCategorySerializer,
-    ElectronResourceSerializer,
     ElectronResourceAdminSerializer,
+    ElectronResourceCategoryDetailSerializer,
+    ElectronResourceCategorySerializer,
+    ElectronResourceCreateSerializer,
+    ElectronResourceSerializer,
+    ElectronResourceSubCategorySerializer,
 )
 from apps.shared.pagination.custom import CustomPagination
 from apps.users.choices.role import Role
@@ -122,7 +123,7 @@ class ElectronResourceSubCategoryDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ElectronResourceView(APIView):
+class ElectronResourceView(GenericAPIView):
     serializer_class = ElectronResourceSerializer
     permission_classes = [AllowAny]
     pagination_class = CustomPagination
@@ -133,6 +134,12 @@ class ElectronResourceView(APIView):
         elif self.request.method == "GET":
             return [AllowAny()]
         return super().get_permissions()
+
+    def get_serializer_class(self):
+        if self.request.method == ["POST"]:
+            return ElectronResourceCreateSerializer
+        else:
+            return ElectronResourceSerializer
 
     def get(self, request):
         queryset = ElectronResource.objects.filter(is_active=True)
@@ -148,7 +155,9 @@ class ElectronResourceView(APIView):
             queryset = queryset.filter(query)
         paginator = self.pagination_class()
         result_page = paginator.paginate_queryset(queryset, request)
-        serializer = self.serializer_class(result_page, many=True, context={'user': request.user})
+        serializer = self.serializer_class(
+            result_page, many=True, context={"user": request.user}
+        )
         return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):

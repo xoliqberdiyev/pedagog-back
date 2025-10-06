@@ -1,14 +1,14 @@
 from rest_framework import serializers
 
+from apps.payment.models.models import Orders, Payments
 from apps.pedagog.models.electron_resource import (
+    ElectronResource,
+    ElectronResourceCategory,
+    ElectronResourceSubCategory,
     SeoMetaCategoryData,
     SeoOgCategoryData,
     SeoTwitterCategoryData,
-    ElectronResourceCategory,
-    ElectronResourceSubCategory,
-    ElectronResource,
 )
-from apps.payment.models.models import Orders, Payments
 
 
 class SeoMetaCategoryDataSerializer(serializers.ModelSerializer):
@@ -144,8 +144,10 @@ class ElectronResourceSubCategorySerializer(serializers.ModelSerializer):
 
 
 class ElectronResourceSerializer(serializers.ModelSerializer):
-    sub_categories = serializers.SerializerMethodField()
-    is_paid = serializers.SerializerMethodField(method_name='get_is_paid')
+    sub_categories = serializers.SerializerMethodField(read_only=True)
+    is_paid = serializers.SerializerMethodField(
+        method_name="get_is_paid", read_only=True
+    )
 
     class Meta:
         model = ElectronResource
@@ -159,8 +161,8 @@ class ElectronResourceSerializer(serializers.ModelSerializer):
             "type",
             "category",
             "sub_categories",
-            'price',
-            'is_paid',
+            "price",
+            "is_paid",
             "created_at",
         )
         extra_kwargs = {
@@ -168,12 +170,12 @@ class ElectronResourceSerializer(serializers.ModelSerializer):
             "size": {"required": False},
             "type": {"required": False},
             "user": {"required": False},
-            'price': {'required': False},
+            "price": {"required": False},
         }
 
     def get_is_paid(self, obj):
         if obj.price:
-            user = self.context.get('user')
+            user = self.context.get("user")
             order = Orders.objects.filter(user=user, electronic_resource=obj).first()
             payment = Payments.objects.filter(order=order).first()
             return payment.status if payment else False
@@ -191,10 +193,16 @@ class ElectronResourceSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         from apps.users.serializers.user import UserSerializer
-        
-        data['file'] = instance.file.url if data.get('is_paid') is True else None  
+
+        data["file"] = instance.file.url if data.get("is_paid") is True else None
         data["user"] = UserSerializer(instance.user).data
         return data
+
+
+class ElectronResourceCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ElectronResource
+        fields = ["id", "category", "user", "name", "description", "price", "file"]
 
 
 class ElectronResourceMiniSerializer(serializers.ModelSerializer):
@@ -208,7 +216,7 @@ class ElectronResourceMiniSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "sub_category",
-            'price',
+            "price",
             "created_at",
         )
 
@@ -226,7 +234,7 @@ class ElectronResourceAdminSerializer(serializers.ModelSerializer):
             "size",
             "type",
             "category",
-            'price',
+            "price",
             "sub_category",
             "created_at",
         )
@@ -243,7 +251,6 @@ class ElectronResourceAdminSerializer(serializers.ModelSerializer):
         }
 
 
-
 class ElectronResourceSubCategorySearchSerializer(serializers.ModelSerializer):
     category = ElectronResourceCategorySerializer()
 
@@ -253,7 +260,7 @@ class ElectronResourceSubCategorySearchSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "description",
-            'category',
+            "category",
             "created_at",
         )
         extra_kwargs = {"user": {"required": False}}
@@ -269,6 +276,6 @@ class ElectronResourceSearchSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "category",
-            'file',
+            "file",
             "created_at",
         )
