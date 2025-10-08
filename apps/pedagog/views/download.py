@@ -66,7 +66,12 @@ class DownloadMediaView(APIView):
             raise Http404(
                 _("Bu resursni yuklab olish uchun buyurtma berishingiz kerak")
             )
-
+        
+        user_downloads_count = Download.objects.filter(user=user, data=current_date).count()
+        if user_downloads_count >= 15:
+            return Http404(
+                _('Siz kuniga 15ta resurs yuklab olishingiz mumkin')
+            )
         download = Download.objects.create(
             user=user,
             media=media,
