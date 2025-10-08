@@ -53,7 +53,7 @@ class DownloadMediaView(APIView):
                 status=True,
             ).last()
             print("\n", order)
-            
+
         user_downloads_today = Download.objects.filter(user=user, date=current_date).count()
         total_user_downloads = Download.objects.filter(user=user).count()
 
@@ -65,7 +65,7 @@ class DownloadMediaView(APIView):
             if total_user_downloads >= 10:
                 raise Http404(
                     _("Siz jami 10 ta faylni tekinga yuklab olgansiz. Yana yuklab olish uchun buyurtma kerak.")
-                )
+                )            
         # If media has a topic, only the owner or a user with an order can download
         if (
             plan
@@ -75,10 +75,10 @@ class DownloadMediaView(APIView):
         ):
             raise Http404(_("Ushbu resurslar sizga tegishli emas"))
 
-        if plan and not order and user.role == Role.USER:
-            raise Http404(
-                _("Bu resursni yuklab olish uchun buyurtma berishingiz kerak")
-            )
+        # if plan and not order and user.role == Role.USER:
+        #     raise Http404(
+        #         _("Bu resursni yuklab olish uchun buyurtma berishingiz kerak")
+        #     )
          
         if user_downloads.filter(date=current_date).count() >= 10:
             raise Http404(
