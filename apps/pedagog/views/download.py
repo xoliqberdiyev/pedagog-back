@@ -68,9 +68,9 @@ class DownloadMediaView(APIView):
             )
         
         user_downloads_count = Download.objects.filter(user=user, date=current_date).count()
-        if user_downloads_count >= 15:
+        if user_downloads_count >= 10:
             raise Http404(
-                _('Siz kuniga 15ta resurs yuklab olishingiz mumkin')
+                _('Siz kuniga 10 ta resurs yuklab olishingiz mumkin')
             )
         download = Download.objects.create(
             user=user,
