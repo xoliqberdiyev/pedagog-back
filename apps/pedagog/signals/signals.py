@@ -12,8 +12,9 @@ from apps.users.models.user import ContractStatus, User, UserProfile
 from apps.websocket.models.notification import Notification
 from apps.pedagog.models.media import Media
 from apps.pedagog.models.converted_media import ConvertedMedia
+from apps.pedagog.models.electron_resource import ElectronResource
 from apps.pedagog.tasks.convert_file import convert_image_create
-from apps.pedagog.tasks.preview import save_preview
+from apps.pedagog.tasks.preview import save_preview, save_preview_for_electron_rosurce
 
 from apps.shared.utils.convert_image import convert_pdf_to_images, convert_pptx_to_images, convert_docx_to_images, add_multiple_icons_to_image, convert_office_to_pdf
 
@@ -103,3 +104,8 @@ def convert_image_on_save_media(sender, instance, created, **kwargs):
         
         convert_image_create.delay(instance.id)
     
+
+@receiver(post_save, sender=ElectronResource)
+def generate_preview(sender, instance, created, **kwargs):
+    if instance.type in ['mp3', 'mp4']:
+        save_preview_for_electron_rosurce.delay(instance.id)

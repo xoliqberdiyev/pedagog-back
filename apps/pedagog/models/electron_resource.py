@@ -90,6 +90,9 @@ class ElectronResource(AbstractBaseModel):
         related_name="resources",
     )
     price = models.PositiveIntegerField(null=True, blank=True)
+    preview = models.FileField(
+        null=True, blank=True, upload_to='electron_resources/',
+    )
     
     is_active = models.BooleanField(_("Is Active"), default=True)
 

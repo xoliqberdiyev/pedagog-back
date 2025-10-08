@@ -163,6 +163,7 @@ class ElectronResourceSerializer(serializers.ModelSerializer):
             "sub_categories",
             "price",
             "is_paid",
+            "preview",
             "created_at",
         )
         extra_kwargs = {

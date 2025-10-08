@@ -3,7 +3,7 @@ import subprocess
 from django.conf import settings
 
 
-def create_preview(file_path: str, duration: int = 15) -> str:
+def create_preview(file_path: str, duration: int = 15, file_folder = str) -> str:
     """
     Fayldan preview (mp3/mp4) yaratadi.
     :param file_path: Asl fayl yo'li
@@ -15,7 +15,7 @@ def create_preview(file_path: str, duration: int = 15) -> str:
     if ext.lower() not in [".mp3", ".mp4"]:
         return None  # boshqa format bo‘lsa hech narsa qilmaymiz
 
-    preview_dir = os.path.join(settings.MEDIA_ROOT, "media")
+    preview_dir = os.path.join(settings.MEDIA_ROOT, file_folder)
     os.makedirs(preview_dir, exist_ok=True)
 
     preview_path = os.path.join(preview_dir, f"{filename}_preview{ext}")
@@ -46,7 +46,7 @@ def create_preview(file_path: str, duration: int = 15) -> str:
         subprocess.run(cmd, check=True)
 
         # return preview MEDIA nisbiy yo‘li
-        return f"media/{filename}_preview{ext}"
+        return f"{file_folder}/{filename}_preview{ext}"
 
     except subprocess.CalledProcessError as e:
         print("FFMPEG ERROR:", e)
