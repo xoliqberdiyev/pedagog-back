@@ -26,7 +26,6 @@ from apps.pedagog.serializers.download_history import (
 )
 from apps.shared.pagination.custom import CustomPagination
 from apps.users.choices.role import Role
-from apps.pedagog.publisher.publish_file import publish_file
 
 
 class DownloadMediaView(APIView):
@@ -145,19 +144,19 @@ class DownloadFileView(APIView):
 
         download = download_token.download
         media = get_object_or_404(Media, id=download.media.id)
-        if source.lower() == 'click_app':
+        if source and source.lower() == 'click_app':
             return Response(
                 {
                     'success': True,
                     'media': media.file.url,
                 }
             )
-        if source.lower() == 'bot':
-            publish_file(
-                chat_id=request.user.tg_id,
-                file_path=media.file.url,
-                delay=10
-            )
+        # if source and source.lower() == 'bot':
+        #     publish_file(
+        #         chat_id=request.user.tg_id,
+        #         file_path=media.file.url,
+        #         delay=10
+        #     )
         
         file_path = media.file.path
         if not os.path.exists(file_path):

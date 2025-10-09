@@ -165,8 +165,3 @@ PAYME_ACCOUNT_FIELD = "order_id"
 PAYME_AMOUNT_FIELD = "price"
 PAYME_ACCOUNT_MODEL = "apps.payment.models.models.Orders"
 PAYME_ONE_TIME_PAYMENT = True
-
-# redis 
-REDIS_HOST=os.getenv('REDIS_HOST')
-REDIS_PORT=os.getenv('REDIS_PORT')
-REDIS_DB=os.getenv('REDIS_DB')
