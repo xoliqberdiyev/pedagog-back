@@ -159,10 +159,14 @@ CLICK_SERVICE_2_ID=os.getenv('CLICK_SERVICE_2_ID')
 CLICK_MERCHANT_2_ID=os.getenv('CLICK_MERCHANT_2_ID')
 
 #payme
-
 PAYME_ID=os.getenv("PAYME_ID")
 PAYME_KEY=os.getenv("PAYME_KEY")
 PAYME_ACCOUNT_FIELD = "order_id"
 PAYME_AMOUNT_FIELD = "price"
 PAYME_ACCOUNT_MODEL = "apps.payment.models.models.Orders"
 PAYME_ONE_TIME_PAYMENT = True
+
+# redis 
+REDIS_HOST=os.getenv('REDIS_HOST')
+REDIS_PORT=os.getenv('REDIS_PORT')
+REDIS_DB=os.getenv('REDIS_DB')
