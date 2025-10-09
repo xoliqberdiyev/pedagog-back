@@ -1,3 +1,5 @@
+from django.contrib.auth.models import AnonymousUser
+
 from rest_framework import serializers
 
 from apps.payment.models.models import Orders, Payments
@@ -175,13 +177,14 @@ class ElectronResourceSerializer(serializers.ModelSerializer):
         }
 
     def get_is_paid(self, obj):
-        if obj.price:
-            user = self.context.get("user")
-            order = Orders.objects.filter(user=user, electronic_resource=obj).first()
-            payment = Payments.objects.filter(order=order).first()
-            return payment.status if payment else False
-        else:
+        user = self.context.get("user")
+        if obj.price and user != AnonymousUser():
+            order = Orders.objects.filter(user=user, electronic_resource=obj).order_by('-created_at').first()
+            return order.status if order else False
+        elif not obj.price and user == AnonymousUser():
             return True
+        else:
+            return False
 
     def get_sub_categories(self, obj):
         if isinstance(obj.category, ElectronResourceCategory):

@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from apps.shared.models.base import AbstractBaseModel
+# from apps.payment.models.models import Orders
 
 
 class ElectronResourceCategory(AbstractBaseModel):

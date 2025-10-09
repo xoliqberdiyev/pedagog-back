@@ -25,6 +25,7 @@ from apps.pedagog.views.electron_resource import (
     ElectronResourceSubCategoryDetailView,
     ElectronResourceSubCategoryView,
     ElectronResourceView,
+    PaidElectronResourceView,
 )
 from apps.pedagog.views.media import MediaApiView, MediaDetailApiView
 from apps.pedagog.views.media_type import MediaTypeListApiView
@@ -163,6 +164,11 @@ urlpatterns = [
         "electron-resource/files/",
         ElectronResourceView.as_view(),
         name="electron-resource-files",
+    ),
+    path(
+        "electron-resource/files/paid/",
+        PaidElectronResourceView.as_view(),
+        name='paid-eletron-resource-files',
     ),
     path(
         "electron-resource/files/create/",

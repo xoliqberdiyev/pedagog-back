@@ -1,4 +1,7 @@
-from django.db.models import Q
+from django.contrib.auth.models import AnonymousUser
+from django.db.models import OuterRef, Subquery, Q
+
+
 from rest_framework import parsers, status
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -21,6 +24,7 @@ from apps.pedagog.serializers.electron_resource import (
 )
 from apps.shared.pagination.custom import CustomPagination
 from apps.users.choices.role import Role
+from apps.payment.models.models import Orders
 
 
 class ElectronResourceCategoryView(APIView):
@@ -128,13 +132,6 @@ class ElectronResourceView(GenericAPIView):
     permission_classes = [AllowAny]
     pagination_class = CustomPagination
 
-    def get_permissions(self):
-        if self.request.method in ["POST", "PATCH", "DELETE"]:
-            return [IsAuthenticated()]
-        elif self.request.method == "GET":
-            return [AllowAny()]
-        return super().get_permissions()
-
     def get(self, request):
         queryset = ElectronResource.objects.filter(is_active=True)
         search = request.query_params.get("search")
@@ -154,6 +151,39 @@ class ElectronResourceView(GenericAPIView):
         )
         return paginator.get_paginated_response(serializer.data)
 
+
+class PaidElectronResourceView(GenericAPIView):
+    serializer_class = ElectronResourceSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
+
+    def get(self, request):
+        user = request.user
+        latest_orders = Orders.objects.filter(
+            electronic_resource=OuterRef('pk'),
+            user=user
+        ).order_by('-created_at')
+
+        queryset = ElectronResource.objects.annotate(
+            latest_status=Subquery(latest_orders.values('status')[:1])
+        ).filter(latest_status=True)
+
+        search = request.query_params.get("search")
+        category = request.query_params.get("category")
+        if category:
+            queryset = queryset.filter(category=category)
+        if search:
+            search_terms = search[:100].split()
+            query = Q()
+            for term in search_terms:
+                query &= Q(name__icontains=term) | Q(description__icontains=term)
+            queryset = queryset.filter(query)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.serializer_class(page, many=True, context={'user': user})
+            return self.get_paginated_response(serializer.data)
+        
 
 class ElectronResourceCreateApiView(GenericAPIView):
     serializer_class = ElectronResourceCreateSerializer
