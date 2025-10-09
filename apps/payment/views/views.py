@@ -90,6 +90,9 @@ class PaymentViewSet(ViewSet):
     @action(detail=False, methods=["POST"], url_path="create")
     def create_payment(self, request):
         try:
+            source = request.headers.get('source')
+            if not source:
+                source = 'web'
             ser = self.serializer_class(data=request.data)
             ser.is_valid(raise_exception=True)
             data = ser.validated_data
@@ -98,7 +101,15 @@ class PaymentViewSet(ViewSet):
             
             user_id = request.user.id
             payment_services = PaymentService(user_id)
-            trans_id, pay_link = payment_services.generate_link(order, payment_type)
+            base_url = {
+                'bot': "https://bot.pedagog.uz/resources/purchased",
+                'web': "https://my.pedagog.uz/resources/purchased",
+                'click': "https://click.pedagog.uz/resources/purchased"
+            }
+
+            trans_id, pay_link = payment_services.generate_link(
+                order, payment_type, base_url.get(source.lower())
+            )
             Payments.objects.get_or_create(
                 order=order, price=order.price, trans_id=trans_id
             )   
@@ -180,6 +191,9 @@ class PaymentCreateViaClickApiView(APIView):
 
     def post(self, request):
         order_id = request.data.get('order')
+        source = request.headers.get('source')
+        if not source:
+                source = 'web'
         if not order_id:
             return Response(
                 {
@@ -189,7 +203,14 @@ class PaymentCreateViaClickApiView(APIView):
         order = get_object_or_404(Orders, id=order_id)
         user_id = request.user.id
         payment_services = PaymentService(user_id)
-        trans_id, pay_link = payment_services.generate_link(order, 'click_2')
+        base_url = {
+            'bot': "https://bot.pedagog.uz/resources/purchased",
+            'web': "https://my.pedagog.uz/resources/purchased",
+            'click': "https://click.pedagog.uz/resources/purchased"
+        }
+        trans_id, pay_link = payment_services.generate_link(
+            order, 'click_2', base_url.get(source.lower())
+        )
         Payments.objects.get_or_create(
             order=order, price=order.price, trans_id=trans_id
         )
@@ -206,6 +227,9 @@ class PayToElectronicResourceApiView(APIView):
 
     def post(self, request, id):
         resource = get_object_or_404(ElectronResource, id=id)
+        source = request.headers.get('source')
+        if not source:
+            source = 'web'
         if resource.price is None:
             return Response(
                 {
@@ -230,11 +254,18 @@ class PayToElectronicResourceApiView(APIView):
             end_date__gte=current_date,
             status=True,
         )
+        base_url = {
+            'bot': "https://bot.pedagog.uz/other-resources/pay",
+            'web': "https://my.pedagog.uz/other-resources/pay",
+            'click': "https://click.pedagog.uz/other-resources/pay"
+        }
 
         if created:
             logger.info(f"Order created")
         payment_services = PaymentService(request.user.id)
-        trans_id, pay_link = payment_services.generate_link(order, payment_type)
+        trans_id, pay_link = payment_services.generate_link(
+            order, payment_type, base_url.get(source.lower())
+        )
         Payments.objects.get_or_create(
             order=order,
             price=order.price,
