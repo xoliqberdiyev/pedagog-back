@@ -145,7 +145,7 @@ class DownloadFileView(APIView):
 
         download = download_token.download
         media = get_object_or_404(Media, id=download.media.id)
-        if source.lower() == 'click':
+        if source.lower() == 'click_app':
             return Response(
                 {
                     'success': True,

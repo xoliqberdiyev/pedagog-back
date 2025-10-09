@@ -104,7 +104,7 @@ class PaymentViewSet(ViewSet):
             base_url = {
                 'bot': "https://bot.pedagog.uz/resources/purchased",
                 'web': "https://my.pedagog.uz/resources/purchased",
-                'click': "https://click.pedagog.uz/resources/purchased"
+                'click_app': "https://click.pedagog.uz/resources/purchased"
             }
 
             trans_id, pay_link = payment_services.generate_link(
@@ -206,7 +206,7 @@ class PaymentCreateViaClickApiView(APIView):
         base_url = {
             'bot': "https://bot.pedagog.uz/resources/purchased",
             'web': "https://my.pedagog.uz/resources/purchased",
-            'click': "https://click.pedagog.uz/resources/purchased"
+            'click_app': "https://click.pedagog.uz/resources/purchased"
         }
         trans_id, pay_link = payment_services.generate_link(
             order, 'click_2', base_url.get(source.lower())
@@ -257,7 +257,7 @@ class PayToElectronicResourceApiView(APIView):
         base_url = {
             'bot': "https://bot.pedagog.uz/other-resources/pay",
             'web': "https://my.pedagog.uz/other-resources/pay",
-            'click': "https://click.pedagog.uz/other-resources/pay"
+            'click_app': "https://click.pedagog.uz/other-resources/pay"
         }
 
         if created:
