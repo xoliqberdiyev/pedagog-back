@@ -136,7 +136,7 @@ class DownloadFileView(APIView):
 
     def get(self, request, download_token, format=None):
         download_token = get_object_or_404(DownloadToken, token=download_token)
-
+        source = request.headers.get('source')
         if download_token.is_expired():
             raise Http404(
                 _("Yuklab olish tokeni topilmadi yoki muddati oʻtgan")
@@ -144,7 +144,14 @@ class DownloadFileView(APIView):
 
         download = download_token.download
         media = get_object_or_404(Media, id=download.media.id)
-
+        if source.lower() == 'click':
+            return Response(
+                {
+                    'success': True,
+                    'media': media.file,
+                }
+            )
+        
         file_path = media.file.path
         if not os.path.exists(file_path):
             raise Http404(_("Fayl topilmadi"))
