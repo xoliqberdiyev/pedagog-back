@@ -109,6 +109,7 @@ class ClickCallbackView(views.APIView):
         merchant_prepare_id = data.get("merchant_prepare_id")
         order_id = data.get("merchant_trans_id")
         merchant_id = data.get("merchant_id")
+        print(f"action: {action}, click_trans_id: {click_trans_id}, amount: {amount}, sign_string: {sign_string}, merchant_prepare_id: {merchant_prepare_id}, order_id: {order_id}, merchant_id: {merchant_id}")
 
         current_config = None
         for name, conf in settings.CLICK_CONFIGS.items():
