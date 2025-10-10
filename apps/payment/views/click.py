@@ -128,8 +128,9 @@ class ClickCallbackView(views.APIView):
             f"{current_config['SECRET_KEY']}"
             f"{order_id}"
             f"{amount}"
-            f"{action}".encode()
+            f"{action}".encode('utf-8')
         ).hexdigest()
+        print(f"check_sign: {check_sign}")
 
         if check_sign != sign_string:
             print({"error": -1, "error_note": "Sign mismatch"})
