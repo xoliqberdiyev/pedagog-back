@@ -108,12 +108,13 @@ class ClickCallbackView(views.APIView):
         sign_string = data.get("sign_string")
         merchant_prepare_id = data.get("merchant_prepare_id")
         order_id = data.get("merchant_trans_id")
-        merchant_id = data.get("merchant_id")
-        print(f"action: {action}, click_trans_id: {click_trans_id}, amount: {amount}, sign_string: {sign_string}, merchant_prepare_id: {merchant_prepare_id}, order_id: {order_id}, merchant_id: {merchant_id}")
+        service_id = data.get('service_id')
+        sign_time = data.get('sign_time')
+        print(f"action: {action}, click_trans_id: {click_trans_id}, amount: {amount}, sign_string: {sign_string}, merchant_prepare_id: {merchant_prepare_id}, order_id: {order_id}, service_id: {service_id}, sign_time: {sign_time}")
 
         current_config = None
         for name, conf in settings.CLICK_CONFIGS.items():
-            if conf["MERCHANT_ID"] == merchant_id:
+            if conf["SERVICE_ID"] == service_id:
                 current_config = conf
                 break
 
@@ -126,9 +127,9 @@ class ClickCallbackView(views.APIView):
             f"{current_config['SERVICE_ID']}"
             f"{current_config['SECRET_KEY']}"
             f"{order_id}"
-            f"{merchant_prepare_id or ''}"
             f"{amount}"
-            f"{action}".encode()
+            f"{action}"
+            f"{sign_time}".encode()
         ).hexdigest()
 
         if check_sign != sign_string:
@@ -142,7 +143,7 @@ class ClickCallbackView(views.APIView):
             return JsonResponse({"error": -5, "error_note": "Order not found"})
 
         if action == "0":
-            order.status = "pending"
+            order.status = False
             order.save()
             return JsonResponse({
                 "error": 0,
@@ -152,7 +153,7 @@ class ClickCallbackView(views.APIView):
             })
 
         elif action == "1":
-            order.status = "paid"
+            order.status = True
             order.paid_at = timezone.now()
             order.save()
             return JsonResponse({
