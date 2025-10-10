@@ -178,7 +178,6 @@ class ClickCallbackView(views.APIView):
 
         elif action == "1":
             order.status = True
-            order.paid_at = timezone.now()
             order.save()
             return JsonResponse({
                 "error": 0,
