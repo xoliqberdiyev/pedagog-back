@@ -109,13 +109,18 @@ class ClickCallbackView(views.APIView):
         sign_string = data.get("sign_string")
         merchant_prepare_id = data.get("merchant_prepare_id")
         order_id = data.get("merchant_trans_id")
-        service_id = data.get('service_id')
-        sign_time = data.get('sign_time')
-        print(f"action: {action}, click_trans_id: {click_trans_id}, amount: {amount}, sign_string: {sign_string}, merchant_prepare_id: {merchant_prepare_id}, order_id: {order_id}, service_id: {service_id}, sign_time: {sign_time}")
+        service_id = data.get("service_id")
+        sign_time = data.get("sign_time")
+
+        print(
+            f"action: {action}, click_trans_id: {click_trans_id}, amount: {amount}, "
+            f"sign_string: {sign_string}, merchant_prepare_id: {merchant_prepare_id}, "
+            f"order_id: {order_id}, service_id: {service_id}, sign_time: {sign_time}"
+        )
 
         current_config = None
         for name, conf in settings.CLICK_CONFIGS.items():
-            if conf["SERVICE_ID"] == service_id:
+            if str(conf["SERVICE_ID"]) == str(service_id):
                 current_config = conf
                 break
 
@@ -123,15 +128,32 @@ class ClickCallbackView(views.APIView):
             print({"error": -8, "error_note": "Unknown merchant"})
             return JsonResponse({"error": -8, "error_note": "Unknown merchant"})
 
-        check_sign = hashlib.md5(
-            f"{click_trans_id}"
-            f"{current_config['SERVICE_ID']}"
-            f"{current_config['SECRET_KEY']}"
-            f"{order_id}"
-            f"{amount}"
-            f"{action}"
-            f"{sign_time}".encode('utf-8')
-        ).hexdigest()
+        if action == "0":
+            sign_raw = (
+                f"{click_trans_id}"
+                f"{service_id}"
+                f"{current_config['SECRET_KEY']}"
+                f"{order_id}"
+                f"{amount}"
+                f"{action}"
+                f"{sign_time}"
+            )
+        elif action == "1":
+            sign_raw = (
+                f"{click_trans_id}"
+                f"{service_id}"
+                f"{current_config['SECRET_KEY']}"
+                f"{order_id}"
+                f"{merchant_prepare_id}"
+                f"{amount}"
+                f"{action}"
+                f"{sign_time}"
+            )
+        else:
+            print({"error": -2, "error_note": "Invalid action"})
+            return JsonResponse({"error": -2, "error_note": "Invalid action"})
+
+        check_sign = hashlib.md5(sign_raw.encode("utf-8")).hexdigest()
         print(f"check_sign: {check_sign}")
 
         if check_sign != sign_string:
@@ -145,7 +167,7 @@ class ClickCallbackView(views.APIView):
             return JsonResponse({"error": -5, "error_note": "Order not found"})
 
         if action == "0":
-            order.status = False
+            order.status = False 
             order.save()
             return JsonResponse({
                 "error": 0,
@@ -164,5 +186,3 @@ class ClickCallbackView(views.APIView):
                 "click_trans_id": click_trans_id,
                 "merchant_confirm_id": order.id,
             })
-        print({"error": -2, "error_note": "Invalid action"})
-        return JsonResponse({"error": -2, "error_note": "Invalid action"})
