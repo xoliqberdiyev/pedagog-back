@@ -98,6 +98,7 @@ class ClickProfileView(views.APIView):
         except requests.RequestException as e:
             return Response({'error': str(e)}, status=500)
         
+
 class ClickCallbackView(views.APIView):
     def post(self, request, *args, **kwargs):
         data = request.data
