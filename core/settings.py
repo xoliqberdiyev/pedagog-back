@@ -175,6 +175,6 @@ CLICK_CONFIGS = {
     "click_2": {
         "SERVICE_ID": os.getenv("CLICK_SERVICE_2_ID"),
         "MERCHANT_ID": os.getenv("CLICK_MERCHANT_2_ID"),
-        "SECRET_KEY": os.getenv("CLICK_SECRET_KEY"),
+        "SECRET_KEY": os.getenv("CLICK_SECRET_KEY_2"),
     },
 }
