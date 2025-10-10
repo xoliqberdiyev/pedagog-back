@@ -117,6 +117,7 @@ class ClickCallbackView(views.APIView):
                 break
 
         if not current_config:
+            print({"error": -8, "error_note": "Unknown merchant"})
             return JsonResponse({"error": -8, "error_note": "Unknown merchant"})
 
         check_sign = hashlib.md5(
@@ -130,11 +131,13 @@ class ClickCallbackView(views.APIView):
         ).hexdigest()
 
         if check_sign != sign_string:
+            print({"error": -1, "error_note": "Sign mismatch"})
             return JsonResponse({"error": -1, "error_note": "Sign mismatch"})
 
         try:
             order = Orders.objects.get(id=order_id)
         except Orders.DoesNotExist:
+            print({"error": -5, "error_note": "Order not found"})
             return JsonResponse({"error": -5, "error_note": "Order not found"})
 
         if action == "0":
@@ -157,5 +160,5 @@ class ClickCallbackView(views.APIView):
                 "click_trans_id": click_trans_id,
                 "merchant_confirm_id": order.id,
             })
-
+        print({"error": -2, "error_note": "Invalid action"})
         return JsonResponse({"error": -2, "error_note": "Invalid action"})
