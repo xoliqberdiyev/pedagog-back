@@ -1,7 +1,7 @@
 from click_up import ClickUp
 from payme import Payme
 from .services import UzumService
-
+from apps.payment.utils.encode_url import encode_url
 import os
 
 
@@ -45,7 +45,7 @@ class PaymentService:
             pay_link = (
                 f"{url}?service_id={self.service_id_2}&merchant_id={self.merchant_id_2}" # noqa
                 f"&amount={order.price}&transaction_param={order.id}"
-                f"&return_url={base_url}"
+                f"&return_url={encode_url(base_url)}"
             )
             # pay_link = self.click_up_2.initializer.generate_pay_link(
             #     id=int(order.id),
