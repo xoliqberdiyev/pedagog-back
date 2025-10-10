@@ -10,32 +10,48 @@ import os
 class PaymentService:
     def __init__(self, user_id):
         self.user_id = user_id
-        self.click_up = ClickUp(
-            service_id=os.getenv("CLICK_SERVICE_ID"),
-            merchant_id=os.getenv("CLICK_MERCHANT_ID"),
-        )
-        self.click_up_2 = ClickUp(
-            service_id=os.getenv('CLICK_SERVICE_2_ID'),
-            merchant_id=os.getenv('CLICK_MERCHANT_2_ID'),
-        )
+        # self.click_up = ClickUp(
+        #     service_id=os.getenv("CLICK_SERVICE_ID"),
+        #     merchant_id=os.getenv("CLICK_MERCHANT_ID"),
+        # )
+        # self.click_up_2 = ClickUp(
+        #     service_id=os.getenv('CLICK_SERVICE_2_ID'),
+        #     merchant_id=os.getenv('CLICK_MERCHANT_2_ID'),
+        # )
+        self.service_id = os.getenv('CLICK_SERVICE_ID')
+        self.merchant_id = os.getenv("CLICK_MERCHANT_ID")
+        self.service_id_2 = os.getenv('CLICK_SERVICE_2_ID')
+        self.merchant_id_2 = os.getenv('CLICK_MERCHANT_2_ID')
         self.payme = Payme(payme_id=os.getenv("PAYME_ID"))
 
     def generate_link(self, order, payment_type, base_url):
         if payment_type == "click":
-            pay_link = self.click_up.initializer.generate_pay_link(
-                id=int(order.id),
-                amount=order.price,
-                return_url=f"{base_url}",
+            # pay_link = self.click_up.initializer.generate_pay_link(
+            #     id=int(order.id),
+            #     amount=order.price,
+            #     return_url=f"{base_url}",
+            # )
+            url = "https://my.click.uz/services/pay/"
+            pay_link = (
+                f"{url}?service_id={self.service_id}&merchant_id={self.merchant_id}" # noqa
+                f"&amount={order.price}&transaction_param={order.id}"
+                f"&return_url={base_url}"
             )
             trans_id = getattr(pay_link, "transaction_id", None) or str(order.id)  
             return trans_id, pay_link 
         
         elif payment_type == 'click_2':
-            pay_link = self.click_up_2.initializer.generate_pay_link(
-                id=int(order.id),
-                amount=order.price,
-                return_url=f"{base_url}"
+            url = "https://my.click.uz/services/pay/"
+            pay_link = (
+                f"{url}?service_id={self.service_id_2}&merchant_id={self.merchant_id_2}" # noqa
+                f"&amount={order.price}&transaction_param={order.id}"
+                f"&return_url={base_url}"
             )
+            # pay_link = self.click_up_2.initializer.generate_pay_link(
+            #     id=int(order.id),
+            #     amount=order.price,
+            #     return_url=f"{base_url}"
+            # )
             trans_id = getattr(pay_link, 'transaction_id', None) or str(order.id)
             return trans_id, pay_link
 
