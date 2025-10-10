@@ -128,7 +128,8 @@ class ClickCallbackView(views.APIView):
             f"{current_config['SECRET_KEY']}"
             f"{order_id}"
             f"{amount}"
-            f"{action}".encode('utf-8')
+            f"{action}"
+            f"{sign_time}".encode('utf-8')
         ).hexdigest()
         print(f"check_sign: {check_sign}")
 
