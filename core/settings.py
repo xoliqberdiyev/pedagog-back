@@ -165,3 +165,16 @@ PAYME_ACCOUNT_FIELD = "order_id"
 PAYME_AMOUNT_FIELD = "price"
 PAYME_ACCOUNT_MODEL = "apps.payment.models.models.Orders"
 PAYME_ONE_TIME_PAYMENT = True
+
+CLICK_CONFIGS = {
+    "click": {
+        "SERVICE_ID": os.getenv("CLICK_SERVICE_ID"),
+        "MERCHANT_ID": os.getenv("CLICK_MERCHANT_ID"),
+        "SECRET_KEY": os.getenv("CLICK_SECRET_KEY"),
+    },
+    "click_2": {
+        "SERVICE_ID": os.getenv("CLICK_SERVICE_2_ID"),
+        "MERCHANT_ID": os.getenv("CLICK_MERCHANT_2_ID"),
+        "SECRET_KEY": os.getenv("CLICK_SECRET_KEY"),
+    },
+}

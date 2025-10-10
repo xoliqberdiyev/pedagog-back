@@ -9,7 +9,7 @@ from apps.payment.views.views import (
     PaymentCreateViaClickApiView, 
     PayToElectronicResourceApiView
 )
-from apps.payment.views.click import ClickWebhookAPIView, ClickProfileView
+from apps.payment.views.click import ClickWebhookAPIView, ClickProfileView, ClickCallbackView
 from apps.payment.views.payme import PaymeCallBackAPIView
 
 
@@ -22,6 +22,7 @@ router.register("transactions", TransactionViewSet, basename="transactions")
 urlpatterns = [
     path("", include(router.urls)),
     path("payment/click/update/", ClickWebhookAPIView.as_view()),
+    path('payment/click/callback/', ClickCallbackView.as_view()),
     path("payment/update/", PaymeCallBackAPIView.as_view()),
     path('payment/click/user-profile/', ClickProfileView.as_view()),
     path('payment/via-click/', PaymentCreateViaClickApiView.as_view()),

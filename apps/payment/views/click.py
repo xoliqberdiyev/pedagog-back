@@ -1,3 +1,6 @@
+from datetime import timezone
+import hashlib
+from django.http import JsonResponse
 import requests, logging
 
 from django.conf import settings
@@ -94,3 +97,65 @@ class ClickProfileView(views.APIView):
             return Response(data, status=400)
         except requests.RequestException as e:
             return Response({'error': str(e)}, status=500)
+        
+class ClickCallbackView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        data = request.data
+
+        action = data.get("action")
+        click_trans_id = data.get("click_trans_id")
+        amount = data.get("amount")
+        sign_string = data.get("sign_string")
+        merchant_prepare_id = data.get("merchant_prepare_id")
+        order_id = data.get("merchant_trans_id")
+        merchant_id = data.get("merchant_id")
+
+        current_config = None
+        for name, conf in settings.CLICK_CONFIGS.items():
+            if conf["MERCHANT_ID"] == merchant_id:
+                current_config = conf
+                break
+
+        if not current_config:
+            return JsonResponse({"error": -8, "error_note": "Unknown merchant"})
+
+        check_sign = hashlib.md5(
+            f"{click_trans_id}"
+            f"{current_config['SERVICE_ID']}"
+            f"{current_config['SECRET_KEY']}"
+            f"{order_id}"
+            f"{merchant_prepare_id or ''}"
+            f"{amount}"
+            f"{action}".encode()
+        ).hexdigest()
+
+        if check_sign != sign_string:
+            return JsonResponse({"error": -1, "error_note": "Sign mismatch"})
+
+        try:
+            order = Orders.objects.get(id=order_id)
+        except Orders.DoesNotExist:
+            return JsonResponse({"error": -5, "error_note": "Order not found"})
+
+        if action == "0":
+            order.status = "pending"
+            order.save()
+            return JsonResponse({
+                "error": 0,
+                "error_note": "Success",
+                "click_trans_id": click_trans_id,
+                "merchant_prepare_id": order.id,
+            })
+
+        elif action == "1":
+            order.status = "paid"
+            order.paid_at = timezone.now()
+            order.save()
+            return JsonResponse({
+                "error": 0,
+                "error_note": "Payment confirmed",
+                "click_trans_id": click_trans_id,
+                "merchant_confirm_id": order.id,
+            })
+
+        return JsonResponse({"error": -2, "error_note": "Invalid action"})
