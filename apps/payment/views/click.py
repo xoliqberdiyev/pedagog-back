@@ -111,13 +111,6 @@ class ClickCallbackView(views.APIView):
         order_id = data.get("merchant_trans_id")
         service_id = data.get("service_id")
         sign_time = data.get("sign_time")
-
-        print(
-            f"action: {action}, click_trans_id: {click_trans_id}, amount: {amount}, "
-            f"sign_string: {sign_string}, merchant_prepare_id: {merchant_prepare_id}, "
-            f"order_id: {order_id}, service_id: {service_id}, sign_time: {sign_time}"
-        )
-
         current_config = None
         for name, conf in settings.CLICK_CONFIGS.items():
             if str(conf["SERVICE_ID"]) == str(service_id):
@@ -154,7 +147,6 @@ class ClickCallbackView(views.APIView):
             return JsonResponse({"error": -2, "error_note": "Invalid action"})
 
         check_sign = hashlib.md5(sign_raw.encode("utf-8")).hexdigest()
-        print(f"check_sign: {check_sign}")
 
         if check_sign != sign_string:
             print({"error": -1, "error_note": "Sign mismatch"})
