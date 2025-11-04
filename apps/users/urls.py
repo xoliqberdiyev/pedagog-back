@@ -23,12 +23,13 @@ from apps.users.views.sms import (
     ResetSetPasswordView,BotUserView
 )
 from apps.users.views.botcheck import CheckUserAPIView, UserByIdView, TopReferrersView
+from apps.users.views.fcm_token import FCMTokenApiView
 
 urlpatterns = [
     path("auth/confirm/", ConfirmView.as_view(), name="confirm"),
     path("auth/register/", RegisterView.as_view(), name="register"),
     path("auth/botuser/", BotUserView.as_view(), name="botuser"),
-
+    path("auth/fcm_token/", FCMTokenApiView.as_view()),
     path(
         "auth/register/moderator/",
         ModeratorRegisterView.as_view(),
