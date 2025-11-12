@@ -26,6 +26,7 @@ from apps.pedagog.serializers.download_history import (
 )
 from apps.shared.pagination.custom import CustomPagination
 from apps.users.choices.role import Role
+from apps.pedagog.views.publish_file import publish_file
 
 
 class DownloadMediaView(APIView):
@@ -131,6 +132,8 @@ class DownloadMediaView(APIView):
         return Response({"download_token": download_url})
 
 
+
+
 class DownloadFileView(APIView):
     permission_classes = [AllowAny]
 
@@ -151,22 +154,29 @@ class DownloadFileView(APIView):
                     'media': media.file.url,
                 }
             )
-        # if source and source.lower() == 'bot':
-        #     publish_file(
-        #         chat_id=request.user.tg_id,
-        #         file_path=media.file.url,
-        #         delay=10
-        #     )
+        print(f"\n\n\n\n{source}")
+        if source and source.lower() == 'bot':
+            user = request.user
+            if not user.tg_id:
+                return Response({"error": "Telegram ID topilmadi"}, status=400)
+
+            print(f"\n\n\n\n{source}")
+
+            file_url = request.build_absolute_uri(media.file.url)
+            publish_file(
+                chat_id=request.user.tg_id,
+                file_path=file_url,
+                delay=5
+            )
         
         file_path = media.file.path
         if not os.path.exists(file_path):
             raise Http404(_("Fayl topilmadi"))
 
-        # Fayl nomi va MIME turini aniqlaymiz
         filename = os.path.basename(media.file.name)
         mime_type, _ = mimetypes.guess_type(file_path)
         if mime_type is None:
-            mime_type = "application/octet-stream"  # default MIME
+            mime_type = "application/octet-stream"  
 
         response = FileResponse(open(file_path, "rb"), as_attachment=True)
 

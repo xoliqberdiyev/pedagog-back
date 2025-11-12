@@ -84,6 +84,7 @@ PAGES = [
                     request.user, "view_plan"
                 ),
             },
+           
             {
                 "title": _("Mavzular"),
                 "icon": "checklist",
