@@ -12,6 +12,9 @@ def publish_file(chat_id, file_path, delay=0):
         
     if file_path.startswith("http"):
         response = requests.post(f"{TELEGRAM_API}/sendDocument", data={"chat_id": chat_id, "document": file_path})
+        print(f"chatid: \n{chat_id}\n")
+        print(f"token: \n{TELEGRAM_API}\n")
+        print(f"file: \n{file_path}\n")
         print(f"Respose: \n{response}\n")
     else:
         with open(file_path, "rb") as f:
