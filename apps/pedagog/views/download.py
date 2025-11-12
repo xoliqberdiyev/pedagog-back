@@ -59,7 +59,7 @@ class DownloadMediaView(APIView):
         total_user_downloads = Download.objects.filter(user=user).count()
 
         if not order:
-            if user_downloads_today >= 3:
+            if user_downloads_today >= 10:
                 raise Http404(
                     _("Siz kuniga 3 ta faylni tekinga yuklab olishingiz mumkin. Davom etish uchun to‘lov qiling.")
                 )
