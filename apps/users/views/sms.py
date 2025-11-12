@@ -45,6 +45,8 @@ from apps.users.serializers.user import (
 from apps.users.models.user import SourceChoice
 from apps.users.views.auth import AbstractSendSms
 from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 
 redis_instance = redis.StrictRedis.from_url(os.getenv("REDIS_CACHE_URL"))
@@ -262,7 +264,13 @@ class ConfirmView(APIView):
                                 {"success": False, "message": str(e)},
                                 status=status.HTTP_400_BAD_REQUEST,
                             )
-                    token = user.tokens()
+                    if user:
+                        refresh = RefreshToken.for_user(user)
+                        token = {
+                            "refresh": str(refresh),
+                            "access": str(refresh.access_token),
+                            "user": user.id,
+                        }
                     return Response(
                         {
                             "success": True,
