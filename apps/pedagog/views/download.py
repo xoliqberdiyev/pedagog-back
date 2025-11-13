@@ -38,7 +38,6 @@ class DownloadMediaView(APIView):
         current_date = datetime.date.today()
         media = get_object_or_404(Media, id=media_id)
             
-        # Check if media has an associated topic
         topic = media.topic_id
         plan = topic.plan_id if topic else None
 
@@ -59,7 +58,7 @@ class DownloadMediaView(APIView):
         total_user_downloads = Download.objects.filter(user=user).count()
 
         if not order:
-            if user_downloads_today >= 10:
+            if user_downloads_today >= 3:
                 raise Http404(
                     _("Siz kuniga 3 ta faylni tekinga yuklab olishingiz mumkin. Davom etish uchun to‘lov qiling.")
                 )
@@ -163,9 +162,11 @@ class DownloadFileView(APIView):
             print(f"\n\n\n\n{source}")
 
             file_url = request.build_absolute_uri(media.file.url)
+            # file_url = "https://api.pedagog.uz/media/media/A2-04C-Will-Future.pdf"
             publish_file(
                 chat_id=request.user.tg_id,
                 file_path=file_url,
+                media_instance=media,
                 delay=5
             )
         
