@@ -179,6 +179,8 @@ class ConfirmView(APIView):
         if serializer.is_valid():
             phone = serializer.validated_data["phone"]
             code = serializer.validated_data["code"]
+            user_tg_id = request.headers.get("tg_id", None)
+            
             user = None
             try:
                 if SmsService.check_confirm(phone, code=code):
@@ -222,6 +224,7 @@ class ConfirmView(APIView):
                                 district=district_instance,
                                 source=user_data[b"source"].decode("utf-8"),
                                 referred_by=referrer,  
+                                tg_id=user_tg_id,
                                 institution_number=user_data[
                                     b"institution_number"
                                 ].decode("utf-8"),
