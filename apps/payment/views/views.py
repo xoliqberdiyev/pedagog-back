@@ -47,7 +47,13 @@ class OrderViewSet(
         science = serializer.validated_data.get("science")
         science_language = serializer.validated_data.get("science_language")
         classes = serializer.validated_data.get("classes")
+        tg_id = self.request.headers.get("tg_id")
         
+        
+        if user.tg_id is None:
+            user.tg_id = tg_id
+            user.save(update_fields=["tg_id"])
+            
         current_date = timezone.now().date()
         
         header_source = self.request.headers.get("source")
