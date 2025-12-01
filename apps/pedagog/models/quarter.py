@@ -29,7 +29,7 @@ class Quarter(AbstractBaseModel):
         default=datetime.today, blank=True, verbose_name=_("Boshlang'ich sana")
     )
     end_date = models.DateField(
-        default=datetime.today, blank=True, verbose_name=_("Oxirgi sana")
+        default=datetime.today, blank=True, verbose_name=_("     sana")
     )
 
     def __str__(self):

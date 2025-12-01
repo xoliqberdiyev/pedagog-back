@@ -26,6 +26,7 @@ from apps.shared.pagination.custom import CustomPagination
 from apps.users.choices.role import Role
 from apps.payment.models.models import Orders
 
+                                                
 
 class ElectronResourceCategoryView(APIView):
     serializer_class = ElectronResourceCategorySerializer
@@ -45,6 +46,8 @@ class ElectronResourceCategoryView(APIView):
         result_page = paginator.paginate_queryset(queryset, request)
         serializer = self.serializer_class(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
+
+    
 
 
 class ElectronResourceCategoryDetailView(APIView):
@@ -136,6 +139,7 @@ class ElectronResourceView(GenericAPIView):
         queryset = ElectronResource.objects.filter(is_active=True)
         search = request.query_params.get("search")
         category = request.query_params.get("category")
+        
         if category:
             queryset = queryset.filter(category=category)
         if search:

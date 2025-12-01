@@ -45,6 +45,8 @@ from apps.users.serializers.user import (
 from apps.users.models.user import SourceChoice
 from apps.users.views.auth import AbstractSendSms
 from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 
 redis_instance = redis.StrictRedis.from_url(os.getenv("REDIS_CACHE_URL"))
@@ -177,6 +179,8 @@ class ConfirmView(APIView):
         if serializer.is_valid():
             phone = serializer.validated_data["phone"]
             code = serializer.validated_data["code"]
+            user_tg_id = request.headers.get("tg_id", None)
+            
             user = None
             try:
                 if SmsService.check_confirm(phone, code=code):
@@ -220,6 +224,7 @@ class ConfirmView(APIView):
                                 district=district_instance,
                                 source=user_data[b"source"].decode("utf-8"),
                                 referred_by=referrer,  
+                                tg_id=user_tg_id,
                                 institution_number=user_data[
                                     b"institution_number"
                                 ].decode("utf-8"),
@@ -262,7 +267,13 @@ class ConfirmView(APIView):
                                 {"success": False, "message": str(e)},
                                 status=status.HTTP_400_BAD_REQUEST,
                             )
-                    token = user.tokens()
+                    if user:
+                        refresh = RefreshToken.for_user(user)
+                        token = {
+                            "refresh": str(refresh),
+                            "access": str(refresh.access_token),
+                            "user": user.id,
+                        }
                     return Response(
                         {
                             "success": True,
