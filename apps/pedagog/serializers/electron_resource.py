@@ -177,6 +177,8 @@ class ElectronResourceSerializer(serializers.ModelSerializer):
         }
 
     def get_is_paid(self, obj):
+        if obj.price is None or obj.price == 0:
+            return True
         user = self.context.get("user")
         if obj.price and user != AnonymousUser():
             order = Orders.objects.filter(user=user, electronic_resource=obj).order_by('-created_at').first()
